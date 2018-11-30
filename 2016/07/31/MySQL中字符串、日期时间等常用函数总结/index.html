@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="数据库基于 MySQL Server 5.6  由于数据库自带函数的效率问题，对于海量数据的处理时，将加大数据库压力，使之成为系统的瓶颈。但对于大部分的初创等小型公司来说，数据并不多时，数据库函数并不能成为系统瓶颈，这时使用数据库自带的函数将给我们带来很大方便。所以这两天就梳理了一些MySQL中字符串、日期和时间等比较常用的函数，和各位分享。 控制流程函数CASE CASE value WHEN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL中字符串、日期时间等常用函数总结">
+<meta property="og:url" content="http://blog.xueliang.org/2016/07/31/MySQL中字符串、日期时间等常用函数总结/index.html">
+<meta property="og:site_name" content="薛亮的主页">
+<meta property="og:description" content="数据库基于 MySQL Server 5.6  由于数据库自带函数的效率问题，对于海量数据的处理时，将加大数据库压力，使之成为系统的瓶颈。但对于大部分的初创等小型公司来说，数据并不多时，数据库函数并不能成为系统瓶颈，这时使用数据库自带的函数将给我们带来很大方便。所以这两天就梳理了一些MySQL中字符串、日期和时间等比较常用的函数，和各位分享。 控制流程函数CASE CASE value WHEN">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-30T02:43:32.712Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL中字符串、日期时间等常用函数总结">
+<meta name="twitter:description" content="数据库基于 MySQL Server 5.6  由于数据库自带函数的效率问题，对于海量数据的处理时，将加大数据库压力，使之成为系统的瓶颈。但对于大部分的初创等小型公司来说，数据并不多时，数据库函数并不能成为系统瓶颈，这时使用数据库自带的函数将给我们带来很大方便。所以这两天就梳理了一些MySQL中字符串、日期和时间等比较常用的函数，和各位分享。 控制流程函数CASE CASE value WHEN">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.xueliang.org/2016/07/31/MySQL中字符串、日期时间等常用函数总结/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>MySQL中字符串、日期时间等常用函数总结 | 薛亮的主页</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">薛亮的主页</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2016/07/31/MySQL中字符串、日期时间等常用函数总结/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="薛亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="薛亮的主页">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MySQL中字符串、日期时间等常用函数总结
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-07-31 14:44:55" itemprop="dateCreated datePublished" datetime="2016-07-31T14:44:55+08:00">2016-07-31</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-30 10:43:32" itemprop="dateModified" datetime="2018-11-30T10:43:32+08:00">2018-11-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>数据库基于 MySQL Server 5.6</p>
+</blockquote>
+<p>由于数据库自带函数的效率问题，对于海量数据的处理时，将加大数据库压力，使之成为系统的瓶颈。但对于大部分的初创等小型公司来说，数据并不多时，数据库函数并不能成为系统瓶颈，这时使用数据库自带的函数将给我们带来很大方便。所以这两天就梳理了一些MySQL中字符串、日期和时间等比较常用的函数，和各位分享。</p>
+<h1 id="控制流程函数"><a href="#控制流程函数" class="headerlink" title="控制流程函数"></a>控制流程函数</h1><h2 id="CASE"><a href="#CASE" class="headerlink" title="CASE"></a>CASE</h2><ul>
+<li><strong>CASE</strong> <em>value</em> <strong>WHEN</strong> [<em>compare_value</em>] <strong>THEN</strong> <em>result</em> [<strong>WHEN</strong> [<em>compare_value</em>] <strong>THEN</strong> <em>result …</em>] [<strong>ELSE</strong> <em>result</em>] <strong>END</strong></li>
+<li><strong>CASE</strong> <strong>WHEN</strong> [<em>condition</em>] <strong>THEN</strong> <em>result</em> [<strong>WHEN</strong> [<em>condition</em>] <strong>THEN</strong> <em>result …</em>] [<strong>ELSE</strong> <em>result</em>] <strong>END</strong></li>
+</ul>
+<p>这里有两个方案，第一个方案对 <em>value</em> 判定，每个 <strong>WHEN</strong> <em>compare_value</em> <strong>THEN</strong> <em>result</em> 或 <strong>ELSE</strong> 是一个分支，若分支中<em>compare_value</em> 与 <em>value</em> 相等，则返回对应的 <strong>THEN</strong> 后的 <em>result</em>，若所有 <strong>WHEN</strong> 后的 <em>compare_value</em> 都不与 <em>value</em> 想的呢过，则返回 <strong>ELSE</strong> 后的 <em>result</em>，若没有 <strong>ELSE</strong>，则返回 <strong>NULL</strong>。<br>示例：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="number">1</span> <span class="keyword">WHEN</span> <span class="number">1</span> <span class="keyword">THEN</span> <span class="string">'one'</span> <span class="keyword">WHEN</span> <span class="number">2</span> <span class="keyword">THEN</span> <span class="string">'two'</span> <span class="keyword">ELSE</span> <span class="string">'more'</span> <span class="keyword">END</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果</p>
+<blockquote>
+<p>one</p>
+</blockquote>
+<p>第二个方案对每个 <strong>WHEN</strong> 后的表达式进行判定，若判定结果为 <code>true</code>，则返回对应的 <strong>THEN</strong> 后的结果，若所有 <strong>WHEN</strong> 后的判定结果均为 <code>false</code> ，则返回 <strong>ELSE</strong> 后的 <em>result</em>，若没有 <strong>ELSE</strong>，则返回 <strong>NULL</strong>。<br>示例：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> <span class="number">1</span> &gt; <span class="number">0</span> <span class="keyword">THEN</span> <span class="string">'true'</span> <span class="keyword">ELSE</span> <span class="string">'false'</span> <span class="keyword">END</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果</p>
+<blockquote>
+<p>true</p>
+</blockquote>
+<h2 id="IF"><a href="#IF" class="headerlink" title="IF"></a>IF</h2><ul>
+<li><strong>IF</strong>(<em>expr1</em>, <em>expr2</em>, <em>expr3</em>)</li>
+</ul>
+<p><strong>IF</strong> 函数类似与 <code>Java</code> 或其他语言中的三元运算符，即对 <em>expr1</em> 进行判定，若结果为 <strong>true</strong>（<em>expr1</em> &lt;&gt; 0 and <em>expr1</em> &lt;&gt; <strong>NULL</strong>），则返回 <em>expr2</em>，否则，返回<em>expr3</em>。<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">IF</span>(<span class="number">1</span> &gt; <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>3</p>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">IF</span>(<span class="number">1</span> &lt; <span class="number">2</span>, <span class="string">'yes'</span>, <span class="string">'no'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>yes</p>
+</blockquote>
+<p>示例3：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">IF</span>(<span class="keyword">STRCMP</span>(<span class="string">'test'</span>, <span class="string">'test1'</span>), <span class="string">'no'</span>, <span class="string">'yes'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>no</p>
+</blockquote>
+<h2 id="IFNULL"><a href="#IFNULL" class="headerlink" title="IFNULL"></a>IFNULL</h2><ul>
+<li><strong>IFNULL</strong>(<em>expr1</em>, <em>expr2</em>)</li>
+</ul>
+<p><strong>IFNULL</strong> 语句与上面的 <a href="#if"><strong>IF</strong>()</a> 函数有点类似对 <em>expr1</em> 进行判定，若 <em>expr1</em>  不为空，则返回 <em>expr1</em>，否则返回 <em>expr2</em>。<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">IFNULL</span>(<span class="number">1</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>1</p>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">IFNULL</span>(<span class="literal">NULL</span>, <span class="number">10</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>10</p>
+</blockquote>
+<p>示例3：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">IFNULL</span>(<span class="number">1</span>/<span class="number">0</span>, <span class="string">'yes'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>yes</p>
+</blockquote>
+<h2 id="NULLIF"><a href="#NULLIF" class="headerlink" title="NULLIF"></a>NULLIF</h2><ul>
+<li><strong>NULLIF</strong>(<em>expr1</em>, <em>expr2</em>)</li>
+</ul>
+<p>若 <em>expr1</em> 与 <em>expr2</em> 相等，则返回 <strong>NULL</strong>，否则返回 <em>expr1</em>。和 <strong>CASE</strong> <strong>WHEN</strong> <em>expr1</em> = <em>expr2</em> <strong>THEN</strong> <strong>NULL</strong> <strong>ELSE</strong> <em>expr1</em> <strong>END</strong> 效果相同。<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">NULLIF</span>(<span class="number">1</span>, <span class="number">1</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>NULL</p>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">NULLIF</span>(<span class="number">1</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>1</p>
+</blockquote>
+<h1 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a>字符串函数</h1><h2 id="字符串比较函数"><a href="#字符串比较函数" class="headerlink" title="字符串比较函数"></a>字符串比较函数</h2><h3 id="LIKE"><a href="#LIKE" class="headerlink" title="LIKE"></a>LIKE</h3><ul>
+<li><em>expr</em> <strong>LIKE</strong> <em>pat</em> [<strong>ESCAPE</strong> ‘escape_char’]</li>
+</ul>
+<p>模式匹配，使用SQL简单正规表达式比较。返回1 (<strong>TRUE</strong>) 或 0 (<strong>FALSE</strong>)。 若 <em>expr</em> 或 <em>pat</em> 中任何一个为 NULL,则结果为 NULL。<br>模式不需要为文字字符串，可以被指定为一个字符串表达式或表列。<br>在模式中可以同 <strong>LIKE</strong> 一起使用以下两种通配符：<br>字符|说明<br>—| —————————-<br><code>%</code>|匹配任何数目的字符，甚至包括零个字符<br><code>_</code>|只能匹配一个字符</p>
+<p>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">'David!'</span> <span class="keyword">LIKE</span> <span class="string">'David_'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>1<br>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">'David!'</span> <span class="keyword">LIKE</span> <span class="string">'%D%v%'</span>;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>结果：</p>
+<blockquote>
+<p>1</p>
+</blockquote>
+<p>若要将通配符视为普通字符，以便在字符串中匹配通配符，可将转义符(默认为<code>\</code>)置于此通配符前面即可。<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">'David!'</span> <span class="keyword">LIKE</span> <span class="string">'David\_'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>0</p>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">'David_'</span> <span class="keyword">LIKE</span> <span class="string">'David\_'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>1</p>
+</blockquote>
+<p>要指定一个不同的转义字符,可使用 <strong>ESCAPE</strong> 语句。<br>示例：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">'David_'</span> <span class="keyword">LIKE</span> <span class="string">'David|_'</span> ESCAPE <span class="string">'|'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>1</p>
+</blockquote>
+<p>转义序列可以为空，也可以是一个字符的长度。<br>字符串比较不区分大小写，除非其中的一个比较对象是大小写敏感的（使用区分大小写敏感的字符集或者是一个二进制字符串）。<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">'abc'</span> <span class="keyword">LIKE</span> <span class="string">'ABC'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>1</p>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">'abc'</span> <span class="keyword">LIKE</span> _latin1 <span class="string">'ABC'</span> <span class="keyword">COLLATE</span> latin1_general_cs;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>0</p>
+</blockquote>
+<p>示例3：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">'abc'</span> <span class="keyword">LIKE</span> _latin1 <span class="string">'ABC'</span> <span class="keyword">COLLATE</span> latin1_bin;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>0</p>
+</blockquote>
+<p>示例4：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">'abc'</span> <span class="keyword">LIKE</span> <span class="built_in">BINARY</span> <span class="string">'ABC'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>0</p>
+</blockquote>
+<p>作为对标准 SQL 的扩展，MySQL 允许 <strong>LIKE</strong> 函数作用在数字表达式上。<br>示例：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="number">10</span> <span class="keyword">LIKE</span> <span class="string">'1%'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>1</p>
+</blockquote>
+<h3 id="NOT-LIKE"><a href="#NOT-LIKE" class="headerlink" title="NOT LIKE"></a>NOT LIKE</h3><ul>
+<li><em>expr</em> <strong>NOT</strong> <strong>LIKE</strong> <em>pat</em> [<strong>ESCAPE</strong> ‘escape_char’]</li>
+</ul>
+<p>和 <strong>NOT</strong> (<em>expr</em> <strong>LIKE</strong> <em>pat</em> [<strong>ESCAPE</strong> ‘escape_char’]) 效果相同。</p>
+<h2 id="正则表达式函数"><a href="#正则表达式函数" class="headerlink" title="正则表达式函数"></a>正则表达式函数</h2><h3 id="REGEXP"><a href="#REGEXP" class="headerlink" title="REGEXP"></a>REGEXP</h3><ul>
+<li><em>expr</em> <strong>REGEXP</strong> <em>pat</em></li>
+<li><em>expr</em> <strong>RLIKE</strong> <em>pat</em></li>
+</ul>
+<p>用给定的正则表达式 <em>pat</em> 匹配字符串 <em>expr</em>，如果匹配成功，则返回 1。否则返回 0。正则表达式 <em>pat</em> 和字符串 <em>expr</em> 二者任意一个为空时，将返回 <strong>NULL</strong>。<strong>RLIKE</strong> 是 <strong>REGEXP</strong> 的同义词, 是为了兼容 <strong>mSQL</strong>。<br>正则表达式 <em>pat</em> 不需要为字符串。例如，可以被指定为一个字符串表达式或表列。<br><strong>REGEXP</strong> 是不区分大小写的，除非跟二进制字符串一起使用。<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">'Monty!'</span> REGEXP <span class="string">'.*'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>1</p>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">'new*\n*line'</span> REGEXP <span class="string">'new\\*.\\*line'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>1</p>
+</blockquote>
+<p>示例3：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">'a'</span> REGEXP <span class="string">'A'</span>, <span class="string">'a'</span> REGEXP <span class="built_in">BINARY</span> <span class="string">'A'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>1  0</p>
+</blockquote>
+<p>示例5：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">'a'</span> REGEXP <span class="string">'^[a-d]'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>1</p>
+</blockquote>
+<h3 id="NOT-REGEXP"><a href="#NOT-REGEXP" class="headerlink" title="NOT REGEXP"></a>NOT REGEXP</h3><ul>
+<li><em>expr</em> <strong>NOT</strong> <strong>REGEXP</strong> <em>pat</em></li>
+<li><em>expr</em> <strong>NOT</strong> <strong>RLIKE</strong> <em>pat</em></li>
+</ul>
+<p>相当于 <strong>NOT</strong> (<em>expr</em> <strong>REGEXP</strong> <em>pat</em>)。</p>
+<h1 id="数值函数"><a href="#数值函数" class="headerlink" title="数值函数"></a>数值函数</h1><!-- ## 算术操作符
+算术操作符的计算结果，都严格按照如下规则：
+
+- 对于+、 - 和 * 而言，如果两个运算对象都是整数，则其计算结果的精确度为 BIGINT (64比特)。
+- 如果两个计算对象都是非负整数数，则其结果也是非负整数。对于减法运算，如果数据库的SQL模式启用了`NO_UNSIGNED_SUBTRACTION`模式的话，计算结果将区分正负数，即便两个计算对象都是非负整数。-->
+<h2 id="数学函数"><a href="#数学函数" class="headerlink" title="数学函数"></a>数学函数</h2><h3 id="TRUNCATE"><a href="#TRUNCATE" class="headerlink" title="TRUNCATE"></a>TRUNCATE</h3><ul>
+<li><strong>TRUNCATE</strong> (<em>X</em>, <em>D</em>)</li>
+</ul>
+<p>返回被舍去至小数点后 <em>D</em> 位的数字 <em>X</em>。若 <em>D</em> 的值为 0, 则结果不带有小数点或不带有小数部分。可以将 <em>D</em> 设为负数,若要截去（归零） <em>X</em>小数点左起第 <em>D</em> 位（含）开始后面所有低位的值。</p>
+<h1 id="日期和时间函数"><a href="#日期和时间函数" class="headerlink" title="日期和时间函数"></a>日期和时间函数</h1><h2 id="ADDDATE"><a href="#ADDDATE" class="headerlink" title="ADDDATE"></a>ADDDATE</h2><ul>
+<li><strong>ADDDATE</strong>(<em>date</em>, <strong>INTERVAL</strong> <em>expr</em> <em>unit</em>)</li>
+<li><strong>ADDDATE</strong>(<em>expr</em>, <em>days</em>)</li>
+</ul>
+<p>当被第二个参数的 <strong>INTERVAL</strong> 格式激活后， <strong>ADDDATE</strong>() 的用法和 <strong>DATE_ADD</strong>() 的相同。相关函数 <strong>SUBDATE</strong>() 的用法和 <strong>DATE_SUB</strong>() 相同。对于 <strong>INTERVAL</strong> 参数上的信息 ，请参见关于 <a href="#dateadd-datesub"><strong>DATE_ADD</strong>()</a> 的论述。<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DATE_ADD</span>(<span class="string">'2008-01-02'</span>, <span class="built_in">INTERVAL</span> <span class="number">31</span> <span class="keyword">DAY</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>2008-02-02</p>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ADDDATE(<span class="string">'2008-01-02'</span>, <span class="built_in">INTERVAL</span> <span class="number">31</span> <span class="keyword">DAY</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>2008-02-02</p>
+</blockquote>
+<h2 id="ADDTIME"><a href="#ADDTIME" class="headerlink" title="ADDTIME"></a>ADDTIME</h2><ul>
+<li><strong>ADDTIME</strong>(<em>expr1</em>, <em>expr2</em>)</li>
+</ul>
+<p><strong>ADDTIME()</strong> 将 <em>expr2</em> 添加至 <em>expr</em> 然后返回结果。<em>expr</em> 是一个时间或时间日期表达式，而 <em>expr2</em> 是一个时间表达式。</p>
+<h2 id="CURDATE"><a href="#CURDATE" class="headerlink" title="CURDATE"></a>CURDATE</h2><ul>
+<li><strong>CURDATE</strong>()</li>
+</ul>
+<p>将当前日期按照 ‘YYYY-MM-DD’ 或 YYYYMMDD 格式的值返回，具体格式根据函数用在字符串或是数字语境中而定。<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CURDATE</span>();</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>2016-07-29</p>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CURDATE</span>() + <span class="number">0</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>20060729</p>
+</blockquote>
+<h2 id="CURRENT-DATE"><a href="#CURRENT-DATE" class="headerlink" title="CURRENT_DATE"></a>CURRENT_DATE</h2><ul>
+<li><strong>CURRENT_DATE</strong></li>
+<li><strong>CURRENT_DATE</strong>()</li>
+</ul>
+<p><strong>CURRENT_DATE</strong> 和 <strong>CURRENT_DATE</strong>() 的用法与 <a href="#curdate"><strong>CURDATE</strong>()</a> 相同。</p>
+<h2 id="CURTIME"><a href="#CURTIME" class="headerlink" title="CURTIME"></a>CURTIME</h2><ul>
+<li><strong>CURTIME</strong>([<em>fsp</em>])</li>
+</ul>
+<p>将当前时间以 ‘HH:MM:SS’ 或 HHMMSS 的格式返回，具体格式根据函数用在字符串或是数字语境中而定。该值表示当前时区的时间。从 MySQL 5.6.4 开始，<em>fsp</em> 参数用来指定返回值中小数位的长度，该参数的取值范围 0 - 6。在 MySQL5.6.4 之前，给<strong>CURTIME</strong>() 函数传递任何参数都会被忽略。<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CURTIME</span>();</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>16:38:39</p>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CURTIME</span>();</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>163927</p>
+</blockquote>
+<h2 id="CURRENT-TIME"><a href="#CURRENT-TIME" class="headerlink" title="CURRENT_TIME"></a>CURRENT_TIME</h2><ul>
+<li><strong>CURRENT_TIME</strong></li>
+<li><strong>CURRENT_TIME</strong>([<em>fsp</em>])</li>
+</ul>
+<p><strong>CURRENT_TIME</strong> 和 <strong>CURRENT_TIME</strong>() 的用法与 <a href="#curtime"><strong>CURTIME</strong>()</a> 函数相同。</p>
+<h2 id="NOW"><a href="#NOW" class="headerlink" title="NOW"></a>NOW</h2><ul>
+<li><strong>NOW</strong>([<em>fsp</em>])</li>
+</ul>
+<p>返回当前日期和时间值，其格式为 ‘YYYY-MM-DD HH:MM:SS’ 或YYYYMMDDHHMMSS， 具体格式取决于该函数是否用在字符串中或数字语境中。该值表示当前时区的时间。从 MySQL 5.6.4 开始，<em>fsp</em> 参数用来指定返回值中小数位的长度，该参数的取值范围 0 - 6。在 MySQL5.6.4 之前，给 <strong>NOW</strong>() 函数传递任何参数都会被忽略。<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">NOW</span>();</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>2016-07-29 16:49:28</p>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">NOW</span>() + <span class="number">0</span>;</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>20160729165026</p>
+</blockquote>
+<p><strong>NOW</strong>() 返回一个固定时间，该时间指示了该开始执行的时间（在存储函数或者触发器中，<strong>NOW</strong>() 函数返回存储函数或者触发器开始执行的时间）。这同 <strong>SYSDATE</strong>() 的运行有所不同，<strong>SYSDATE</strong>() 函数返回它自身执行的时间。<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">NOW</span>(), <span class="keyword">SLEEP</span>(<span class="number">2</span>), <span class="keyword">NOW</span>();</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th>NOW()</th>
+<th>SLEEP(2)</th>
+<th>NOW()</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2016-07-29 17:16:40</td>
+<td>0</td>
+<td>2016-07-29 17:16:40</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">SYSDATE</span>(), <span class="keyword">SLEEP</span>(<span class="number">2</span>), <span class="keyword">SYSDATE</span>();</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th>SYSDATE()</th>
+<th>SLEEP(2)</th>
+<th>SYSDATE()</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2016-07-29 17:52:24</td>
+<td>0</td>
+<td>2016-07-29 17:52:26</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<h2 id="CURRENT-TIMESTAMP"><a href="#CURRENT-TIMESTAMP" class="headerlink" title="CURRENT_TIMESTAMP"></a>CURRENT_TIMESTAMP</h2><ul>
+<li><strong>CURRENT_TIMESTAMP</strong></li>
+<li><strong>CURRENT_TIMESTAMP</strong>([<em>fsp</em>])</li>
+</ul>
+<p><strong>CURRENT_TIMESTAMP</strong> 和 <strong>CURRENT_TIMESTAMP</strong>() 的用法与 <a href="#now"><strong>NOW</strong>()</a> 函数相同。</p>
+<h2 id="DATE"><a href="#DATE" class="headerlink" title="DATE"></a>DATE</h2><ul>
+<li><strong>DATE</strong>(<em>expr</em>)</li>
+</ul>
+<p>提取日期或时间日期表达式 <em>expr</em> 中的日期部分，若没有提取到，则返回 <strong>NULL</strong>。<br>示例：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">DATE</span>(<span class="string">'2016-12-31 01:02:03'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>2016-12-31</p>
+</blockquote>
+<h2 id="DATEDIFF"><a href="#DATEDIFF" class="headerlink" title="DATEDIFF"></a>DATEDIFF</h2><ul>
+<li><strong>DATEDIFF</strong>(<em>expr1</em>, <em>expr2</em>)</li>
+</ul>
+<p>返回起始时间 <em>expr1</em> 和结束时间 <em>expr2</em> 之间的天数（即表达式 <code>expr1 - expr2</code> 的值）。<em>expr1</em> 和 <em>expr2</em> 为日期或 date-and-time 表达式。计算中只用到这些值的日期部分。<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DATEDIFF</span>(<span class="string">'2007-12-31 23:59:59'</span>,<span class="string">'2007-12-30'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>1</p>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DATEDIFF</span>(<span class="string">'2010-11-30 23:59:59'</span>,<span class="string">'2010-12-31'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>-31</p>
+</blockquote>
+<h2 id="DATE-ADD-DATE-SUB"><a href="#DATE-ADD-DATE-SUB" class="headerlink" title="DATE_ADD, DATE_SUB"></a>DATE_ADD, DATE_SUB</h2><ul>
+<li><strong>DATE_ADD</strong>(<em>date</em>, <strong>INTERVAL</strong> <em>expr</em> unit)</li>
+<li><strong>DATE_SUB</strong>(<em>date</em>, <strong>INTERVAL</strong> <em>expr</em> unit)</li>
+</ul>
+<p>这两个函数执行日期运算。参数 <em>date</em> 是一个 <strong>DATETIME</strong> 或 <strong>DATE</strong> 值，用来指定起始日期。 <em>expr</em> 是一个表达式，用来指定从起始日期(即参数 <em>date</em>)添加或减去的日期间隔值。<em>expr</em> 是一个字符串；对于负值的日期间隔，它可以以一个 “<code>-</code>”开头。 type 为关键词，它指示了表达式被解释的方式。<br>关键词 <strong>INTERVA</strong> 及 unit 分类符均不区分大小写。<br>下表展示了unit 和 <em>expr</em> 参数的关系：<br>unit 值             | 期望的 <em>expr</em> 值<br>——————- | ————-<br><code>MICROSECOND</code>       | MICROSECONDS<br><code>SECOND</code>            | SECONDS<br><code>MINUTE</code>            | MINUTES<br><code>HOUR</code>              | HOURS<br><code>DAY</code>               | DAYS<br><code>WEEK</code>              | WEEKS<br><code>MONTH</code>             | MONTHS<br><code>QUARTER</code>           | QUARTERS<br><code>YEAR</code>              | YEARS<br><code>SECOND_MICROSECOND</code>| ‘SECONDS.MICROSECONDS’<br><code>MINUTE_MICROSECOND</code>| ‘MINUTES:SECONDS.MICROSECONDS’<br><code>MINUTE_SECOND</code>     | ‘MINUTES:SECONDS’<br><code>HOUR_MICROSECOND</code>  | ‘HOURS:MINUTES:SECONDS.MICROSECONDS’<br><code>HOUR_SECOND</code>       | ‘HOURS:MINUTES:SECONDS’<br><code>HOUR_MINUTE</code>       | ‘HOURS:MINUTES’<br><code>DAY_MICROSECOND</code>   | ‘DAYS HOURS:MINUTES:SECONDS.MICROSECONDS’<br><code>DAY_SECOND</code>        | ‘DAYS HOURS:MINUTES:SECONDS’<br><code>DAY_MINUTE</code>        | ‘DAYS HOURS:MINUTES’<br><code>DAY_HOUR</code>          | ‘DAYS HOURS’<br><code>YEAR_MONTH</code>        | ‘YEARS-MONTHS’<br>返回值取决于传递的参数。<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DATE_ADD</span>(<span class="string">'2010-12-31 23:59:59'</span>, <span class="built_in">INTERVAL</span> <span class="number">1</span> <span class="keyword">DAY</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>2011-01-01 23:59:59</p>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DATE_ADD</span>(<span class="string">'2100-12-31 23:59:59'</span>, <span class="built_in">INTERVAL</span> <span class="string">'1:1'</span> MINUTE_SECOND);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>2101-01-01 00:01:00</p>
+</blockquote>
+<p>示例3：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DATE_SUB</span>(<span class="string">'2005-01-01 00:00:00'</span>, <span class="built_in">INTERVAL</span> <span class="string">'1 1:1:1'</span> DAY_SECOND);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>2004-12-30 22:58:59</p>
+</blockquote>
+<h2 id="DATE-FORMAT"><a href="#DATE-FORMAT" class="headerlink" title="DATE_FORMAT"></a>DATE_FORMAT</h2><ul>
+<li><strong>DATE_FORMAT</strong>(<em>date</em>, <em>format</em>)</li>
+</ul>
+<p>根据 <em>format</em> 字符串安排 <em>date</em> 值的格式。<br>说明符 | 说明<br>—– | —-<br><code>%a</code>    | 工作日的缩写名称  (Sun..Sat)<br><code>%b</code>    | 月份的缩写名称  (Jan..Dec)<br><code>%c</code>    | 月份，数字形式(0..12)<br><code>%D</code>    | 带有英语后缀的该月日期  (0th，1st，2nd，3rd，···)<br><code>%d</code>    | 该月日期，数字形式 (00..31)<br><code>%e</code>    | 该月日期，数字形式(0..31)<br><code>%f</code>    | 微秒 (000000..999999)<br><code>%H</code>    | 小时(00..23)<br><code>%h</code>    | 小时(01..12)<br><code>%I</code>    | 小时 (01..12)<br><code>%i</code>    | 分钟，数字形式 (00..59)<br><code>%j</code>    | 一年中的天数 (001..366)<br><code>%k</code>    | 小时 (0..23)<br><code>%l</code>    | 小时 (1..12)<br><code>%M</code>    | 月份名称 (January..December)<br><code>%m</code>    | 月份，数字形式 (00..12)<br><code>%p</code>    | 上午（AM）或下午（ PM）<br><code>%r</code>    | 时间，12小时制 (小时hh:分钟mm:秒数ss 后加 AM或PM)<br><code>%S</code>    | 秒 (00..59)<br><code>%s</code>    | 秒 (00..59)<br><code>%T</code>    | 时间，24小时制 (小时hh:分钟mm:秒数ss)<br><code>%U</code>    | 周 (00..53), 其中周日为每周的第一天<br><code>%u</code>    | 周 (00..53), 其中周一为每周的第一天<br><code>%V</code>    | 周 (01..53), 其中周日为每周的第一天；和 <code>%X</code> 同时使用<br><code>%v</code>    | 周 (01..53), 其中周一为每周的第一天；和 <code>%x</code> 同时使用<br><code>%W</code>    | 工作日名称 (周日..周六)<br><code>%w</code>    | 一周中的每日 (0=周日..6=周六)<br><code>%X</code>    | 该周的年份，其中周日为每周的第一天；数字形式，4位数；和 <code>%V</code> 同时使用<br><code>%x</code>    | 该周的年份，其中周一为每周的第一天，数字形式，4位数；和 <code>%v</code> 同时使用<br><code>%Y</code>    | 年份，数字形式，4位数<br><code>%y</code>    | 年份，数字形式 (2位数)<br><code>%%</code>    | <code>%</code> 字符<br>示例1：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DATE_FORMAT</span>(<span class="string">'1900-10-04 22:23:00'</span>, <span class="string">'%D %y %a %d %m %b %j'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>4th 00 Thu 04 10 Oct 277</p>
+</blockquote>
+<p>示例2：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DATE_FORMAT</span>(<span class="string">'1999-01-01'</span>, <span class="string">'%X %V'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>1998 52</p>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/17/Linux下，Nginx的安装、升级及动态添加模块/" rel="next" title="Linux下，Nginx的安装、升级及动态添加模块">
+                <i class="fa fa-chevron-left"></i> Linux下，Nginx的安装、升级及动态添加模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/10/MySQL主从架构配置详解/" rel="prev" title="MySQL主从架构配置详解">
+                MySQL主从架构配置详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">薛亮</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#控制流程函数"><span class="nav-number">1.</span> <span class="nav-text">控制流程函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CASE"><span class="nav-number">1.1.</span> <span class="nav-text">CASE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IF"><span class="nav-number">1.2.</span> <span class="nav-text">IF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IFNULL"><span class="nav-number">1.3.</span> <span class="nav-text">IFNULL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NULLIF"><span class="nav-number">1.4.</span> <span class="nav-text">NULLIF</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串函数"><span class="nav-number">2.</span> <span class="nav-text">字符串函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串比较函数"><span class="nav-number">2.1.</span> <span class="nav-text">字符串比较函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LIKE"><span class="nav-number">2.1.1.</span> <span class="nav-text">LIKE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NOT-LIKE"><span class="nav-number">2.1.2.</span> <span class="nav-text">NOT LIKE</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式函数"><span class="nav-number">2.2.</span> <span class="nav-text">正则表达式函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#REGEXP"><span class="nav-number">2.2.1.</span> <span class="nav-text">REGEXP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NOT-REGEXP"><span class="nav-number">2.2.2.</span> <span class="nav-text">NOT REGEXP</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数值函数"><span class="nav-number">3.</span> <span class="nav-text">数值函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数学函数"><span class="nav-number">3.1.</span> <span class="nav-text">数学函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TRUNCATE"><span class="nav-number">3.1.1.</span> <span class="nav-text">TRUNCATE</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#日期和时间函数"><span class="nav-number">4.</span> <span class="nav-text">日期和时间函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ADDDATE"><span class="nav-number">4.1.</span> <span class="nav-text">ADDDATE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ADDTIME"><span class="nav-number">4.2.</span> <span class="nav-text">ADDTIME</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CURDATE"><span class="nav-number">4.3.</span> <span class="nav-text">CURDATE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CURRENT-DATE"><span class="nav-number">4.4.</span> <span class="nav-text">CURRENT_DATE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CURTIME"><span class="nav-number">4.5.</span> <span class="nav-text">CURTIME</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CURRENT-TIME"><span class="nav-number">4.6.</span> <span class="nav-text">CURRENT_TIME</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NOW"><span class="nav-number">4.7.</span> <span class="nav-text">NOW</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CURRENT-TIMESTAMP"><span class="nav-number">4.8.</span> <span class="nav-text">CURRENT_TIMESTAMP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DATE"><span class="nav-number">4.9.</span> <span class="nav-text">DATE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DATEDIFF"><span class="nav-number">4.10.</span> <span class="nav-text">DATEDIFF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DATE-ADD-DATE-SUB"><span class="nav-number">4.11.</span> <span class="nav-text">DATE_ADD, DATE_SUB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DATE-FORMAT"><span class="nav-number">4.12.</span> <span class="nav-text">DATE_FORMAT</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">薛亮</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

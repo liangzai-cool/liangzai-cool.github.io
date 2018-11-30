@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="数据库基于 MySQL Server 5.6  无论是哪一种数据库，数据的安全都是至关重要的，因此熟练掌握数据库的安全备份功能，是作为开发人员，特别是后端开发人员的一项必备技能。MySQL 数据库内建的复制功能，可以帮助我们对数据进行异地备份，读写分离，在较大程度上避免数据丢失、数据库服务器压力过大甚至宕机带来的损失。 使用MySQL 主从架构一年多了，想起当年学习这些东西的时候，苦于完整的中文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL主从架构配置详解">
+<meta property="og:url" content="http://blog.xueliang.org/2016/08/10/MySQL主从架构配置详解/index.html">
+<meta property="og:site_name" content="薛亮的主页">
+<meta property="og:description" content="数据库基于 MySQL Server 5.6  无论是哪一种数据库，数据的安全都是至关重要的，因此熟练掌握数据库的安全备份功能，是作为开发人员，特别是后端开发人员的一项必备技能。MySQL 数据库内建的复制功能，可以帮助我们对数据进行异地备份，读写分离，在较大程度上避免数据丢失、数据库服务器压力过大甚至宕机带来的损失。 使用MySQL 主从架构一年多了，想起当年学习这些东西的时候，苦于完整的中文">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-30T02:43:32.714Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL主从架构配置详解">
+<meta name="twitter:description" content="数据库基于 MySQL Server 5.6  无论是哪一种数据库，数据的安全都是至关重要的，因此熟练掌握数据库的安全备份功能，是作为开发人员，特别是后端开发人员的一项必备技能。MySQL 数据库内建的复制功能，可以帮助我们对数据进行异地备份，读写分离，在较大程度上避免数据丢失、数据库服务器压力过大甚至宕机带来的损失。 使用MySQL 主从架构一年多了，想起当年学习这些东西的时候，苦于完整的中文">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.xueliang.org/2016/08/10/MySQL主从架构配置详解/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>MySQL主从架构配置详解 | 薛亮的主页</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">薛亮的主页</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2016/08/10/MySQL主从架构配置详解/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="薛亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="薛亮的主页">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MySQL主从架构配置详解
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-08-10 16:33:15" itemprop="dateCreated datePublished" datetime="2016-08-10T16:33:15+08:00">2016-08-10</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-30 10:43:32" itemprop="dateModified" datetime="2018-11-30T10:43:32+08:00">2018-11-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>数据库基于 MySQL Server 5.6</p>
+</blockquote>
+<p>无论是哪一种数据库，数据的安全都是至关重要的，因此熟练掌握数据库的安全备份功能，是作为开发人员，特别是后端开发人员的一项必备技能。MySQL 数据库内建的复制功能，可以帮助我们对数据进行异地备份，读写分离，在较大程度上避免数据丢失、数据库服务器压力过大甚至宕机带来的损失。</p>
+<p>使用MySQL 主从架构一年多了，想起当年学习这些东西的时候，苦于完整的中文资料比较少，当时英文又不太好，遇到不少问题。刚好最近也有一段时间没更新博客了，心血来潮，决定翻译一下 MySQL 官网的英文文档，官网文档讲解的非常详细，可以帮助更多新手理解并快速入门。</p>
+<p>第一次翻译这么大篇幅的英文技术文档，尽量采取逐句翻译，这样可以尽可能保持文档原意，但仍有很多需要修改的地方，恳请各位指正。</p>
+<p>废话说多了，下面开始~~~</p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>MySQL的复制功能，使得数据可以从一台MySQL 数据库服务器（我们称之为主库，即 <code>master</code>），复制到另外一台或者多台MySQL 数据库服务器（我们称之为从库，即 <code>slave</code>）。在默认情况下，复制的过程是异步的，因此，从数据库服务器不需要一直连接到主数据库服务器接收更新。 这也意味着，更新可以在长距离连接，甚至在诸如拨号服务临时或者间歇性的情况下继续。MySQL的复制功能，可以复制所有数据库，或者需要复制的几个数据库，甚至数据库中需要复制的数据库表，这都依赖于你是如何配置的。</p>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="配置主库"><a href="#配置主库" class="headerlink" title="配置主库"></a>配置主库</h2><p>需要复制的主库必须开启二进制日志功能，并且创建一个唯一的服务器编号（<code>server-id</code>），之后，必须重启数据库。</p>
+<p>由于二进制日志文件是主从复制的基础，所以，主库 <strong>必须</strong> 开启二进制日志功能。如果二进制日志功能没用使用 <code>log-bin</code> 选项开启，主从复制就无法进行。</p>
+<p>可以将所有的从库作为一个组，组里的每一个从库都需要创建一个唯一的服务器编号（<code>server-id</code>），以便用这个编号在组里识别指定的从库，数据库服务器编号（<code>server-id</code>）必须是 1 至 2<sup>32</sup> − 1 之间的整数。具体使用哪些整数，完全由你自己决定，没有其他特殊规定。</p>
+<p>要给数据库配置服务器编号（<code>server-id</code>）选项，需要停止MySQL 数据库，然后编辑 <code>my.cnf</code> 或者 <code>my.ini</code> 文件。在配置文件的 <code>[mysqld]</code> 这一节下，添加 <code>log-bin</code> 和 <code>server-id</code> 两个选项。如果它们已经存在，但是被注释掉了，就解注释，然后根据自己的需要进行修改。例如使用前缀为<code>mysql-bin</code>日志文件名，启用二进制日志功能，配置服务器编号为<code>1</code>，可以参考下面的示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">log-bin=mysql-bin</span><br><span class="line">server-id=1</span><br></pre></td></tr></table></figure></p>
+<p>保存好上面的修改之后，重启数据库。</p>
+<blockquote>
+<p>注意：</p>
+<ul>
+<li><p>如果没有配置 <code>server-id</code> 选项（或者将其设置为默认值0），主库将拒绝来自任何从库的连接请求。</p>
+</li>
+<li><p>为了能在 InnoDB 存储引擎中使用事务时，达到最大可能的耐用性和一致性，需要在 <code>my.cnf</code> 文件中配置 <code>innodb_flush_log_at_trx_commit=1</code> 和 <code>sync_binlog=1</code> 两个选项。</p>
+</li>
+<li><p>不要在主库上配置 <code>skip-networking</code> 选项。如果主库的网络都被禁用了，从库就不能连接到主库，最终导致复制失败。</p>
+</li>
+</ul>
+</blockquote>
+<h2 id="配置从库"><a href="#配置从库" class="headerlink" title="配置从库"></a>配置从库</h2><p>前面在<a href="#配置主库">配置主库</a>时，已经说过，必须给每个从库创建一个服务器编号，创建好之后，<strong>必须</strong> 重启数据库。</p>
+<p>如果从库的服务器编号没有设置，或者设置的编号和主库冲突，就需要先停掉从库，然后编辑从库的配置文件的 <code>[mysqld]</code> 这一节，指定一个唯一的服务器编号，像下面这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">server-id=2</span><br></pre></td></tr></table></figure></p>
+<p>保存好修改之后，重启从库。<br>如果配置了多个从库，那么每一个从库都必须有一个唯一的 <code>server-id</code> 选项值（即每个从库的 <code>server-id</code> 值必须与主库以及除它本身以外的其他从库的 <code>server-id</code> 值不同）。</p>
+<blockquote>
+<p>注意：<br>如果没有配置从库的 <code>server-id</code> 选项（或者配置它的值为默认值0），那么从库将拒绝连接到主库。</p>
+</blockquote>
+<p>不需要为了主从复制而给从库开启二进制日志功能。如果给从库开启了二进制日志功能，由此产生的二进制日志文件可以作为备份数据，或者在数据库崩溃的时候，使用二进制日志文件恢复数据，也可以使用此开启了二进制日志功能的从库作为更复杂的主从架构的一部分。比如，可以将此从库作为其他从库的主库。</p>
+<h2 id="为从库创建用户"><a href="#为从库创建用户" class="headerlink" title="为从库创建用户"></a>为从库创建用户</h2><p>每个从库都使用数据库用户名和密码连接并登录到主库，所以在主库中必须有一个能让从库连接到此主库的 MySQL 账户。任何被赋予 <code>REPLICATION SLAVE</code> 权限的 MySQ L账户，都可以用作此连接操作。可以为每一个从库分配一个账户，也可以让所有的从库使用同一个账户，用来连接到主库。</p>
+<p>虽然不需要为从库分配一个单独的账户去执行复制，但你应该知道的是，用来复制操作的用户名和密码都是明文存储在主库文件或表中的（相关链接：<a href="http://dev.mysql.com/doc/refman/5.6/en/slave-logs-status.html" target="_blank" rel="noopener">Section 17.2.2.2, “Slave Status Logs”</a>）。因此，你可能想要创建一个隔离的、只能进行复制操作的账户，将对其他账户的损害减到最小。</p>
+<p>使用 <code>CREATE USER</code> 语句创建新的 MySQL 账户。使用 <code>GRANT</code> 语句给这个账户赋予复制操作所必要的权限。若创建账户仅是为了达到复制的目的的话，那么这个账户只需要 <code>REPLICATION SLAVE</code> 。举个例子，创建一个新的账户 <code>repl</code> ，使其可以从  <code>mydomain.com</code> 域名下的任何主机连接到主库并执行复制，在主库上执行下面的语句：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">'repl'</span>@<span class="string">'%.mydomain.com'</span> <span class="keyword">IDENTIFIED</span> <span class="keyword">BY</span> <span class="string">'slavepass'</span>;</span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">REPLICATION</span> <span class="keyword">SLAVE</span> <span class="keyword">ON</span> *.* <span class="keyword">TO</span> <span class="string">'repl'</span>@<span class="string">'%.mydomain.com'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>更多关于用户账户的操作语句，请查看 <a href="http://dev.mysql.com/doc/refman/5.6/en/account-management-sql.html" target="_blank" rel="noopener">Section 13.7.1, “Account Management Statements”</a>。</p>
+<h2 id="获取主库的二进制日志坐标"><a href="#获取主库的二进制日志坐标" class="headerlink" title="获取主库的二进制日志坐标"></a>获取主库的二进制日志坐标</h2><p>为了在接下来配置完从库，使其能从正确的位置开始执行复制操作，你需要知道主库当前的二进制日志坐标。</p>
+<p>如果在主库上已经存储了一些数据，而且又需要在开始之前同步到从库上，那么就必须在主库上停止执行语句，接着，获取主库当前的日志坐标，并转存其数据。如果不使主库停止执行语句，将会导致转存的数据和数据库的状态信息不相符，最终导致从库数据不一致或者引起从库发生错误。</p>
+<p>依照下面这几步来获取主库的二进制日志坐标：</p>
+<ol>
+<li>使用命令行连接到主库以开始一个会话，清空所有表的缓存，并且通过执行 <code>FLUSH TABLES WITH READ LOCK</code> 阻止对数据库的写操作，即锁定对所有表的只读操作：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FLUSH</span> <span class="keyword">TABLES</span> <span class="keyword">WITH</span> <span class="keyword">READ</span> <span class="keyword">LOCK</span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>对于 <code>InnoDB</code> 存储引擎来说， <code>FLUSH TABLES WITH READ LOCK</code> 语句也会阻止 <code>COMMIT</code> 操作。</p>
+<blockquote>
+<p><strong>提醒</strong>：<br>不要退出刚才执行了 <code>FLUSH TABLES</code> 语句的会话。如果退出了这个会话，上面的锁表操作将被释放。</p>
+</blockquote>
+<ol start="2">
+<li>再打开一个新的会话，连接到主库，使用 <code>SHOW MASTER STATUS</code> 语句来确认当前二进制日志文件的名称和位置：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> <span class="keyword">MASTER</span> <span class="keyword">STATUS</span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>结果：</p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Position</th>
+<th>Binlog_Do_DB</th>
+<th>Binlog_Ignore_DB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mysql-bin.000003</td>
+<td>73</td>
+<td>test</td>
+<td>manual,mysql</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p> <code>File</code> 列显示了当前二进制日志文件的名字， <code>Position</code> 列显示了文件的位置。在上面这个例子中，二进制日志文件的名字是 <code>mysql-bin.000003</code> ，位置是 <code>73</code> 。这些数据代表了从库将要（开始）处理来自主库的更新的坐标。记录下这些数据，稍后在配置从库时，将会使用到它们。</p>
+<p> 如果主库在事先没有开启二进制日志功能时已经在运行状态了，那么，通过执行 <code>SHOW MASTER STATUS</code> 语句，或者通过执行 <a href="http://dev.mysql.com/doc/refman/5.6/en/mysqldump.html" target="_blank" rel="noopener">mysqldump –master-data</a> 命令，得到的结果中，二进制日志文件名和位置都将是空。若是那样的话，在从库上配置二进制日志名和位置时，就分别用空字符串（<code>&#39;&#39;</code>）和 数值 <code>4</code> 来代替。</p>
+<p><br><br>到目前为止，我们已经获得了足够的信息，我们需要使用这些信息，配置从库，使从库开始从正确的位置读取来自主库的二进制日志，开始进行复制。</p>
+<p>如果你有一些数据，需要在从库开始复制之前同步到从库，那么，保持之前开启的会话不要关闭，这样才能保持之前开启的数据库锁不被释放。接着，查看 <a href="http://dev.mysql.com/doc/refman/5.6/en/replication-howto-mysqldump.html" target="_blank" rel="noopener">Section 17.1.1.5, “Creating a Data Snapshot Using mysqldump”</a> 或者 <a href="http://dev.mysql.com/doc/refman/5.6/en/replication-howto-rawdata.html" target="_blank" rel="noopener">Section 17.1.1.6, “Creating a Data Snapshot Using Raw Data Files”</a> 。它们将会告诉你如何防止任何进一步的更改，以便于将已经存在于主库的数据同步到从库。</p>
+<p>如果你正在建立一个全新的主从复制组，你可以退出第一个会话，以便释放对数据库的读锁定。</p>
+<h2 id="使用新的主、从库配置复制"><a href="#使用新的主、从库配置复制" class="headerlink" title="使用新的主、从库配置复制"></a>使用新的主、从库配置复制</h2><p>使用新的主、从库配置数据库复制是最简单、最直接的方式。</p>
+<p>如果你正在设置新的服务器，但是有一些从其他的务器转存的数据库，并且你想加载到你的复制配置新中，同样可以使用本节介绍的方法。通过将数据加载到新的主库中，数据将会被自动复制到从库中。</p>
+<p>依照下面这几步，来在新的主、从库之间配置复制功能：</p>
+<ol>
+<li>通过一些必要的配置属性文件，配置主库。参考：<a href="#配置主库">配置主库</a></li>
+<li>启动主库。</li>
+<li>设置一个用户。参考：<a href="#为从库创建用户">为从库创建用户</a>。</li>
+<li>获取主库的状态信息。参考：<a href="#获取主库的二进制日志坐标">获取主库的二进制日志坐标</a>。</li>
+<li><p>在主库上释放读锁：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UNLOCK</span> <span class="keyword">TABLES</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在从库上编辑 MySQL 配置文件。 参考：<a href="#配置从库">配置从库</a>。</p>
+</li>
+<li>启动从库。</li>
+<li>执行 <code>CHANGE MASTER TO</code> 语句来设置主库的信息。参考：<a href="#为从库配置主库的信息">为从库配置主库的信息</a>。</li>
+</ol>
+<p>在每一台从库上，都完成上面这几步操作。</p>
+<p>因为使用的是新的数据库，没有数据或者配置信息需要替换，因此你不需要复制或者导入任何其他信息。</p>
+<p>如果你需要使用来自于其他数据库服务器上数据配置新的复制环境，你可能需要在新的主库上导入这些转存的数据。由此对主库产生的更新将会被自动同步到从库：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h master &lt; fulldb.dump</span><br></pre></td></tr></table></figure></p>
+<h2 id="使用已有的数据配置复制环境"><a href="#使用已有的数据配置复制环境" class="headerlink" title="使用已有的数据配置复制环境"></a>使用已有的数据配置复制环境</h2><p>当使用已有的数据配置复制环境时，你可能需要做出一个决定，如何在启动复制服务之前，让从库以最优方式获取到主库的数据。<br>下面这几步基本操作将会引导你，使用已有的数据配置复制环境：</p>
+<ol>
+<li><p>在 MySQL 主库运行的情况下，创建一个用户，以便从库在复制的时候可以连接到主库。参考：<a href="#为从库创建用户">为从库创建用户</a>。</p>
+</li>
+<li><p>如果你还没有在主库上配置 <code>server-id</code> 选项，或者还没有开启二进制日志功能，你需要停止主库，然后配置它们。参考：<a href="#配置主库">配置主库</a>。<br>在配置主库的过程中，如果需要停止（重启）主库服务，你可以利用主库服务停止的这段时间，创建一个主库的快照。但别忘了，你需要在停止主库服务、更新配置信息，创建快照之前，获得主库的状态信息（参考：<a href="#获取主库的二进制日志坐标">获取主库的二进制日志坐标</a>）。关于如何使用原始数据创建数据库快照，你可以参考这里：<a href="http://dev.mysql.com/doc/refman/5.6/en/replication-howto-rawdata.html" target="_blank" rel="noopener">Section 17.1.1.6, “Creating a Data Snapshot Using Raw Data Files”</a>。</p>
+</li>
+<li><p>如果主库信息已经正确配置好了，那么就可以获取它的状态信息（参考：<a href="#获取主库的二进制日志坐标">获取主库的二进制日志坐标</a>），接着，使用 MySQL 自带的 <code>mysqldump</code> 工具创建一个数据库快照（参考：<a href="http://dev.mysql.com/doc/refman/5.6/en/replication-howto-mysqldump.html" target="_blank" rel="noopener">Section 17.1.1.5, “Creating a Data Snapshot Using mysqldump”</a>），也可以参考 <a href="http://dev.mysql.com/doc/refman/5.6/en/replication-howto-rawdata.html" target="_blank" rel="noopener">Section 17.1.1.6, “Creating a Data Snapshot Using Raw Data Files”</a> 直接创建主库的原始数据文件的快照。</p>
+</li>
+<li>更新从库的配置信息。参考：<a href="#配置从库">配置从库</a>。</li>
+<li>这一步的操作，取决于你在主库上是如何创建的数据的快照的。<br>若你是使用的 <code>mysqldump</code> 创建的快照：</li>
+</ol>
+<ul>
+<li>使用 <code>--skip-slave-start</code> 选项启动从库，以便不让主从复制开始。</li>
+<li>像下面这样，导入转存的数据文件：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &lt; fulldb.dump</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>若你是使用第二种方案，即直接创建原始数据文件的快照的方式：</p>
+<ul>
+<li><p>将数据文件解压到从库的数据（<code>data</code>）目录下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xvf dbdump.tar</span><br></pre></td></tr></table></figure>
+<pre><code>你可能需要设置这些文件的权限和所有者，以便在从库可以获取到这些数据文件，并且可以对其进行更新。
+</code></pre></li>
+<li><p>使用 <code>--skip-slave-start</code> 选项启动从库，以便不让主从复制开始。</p>
+</li>
+</ul>
+<ol start="6">
+<li>将主库的二进制日志坐标信息配置到从库。这一步用来指定从库需要从主库的哪一个二进制日志文件，以及从这个文件的什么位置开始复制。当然，也需要在从库上配置连接主库时使用的凭证和主库的 IP 或者 域名。更多关于 <code>CHANGE MASTER TO</code> 语句的所需的必须参数等信息，请参考：<a href="#为从库配置主库的信息">为从库配置主库的信息</a>。</li>
+<li><p>启动从库：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">START</span> <span class="keyword">SLAVE</span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>执行完上面这几步，从库就会连接到主库，主库的任何更新操作，都将被发送到从库，从库会在已有的快照数据的基础上，同步执行这些更新。</p>
+<p>如果你忘记了设置主库的 <code>server-id</code> 选项信息，从库将无法连接到主库。<br>如果你忘记了设置从库的 <code>server-id</code> 选项信息，在从库的错误日志中，将出现以下错误信息：</p>
+<blockquote>
+<p>Warning: You should set server-id to a non-0 value if master_host<br>is set; we will force server id to 2, but this MySQL server will<br>not act as a slave.</p>
+</blockquote>
+<p>同样，如果从库由于其他任何原因导致不能执行复制，你可以在错误日志文件中得到相关的错误信息。</p>
+<p>从库通过使用存储在主库信息仓库中的信息，保持跟踪它已经执行了多少主库产生的二进制日志。通过 <code>--master-info-repository</code> 选项，可以将仓库信息设置在文件的表单里，或者在一个表中。当配置信息为 <code>--master-info-repository=FILE</code> 时，你可以在从库的数据（<code>data</code>）目录下发现两个文件，名字分别是 <code>master.info</code> 和 <code>relay-log.info</code> 。配置信息为 <code>--master-info-repository=TABLE</code> 时，信息将会被保存在 <code>mysql</code> 数据库的 <code>master_slave_info</code> 表中。无论如何，不要删除或者编辑上面提到的文件和表里的数据，除非你清楚的知道你在干什么，并且充分理解这么做代表的含义。即便如此，也应该优先使用 <code>CHANGE MASTER TO</code> 语句去修改复制参数。从库可以使用语句中指定的值去自动更新状态信息文件。更多相关信息请参考：<a href="http://dev.mysql.com/doc/refman/5.6/en/slave-logs.html" target="_blank" rel="noopener">Section 17.2.2, “Replication Relay and Status Logs”</a>。</p>
+<blockquote>
+<p>注意：<br>主库信息仓库的内容会覆盖一些在命令行或者 <code>my.cnf</code> 文件中设置的选项。详细信息请参考：<a href="http://dev.mysql.com/doc/refman/5.6/en/replication-options.html" target="_blank" rel="noopener">Section 17.1.4, “Replication and Binary Logging Options and Variables”</a>。</p>
+</blockquote>
+<p>一份主库的快照，可以被多个从库来使用。如果需要额外再配置一些从库，可以使用相同的主库快照，像之前介绍如何配置已有从库时描述的那样，配置这些额外增加的从库。</p>
+<h2 id="为从库配置主库的信息"><a href="#为从库配置主库的信息" class="headerlink" title="为从库配置主库的信息"></a>为从库配置主库的信息</h2><p>你必须告诉告诉从库一些必要信息，以便从库能够连接到主库进行复制。为了做到这一点，在从库上执行下面的语句，根据你的系统上实际的值，替换语句中相应的选项值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CHANGE MASTER TO MASTER_HOST=&apos;master_host_name&apos;, MASTER_USER=&apos;replication_user_name&apos;, MASTER_PASSWORD=&apos;replication_password&apos;, MASTER_LOG_FILE=&apos;recorded_log_file_name&apos;, MASTER_LOG_POS=recorded_log_position;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意：<br>复制不能使用 Unix 套接字文件（<code>socket file</code>）。你必须确保能够使用 <code>TCP/IP</code> 协议连接到主库。</p>
+</blockquote>
+<p><code>CHANGE MASTER TO</code> 语句也有一些其他参数可供配置。例如，可以通过使用此语句的其他选项，决定是否使用 SSL 协议，以便达到安全的复制。<br>关于此语句的完整的选项，以及选项值允许的最大长度等信息，请参考：<a href="http://dev.mysql.com/doc/refman/5.6/en/change-master-to.html" target="_blank" rel="noopener">Section 13.4.2.1, “CHANGE MASTER TO Syntax”</a>。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/31/MySQL中字符串、日期时间等常用函数总结/" rel="next" title="MySQL中字符串、日期时间等常用函数总结">
+                <i class="fa fa-chevron-left"></i> MySQL中字符串、日期时间等常用函数总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/19/Git如何检出指定目录或文件/" rel="prev" title="Git如何检出指定目录或文件">
+                Git如何检出指定目录或文件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">薛亮</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置"><span class="nav-number">2.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置主库"><span class="nav-number">2.1.</span> <span class="nav-text">配置主库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置从库"><span class="nav-number">2.2.</span> <span class="nav-text">配置从库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为从库创建用户"><span class="nav-number">2.3.</span> <span class="nav-text">为从库创建用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取主库的二进制日志坐标"><span class="nav-number">2.4.</span> <span class="nav-text">获取主库的二进制日志坐标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用新的主、从库配置复制"><span class="nav-number">2.5.</span> <span class="nav-text">使用新的主、从库配置复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用已有的数据配置复制环境"><span class="nav-number">2.6.</span> <span class="nav-text">使用已有的数据配置复制环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为从库配置主库的信息"><span class="nav-number">2.7.</span> <span class="nav-text">为从库配置主库的信息</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">薛亮</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="好久没更博了…最近看了个真正全注解实现的 SpringMVC 博客，感觉很不错，终于可以彻底丢弃 web.xml 了。其实这玩意也是老东西了，丢弃 web.xml，是基于 5、6年前发布的 Servlet 3.0 规范，只不过少有人玩而已…现在4.0都快正式发布了…Spring对注解的支持也从09年底就开始支持了…基础部分我就不仔细讲了，可以先看一下这篇 以及其中提到的另外两篇文章，这三篇文章讲的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring RESTful + Redis全注解实现恶意登录保护机制">
+<meta property="og:url" content="http://blog.xueliang.org/2016/11/02/Spring-RESTful-Redis全注解实现恶意登录保护机制/index.html">
+<meta property="og:site_name" content="薛亮的主页">
+<meta property="og:description" content="好久没更博了…最近看了个真正全注解实现的 SpringMVC 博客，感觉很不错，终于可以彻底丢弃 web.xml 了。其实这玩意也是老东西了，丢弃 web.xml，是基于 5、6年前发布的 Servlet 3.0 规范，只不过少有人玩而已…现在4.0都快正式发布了…Spring对注解的支持也从09年底就开始支持了…基础部分我就不仔细讲了，可以先看一下这篇 以及其中提到的另外两篇文章，这三篇文章讲的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-30T02:43:32.720Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring RESTful + Redis全注解实现恶意登录保护机制">
+<meta name="twitter:description" content="好久没更博了…最近看了个真正全注解实现的 SpringMVC 博客，感觉很不错，终于可以彻底丢弃 web.xml 了。其实这玩意也是老东西了，丢弃 web.xml，是基于 5、6年前发布的 Servlet 3.0 规范，只不过少有人玩而已…现在4.0都快正式发布了…Spring对注解的支持也从09年底就开始支持了…基础部分我就不仔细讲了，可以先看一下这篇 以及其中提到的另外两篇文章，这三篇文章讲的">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.xueliang.org/2016/11/02/Spring-RESTful-Redis全注解实现恶意登录保护机制/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Spring RESTful + Redis全注解实现恶意登录保护机制 | 薛亮的主页</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">薛亮的主页</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2016/11/02/Spring-RESTful-Redis全注解实现恶意登录保护机制/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="薛亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="薛亮的主页">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring RESTful + Redis全注解实现恶意登录保护机制
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-11-02 09:35:00" itemprop="dateCreated datePublished" datetime="2016-11-02T09:35:00+08:00">2016-11-02</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-30 10:43:32" itemprop="dateModified" datetime="2018-11-30T10:43:32+08:00">2018-11-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>好久没更博了…<br>最近看了个真正全注解实现的 SpringMVC 博客，感觉很不错，终于可以彻底丢弃 <code>web.xml</code> 了。其实这玩意也是老东西了，丢弃 <code>web.xml</code>，是基于 5、6年前发布的 Servlet 3.0 规范，只不过少有人玩而已…现在4.0都快正式发布了…Spring对注解的支持也从09年底就开始支持了…<br>基础部分我就不仔细讲了，可以先看一下<a href="https://my.oschina.net/devleon/blog/530803" target="_blank" rel="noopener">这篇</a> 以及其中提到的另外两篇文章，这三篇文章讲的很不错。<br>下面开始旧东西新玩~~~</p>
+<h1 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h1><p>项目是基于 <code>gradle 3.1</code>构建的，这是项目依赖：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">  <span class="keyword">def</span> springVersion = <span class="string">'4.3.2.RELEASE'</span></span><br><span class="line">  </span><br><span class="line">  compile <span class="string">"org.springframework:spring-web:$springVersion"</span></span><br><span class="line">  compile <span class="string">"org.springframework:spring-webmvc:$springVersion"</span></span><br><span class="line">  compile <span class="string">"redis.clients:jedis:2.9.0"</span></span><br><span class="line">  compile <span class="string">"javax.servlet:javax.servlet-api:3.1.0"</span></span><br><span class="line">  compile <span class="string">"org.json:json:20160810"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="编写Java版的web-xml"><a href="#编写Java版的web-xml" class="headerlink" title="编写Java版的web.xml"></a>编写Java版的web.xml</h1><p>想要让请求经过Java，少不了配置 <code>web.xml</code>，不过现在我们来写个Java版的~<br>这里和传统的 <code>web.xml</code> 一样，依次添加 <code>filter</code>， <code>servlet</code> 。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.xueliang.loginsecuritybyredis.commons;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterRegistration;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.Servlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletContext;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletRegistration;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.web.WebApplicationInitializer;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.context.support.AnnotationConfigWebApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.filter.CharacterEncodingFilter;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.DispatcherServlet;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 基于注解的/WEB-INF/web.xml</span></span><br><span class="line"><span class="comment"> * 依赖 servlet 3.0</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> XueLiang</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2016年10月24日 下午5:58:45</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommonInitializer</span> <span class="keyword">implements</span> <span class="title">WebApplicationInitializer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(ServletContext servletContext)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 基于注解配置的Web容器上下文</span></span><br><span class="line">		AnnotationConfigWebApplicationContext context = <span class="keyword">new</span> AnnotationConfigWebApplicationContext();</span><br><span class="line">		context.register(WebAppConfig.class);</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 添加编码过滤器并进行映射</span></span><br><span class="line">		CharacterEncodingFilter characterEncodingFilter = <span class="keyword">new</span> CharacterEncodingFilter(<span class="string">"UTF-8"</span>, <span class="keyword">true</span>);</span><br><span class="line">		FilterRegistration.Dynamic dynamicFilter = servletContext.addFilter(<span class="string">"characterEncodingFilter"</span>, characterEncodingFilter);</span><br><span class="line">		dynamicFilter.addMappingForUrlPatterns(<span class="keyword">null</span>, <span class="keyword">true</span>, <span class="string">"/*"</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 添加静态资源映射</span></span><br><span class="line">		ServletRegistration defaultServletRegistration = servletContext.getServletRegistration(<span class="string">"default"</span>);</span><br><span class="line">		defaultServletRegistration.addMapping(<span class="string">"*.html"</span>);</span><br><span class="line">		</span><br><span class="line">		Servlet dispatcherServlet = <span class="keyword">new</span> DispatcherServlet(context);</span><br><span class="line">		ServletRegistration.Dynamic dynamicServlet = servletContext.addServlet(<span class="string">"dispatcher"</span>, dispatcherServlet);</span><br><span class="line">		dynamicServlet.addMapping(<span class="string">"/"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这一步走完，Spring 基本上启动起来了。</p>
+<h1 id="编写Java版的Spring配置"><a href="#编写Java版的Spring配置" class="headerlink" title="编写Java版的Spring配置"></a>编写Java版的Spring配置</h1><p>现在Spring已经可以正常启动了，但我们还要给 Spring 做一些配置，以便让它按我们需要的方式工作~<br>这里因为后端只负责提供数据，而不负责页面渲染，所以只需要配置返回 <code>json</code> 视图即可，个人比较偏爱采用内容协商，所以这里我使用了 <code>ContentNegotiationManagerFactoryBean</code>，但只配置了一个 JSON 格式的视图。<br>为了避免中文乱码，这里设置了 <code>StringHttpMessageConverter</code> 默认编码格式为 <code>UTF-8</code>，然后将其设置为 <code>RequestMappingHandlerAdapter</code> 的消息转换器。<br>最后还需要再配置一个欢迎页，类似于 <code>web.xml</code> 的 <code>welcome-file-list - welcome-file</code>，因为 Servlet 3.0 规范没有针对欢迎页的Java配置方案，所以目前只能在Java中这样配置，其效果类似于在XML版中配置 <code>&lt;mvc:redirect-view-controller path=&quot;/&quot; redirect-url=&quot;/index.html&quot;/&gt;</code> 。<br>最后注意这里的 <code>@Bean</code> 注解，默认的 <code>name</code> 是方法名。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">package org.xueliang.loginsecuritybyredis.commons;</span><br><span class="line"></span><br><span class="line">import java.nio.charset.Charset;</span><br><span class="line">import java.util.Collections;</span><br><span class="line">import java.util.Properties;</span><br><span class="line"></span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.context.annotation.ComponentScan;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import org.springframework.context.annotation.PropertySource;</span><br><span class="line">import org.springframework.http.MediaType;</span><br><span class="line">import org.springframework.http.converter.StringHttpMessageConverter;</span><br><span class="line">import org.springframework.web.accept.ContentNegotiationManager;</span><br><span class="line">import org.springframework.web.accept.ContentNegotiationManagerFactoryBean;</span><br><span class="line">import org.springframework.web.servlet.config.annotation.EnableWebMvc;</span><br><span class="line">import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;</span><br><span class="line">import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;</span><br><span class="line">import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;</span><br><span class="line">import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;</span><br><span class="line"></span><br><span class="line">@Configuration</span><br><span class="line">@EnableWebMvc</span><br><span class="line">@ComponentScan(basePackages = &quot;org.xueliang.loginsecuritybyredis&quot;)</span><br><span class="line">@PropertySource(&#123;&quot;classpath:loginsecuritybyredis.properties&quot;&#125;)</span><br><span class="line">public class WebAppConfig extends WebMvcConfigurerAdapter &#123;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 内容协商</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	@Bean</span><br><span class="line">	public ContentNegotiationManager mvcContentNegotiationManager() &#123;</span><br><span class="line">	    ContentNegotiationManagerFactoryBean contentNegotiationManagerFactoryBean = new ContentNegotiationManagerFactoryBean();</span><br><span class="line">	    contentNegotiationManagerFactoryBean.setFavorParameter(true);</span><br><span class="line">	    contentNegotiationManagerFactoryBean.setIgnoreAcceptHeader(true);</span><br><span class="line">	    contentNegotiationManagerFactoryBean.setDefaultContentType(MediaType.APPLICATION_JSON_UTF8);</span><br><span class="line">	    Properties mediaTypesProperties = new Properties();</span><br><span class="line">	    mediaTypesProperties.setProperty(&quot;json&quot;, MediaType.APPLICATION_JSON_UTF8_VALUE);</span><br><span class="line">	    contentNegotiationManagerFactoryBean.setMediaTypes(mediaTypesProperties);</span><br><span class="line">	    contentNegotiationManagerFactoryBean.afterPropertiesSet();</span><br><span class="line">		return contentNegotiationManagerFactoryBean.getObject();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	@Bean</span><br><span class="line">	public ContentNegotiatingViewResolver contentNegotiatingViewResolver(@Autowired ContentNegotiationManager mvcContentNegotiationManager) &#123;</span><br><span class="line">		ContentNegotiatingViewResolver contentNegotiatingViewResolver = new ContentNegotiatingViewResolver();</span><br><span class="line">		contentNegotiatingViewResolver.setOrder(1);</span><br><span class="line">		contentNegotiatingViewResolver.setContentNegotiationManager(mvcContentNegotiationManager);</span><br><span class="line">		return contentNegotiatingViewResolver;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 采用UTF-8编码，防止中文乱码</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	@Bean</span><br><span class="line">	public StringHttpMessageConverter stringHttpMessageConverter() &#123;</span><br><span class="line">		return new StringHttpMessageConverter(Charset.forName(&quot;UTF-8&quot;));</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	@Bean</span><br><span class="line">	public RequestMappingHandlerAdapter requestMappingHandlerAdapter(@Autowired StringHttpMessageConverter stringHttpMessageConverter) &#123;</span><br><span class="line">		RequestMappingHandlerAdapter requestMappingHandlerAdapter = new RequestMappingHandlerAdapter();</span><br><span class="line">		requestMappingHandlerAdapter.setMessageConverters(Collections.singletonList(stringHttpMessageConverter));</span><br><span class="line">		return requestMappingHandlerAdapter;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 设置欢迎页</span><br><span class="line">	 * 相当于web.xml中的 welcome-file-list &gt; welcome-file</span><br><span class="line">	 */</span><br><span class="line">	@Override</span><br><span class="line">	public void addViewControllers(ViewControllerRegistry registry) &#123;</span><br><span class="line">		registry.addRedirectViewController(&quot;/&quot;, &quot;/index.html&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="编写登录认证Api"><a href="#编写登录认证Api" class="headerlink" title="编写登录认证Api"></a>编写登录认证Api</h1><p>这里在 <code>init</code> 方法中初始化几个用户，放入 <code>USER_DATA</code> 集合，用于后续模拟登录。然后初始化 <code>jedis</code> 连接信息。<code>init</code> 方法被 <code>@PostConstruct</code> 注解，因此 <code>Spring</code> 创建该类的对象后，将自动执行其 <code>init</code> 方法，进行初始化操作。<br>然后看 <code>login</code> 方法，首先根据用户名获取最近 <code>MAX_DISABLED_SECONDS</code> 秒内失败的次数，是否超过最大限制 <code>MAX_TRY_COUNT</code>。</p>
+<p>若超过最大限制，不再对用户名和密码进行认证，直接返回认证失败提示信息，也即账户已被锁定的提示信息。</p>
+<p>否则，进行用户认证。</p>
+<p>若认证失败，将其添加到 Redis 缓存中，并设置过期默认为 <code>MAX_DISABLED_SECONDS</code>，表示从此刻起，<code>MAX_DISABLED_SECONDS</code> 秒内，该用户已登录失败 <code>count</code> 次。</p>
+<p>若Redis缓存中已存在该用户认证失败的计数信息，则刷新 <code>count</code> 值，并将旧值的剩余存活时间设置到新值上，然后返回认证失败提示信息。</p>
+<p>否则，返回认证成功提示信息。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.xueliang.loginsecuritybyredis.web.controller.api;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.annotation.PostConstruct;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestParam;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"><span class="keyword">import</span> org.xueliang.loginsecuritybyredis.web.model.JSONResponse;</span><br><span class="line"><span class="keyword">import</span> org.xueliang.loginsecuritybyredis.web.model.User;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 认证类</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> XueLiang</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2016年11月1日 下午4:11:59</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/api/auth/"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AuthApi</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;String, User&gt; USER_DATA = <span class="keyword">new</span> HashMap&lt;String, User&gt;();</span><br><span class="line">	<span class="meta">@Value</span>(<span class="string">"$&#123;auth.max_try_count&#125;"</span>)</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> MAX_TRY_COUNT = <span class="number">0</span>;</span><br><span class="line">	<span class="meta">@Value</span>(<span class="string">"$&#123;auth.max_disabled_seconds&#125;"</span>)</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> MAX_DISABLED_SECONDS = <span class="number">0</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Value</span>(<span class="string">"$&#123;redis.host&#125;"</span>)</span><br><span class="line">	<span class="keyword">private</span> String host;</span><br><span class="line">	<span class="meta">@Value</span>(<span class="string">"$&#123;redis.port&#125;"</span>)</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> port;</span><br><span class="line">	<span class="keyword">private</span> Jedis jedis;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@PostConstruct</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">			String username = <span class="string">"username"</span> + <span class="number">0</span>;</span><br><span class="line">			String password = <span class="string">"password"</span> + <span class="number">0</span>;</span><br><span class="line">			USER_DATA.put(username + <span class="string">"_"</span> + password, <span class="keyword">new</span> User(username, <span class="string">"nickname"</span> + i));</span><br><span class="line">		&#125;</span><br><span class="line">		jedis = <span class="keyword">new</span> Jedis(host, port);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@RequestMapping</span>(value = &#123;<span class="string">"login"</span>&#125;, method = RequestMethod.POST)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">login</span><span class="params">(@RequestParam(<span class="string">"username"</span>)</span> String username, @<span class="title">RequestParam</span><span class="params">(<span class="string">"password"</span>)</span> String password) </span>&#123;</span><br><span class="line">		JSONResponse jsonResponse = <span class="keyword">new</span> JSONResponse();</span><br><span class="line">		String key = username;</span><br><span class="line">		String countString = jedis.get(key);</span><br><span class="line">		<span class="keyword">boolean</span> exists = countString != <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">int</span> count = exists ? Integer.parseInt(countString) : <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">if</span> (count &gt;= MAX_TRY_COUNT) &#123;</span><br><span class="line">			checkoutMessage(key, count, jsonResponse);</span><br><span class="line">			<span class="keyword">return</span> jsonResponse.toString();</span><br><span class="line">		&#125;</span><br><span class="line">		User user = USER_DATA.get(username + <span class="string">"_"</span> + password);</span><br><span class="line">		<span class="keyword">if</span> (user == <span class="keyword">null</span>) &#123;</span><br><span class="line">			count++;</span><br><span class="line">			<span class="keyword">int</span> secondsRemain = MAX_DISABLED_SECONDS;</span><br><span class="line">			<span class="keyword">if</span> (exists &amp;&amp; count &lt; <span class="number">5</span>) &#123;</span><br><span class="line">				secondsRemain = (<span class="keyword">int</span>)(jedis.pttl(key) / <span class="number">1000</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			jedis.set(key, count + <span class="string">""</span>);</span><br><span class="line">			jedis.expire(key, secondsRemain);</span><br><span class="line">			checkoutMessage(key, count, jsonResponse);</span><br><span class="line">			<span class="keyword">return</span> jsonResponse.toString();</span><br><span class="line">		&#125;</span><br><span class="line">		count = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">if</span> (exists) &#123;</span><br><span class="line">			jedis.del(key);</span><br><span class="line">		&#125;</span><br><span class="line">		checkoutMessage(key, count, jsonResponse);</span><br><span class="line">		<span class="keyword">return</span> jsonResponse.toString();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * </span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> key</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> count 尝试次数，也可以改为从redis里直接读</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> jsonResponse</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkoutMessage</span><span class="params">(String key, <span class="keyword">int</span> count, JSONResponse jsonResponse)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (count == <span class="number">0</span>) &#123;</span><br><span class="line">			jsonResponse.setCode(<span class="number">0</span>);</span><br><span class="line">			jsonResponse.addMsg(<span class="string">"success"</span>, <span class="string">"恭喜，登录成功！"</span>);</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		jsonResponse.setCode(<span class="number">1</span>);</span><br><span class="line">		<span class="keyword">if</span> (count &gt;= MAX_TRY_COUNT) &#123;</span><br><span class="line">			<span class="keyword">long</span> pttlSeconds = jedis.pttl(key) / <span class="number">1000</span>;</span><br><span class="line">			<span class="keyword">long</span> hours = pttlSeconds / <span class="number">3600</span>;</span><br><span class="line">			<span class="keyword">long</span> sencondsRemain = pttlSeconds - hours * <span class="number">3600</span>;</span><br><span class="line">			<span class="keyword">long</span> minutes = sencondsRemain / <span class="number">60</span>;</span><br><span class="line">			<span class="keyword">long</span> seconds = sencondsRemain - minutes * <span class="number">60</span>;</span><br><span class="line">			jsonResponse.addError(<span class="string">"login_disabled"</span>, <span class="string">"登录超过"</span> + MAX_TRY_COUNT + <span class="string">"次，请"</span> + hours + <span class="string">"小时"</span> + minutes + <span class="string">"分"</span> + seconds + <span class="string">"秒后再试！"</span>);</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		jsonResponse.addError(<span class="string">"username_or_password_is_wrong"</span>, <span class="string">"密码错误，您还有 "</span> + (MAX_TRY_COUNT - count) + <span class="string">" 次机会！"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="编写前端页面"><a href="#编写前端页面" class="headerlink" title="编写前端页面"></a>编写前端页面</h1><p>页面很简单，监听表单提交事件，用 ajax 提交表单数据，然后将认证结果显示到 <code>div</code> 中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">&lt;title&gt;登录&lt;/title&gt;</span><br><span class="line">&lt;style&gt;</span><br><span class="line">  span.error &#123;</span><br><span class="line">    color: red;</span><br><span class="line">  &#125;</span><br><span class="line">  span.msg &#123;</span><br><span class="line">    color: green;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;</span><br><span class="line">  &lt;label&gt;用户名&lt;/label&gt;&lt;input type=&quot;text&quot; name=&quot;username&quot;&gt;</span><br><span class="line">  &lt;label&gt;密码&lt;/label&gt;&lt;input type=&quot;text&quot; name=&quot;password&quot;&gt;</span><br><span class="line">  &lt;button type=&quot;submit&quot;&gt;登录&lt;/button&gt;</span><br><span class="line">  &lt;div&gt;&lt;/div&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">  (function($) &#123;</span><br><span class="line">    var $ = (selector) =&gt; document.querySelector(selector);</span><br><span class="line">    var xhr = new XMLHttpRequest();</span><br><span class="line">    xhr.onreadystatechange = function() &#123;</span><br><span class="line">      if (this.readyState == 4 &amp;&amp; this.status == 200) &#123;</span><br><span class="line">        var response = JSON.parse(this.responseText);</span><br><span class="line">        var html = &apos;&apos;;</span><br><span class="line">        var msgNode = &apos;&apos;;</span><br><span class="line">        if (response.code != 0) &#123;</span><br><span class="line">          msgNode = &apos;error&apos;;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          msgNode = &apos;msg&apos;;</span><br><span class="line">        &#125;</span><br><span class="line">        for (var key in response[msgNode]) &#123;</span><br><span class="line">          html += &apos;&lt;span class=&quot;&apos; + msgNode + &apos;&quot;&gt;&apos; + response[msgNode][key] + &apos;&lt;/span&gt;&apos;;</span><br><span class="line">        &#125;</span><br><span class="line">        $(&apos;div&apos;).innerHTML = html;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    var ajax = function(formData) &#123;</span><br><span class="line">      xhr.open(&apos;POST&apos;, &apos;/api/auth/login.json&apos;, true);</span><br><span class="line">      xhr.setRequestHeader(&apos;Content-Type&apos;, &apos;application/x-www-form-urlencoded; charset=UTF-8&apos;); // 将请求头设置为表单方式提交</span><br><span class="line">      xhr.send(formData);</span><br><span class="line">    &#125;</span><br><span class="line">    $(&apos;form&apos;).addEventListener(&apos;submit&apos;, function(event) &#123;</span><br><span class="line">      event.preventDefault();</span><br><span class="line">      var formData = &apos;&apos;;</span><br><span class="line">      for (var elem of [&apos;username&apos;, &apos;password&apos;]) &#123;</span><br><span class="line">        var value = $(&apos;input[name=&quot;&apos; + elem + &apos;&quot;]&apos;).value;</span><br><span class="line">        formData += (elem + &apos;=&apos; + value + &apos;&amp;&apos;);</span><br><span class="line">      &#125;</span><br><span class="line">      ajax(formData);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;)();</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<h1 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h1><p>最后上下源码地址：<a href="https://github.com/liangzai-cool/loginsecuritybyredis" target="_blank" rel="noopener">https://github.com/liangzai-cool/loginsecuritybyredis</a></p>
+<h1 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h1><p>2016年11月29日 更新，代码优化，增加原子操作，<code>org.xueliang.loginsecuritybyredis.web.controller.api.AuthApi#login</code> 函数作如下优化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">    @RequestMapping(value = &#123;&quot;login&quot;&#125;, method = RequestMethod.POST)</span><br><span class="line">    public String login(@RequestParam(&quot;username&quot;) String username, @RequestParam(&quot;password&quot;) String password) &#123;</span><br><span class="line">        JSONResponse jsonResponse = new JSONResponse();</span><br><span class="line">        String key = username;</span><br><span class="line">        String countString = jedis.get(key);</span><br><span class="line">        boolean exists = countString != null;</span><br><span class="line">        int count = exists ? Integer.parseInt(countString) : 0;</span><br><span class="line">        if (count &gt;= MAX_TRY_COUNT) &#123;</span><br><span class="line">            checkoutMessage(key, count, jsonResponse);</span><br><span class="line">            return jsonResponse.toString();</span><br><span class="line">        &#125;</span><br><span class="line">        User user = USER_DATA.get(username + &quot;_&quot; + password);</span><br><span class="line">        if (user == null) &#123;</span><br><span class="line">            count++;</span><br><span class="line">//            int secondsRemain = MAX_DISABLED_SECONDS;</span><br><span class="line">//            if (exists &amp;&amp; count &lt; 5) &#123;</span><br><span class="line">//                secondsRemain = (int)(jedis.pttl(key) / 1000);</span><br><span class="line">//            &#125;</span><br><span class="line">//            jedis.set(key, count + &quot;&quot;);</span><br><span class="line">//            jedis.expire(key, secondsRemain);</span><br><span class="line">            if (exists) &#123;</span><br><span class="line">                jedis.incr(key);</span><br><span class="line">                if (count &gt;= MAX_TRY_COUNT) &#123;</span><br><span class="line">                    jedis.expire(key, MAX_DISABLED_SECONDS);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                jedis.set(key, count + &quot;&quot;);</span><br><span class="line">                jedis.expire(key, MAX_DISABLED_SECONDS);</span><br><span class="line">            &#125;</span><br><span class="line">            checkoutMessage(key, count, jsonResponse);</span><br><span class="line">            return jsonResponse.toString();</span><br><span class="line">        &#125;</span><br><span class="line">        count = 0;</span><br><span class="line">        if (exists) &#123;</span><br><span class="line">            jedis.del(key);</span><br><span class="line">        &#125;</span><br><span class="line">        checkoutMessage(key, count, jsonResponse);</span><br><span class="line">        return jsonResponse.toString();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h1><ul>
+<li><a href="20170302232815082">Spring MVC + Security 4 初体验（Java配置版）</a></li>
+<li><a href="20170116145848852">Java程序通过代理访问网络</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/11/解决CenOS-7下启动ActiveMQ时报错/" rel="next" title="解决CenOS 7下启动ActiveMQ时报错">
+                <i class="fa fa-chevron-left"></i> 解决CenOS 7下启动ActiveMQ时报错
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/16/Java程序通过代理访问网络/" rel="prev" title="Java程序通过代理访问网络">
+                Java程序通过代理访问网络 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">薛亮</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#构建"><span class="nav-number">1.</span> <span class="nav-text">构建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编写Java版的web-xml"><span class="nav-number">2.</span> <span class="nav-text">编写Java版的web.xml</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编写Java版的Spring配置"><span class="nav-number">3.</span> <span class="nav-text">编写Java版的Spring配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编写登录认证Api"><span class="nav-number">4.</span> <span class="nav-text">编写登录认证Api</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编写前端页面"><span class="nav-number">5.</span> <span class="nav-text">编写前端页面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源码"><span class="nav-number">6.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#更新"><span class="nav-number">7.</span> <span class="nav-text">更新</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关文章"><span class="nav-number">8.</span> <span class="nav-text">相关文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">薛亮</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

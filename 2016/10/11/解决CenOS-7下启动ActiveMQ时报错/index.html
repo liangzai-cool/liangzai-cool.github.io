@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="基于 CentOS 7，ActiveMQ 5.9.1  问题重现在 CentOS 7 下安装好ActiveMQ后，执行 /usr/local/apache-activemq-5.9.1/bin/activemq start 启动 ActiveMQ，显示：  INFO: Using default configuration(you can configure options in one of">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决CenOS 7下启动ActiveMQ时报错">
+<meta property="og:url" content="http://blog.xueliang.org/2016/10/11/解决CenOS-7下启动ActiveMQ时报错/index.html">
+<meta property="og:site_name" content="薛亮的主页">
+<meta property="og:description" content="基于 CentOS 7，ActiveMQ 5.9.1  问题重现在 CentOS 7 下安装好ActiveMQ后，执行 /usr/local/apache-activemq-5.9.1/bin/activemq start 启动 ActiveMQ，显示：  INFO: Using default configuration(you can configure options in one of">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-30T02:43:32.734Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="解决CenOS 7下启动ActiveMQ时报错">
+<meta name="twitter:description" content="基于 CentOS 7，ActiveMQ 5.9.1  问题重现在 CentOS 7 下安装好ActiveMQ后，执行 /usr/local/apache-activemq-5.9.1/bin/activemq start 启动 ActiveMQ，显示：  INFO: Using default configuration(you can configure options in one of">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.xueliang.org/2016/10/11/解决CenOS-7下启动ActiveMQ时报错/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>解决CenOS 7下启动ActiveMQ时报错 | 薛亮的主页</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">薛亮的主页</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2016/10/11/解决CenOS-7下启动ActiveMQ时报错/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="薛亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="薛亮的主页">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">解决CenOS 7下启动ActiveMQ时报错
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-10-11 18:43:06" itemprop="dateCreated datePublished" datetime="2016-10-11T18:43:06+08:00">2016-10-11</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-30 10:43:32" itemprop="dateModified" datetime="2018-11-30T10:43:32+08:00">2018-11-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>基于 CentOS 7，ActiveMQ 5.9.1</p>
+</blockquote>
+<h1 id="问题重现"><a href="#问题重现" class="headerlink" title="问题重现"></a>问题重现</h1><p>在 CentOS 7 下安装好ActiveMQ后，执行 <code>/usr/local/apache-activemq-5.9.1/bin/activemq start</code> 启动 ActiveMQ，显示：</p>
+<blockquote>
+<p>INFO: Using default configuration<br>(you can configure options in one of these file: /etc/default/activemq /home/xueliang/.activemqrc)</p>
+</blockquote>
+<blockquote>
+<p>INFO: Invoke the following command to create a configuration file<br>/usr/local/apache-activemq-5.9.1/bin/activemq setup [ /etc/default/activemq | /home/xueliang/.activemqrc ]</p>
+</blockquote>
+<blockquote>
+<p>INFO: Using java ‘/usr/local/java/jdk1.8.0_101/bin/java’<br>INFO: Starting - inspect logfiles specified in logging.properties and log4j.properties to get details<br>INFO: pidfile created : ‘/usr/local/apache-activemq-5.9.1/data/activemq-server2.pid’ (pid ‘24484’)</p>
+</blockquote>
+<p>从提示信息看，似乎启动成功，但根据提示信息中的 <code>pid</code> 查找进程时，却发现并无此进程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -eLf | grep 24484</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>[xueliang@server2 ~]\$ ps -eLf | grep 24484<br>xueliang 24520 23462 24520  0    1 00:52 pts/2    00:00:00 grep –color=auto 24484<br>[xueliang@server2 ~]\$</p>
+</blockquote>
+<h1 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h1><p>一个好的软件，总能在错误发生时告诉你如何解决。<br>执行 <code>cat /usr/local/apache-activemq-5.9.1/data/activemq.log</code> 看一下日志信息：</p>
+<blockquote>
+<p>2016-10-12 02:04:09,053 | INFO  | Refreshing org.apache.activemq.xbean.XBeanBrokerFactory\$1@13c78c0b: startup date [Wed Oct 12 02:04:09 CST 2016]; root of context hierarchy | org.apache.activemq.xbean.XBeanBrokerFactory\$1 | main<br>2016-10-12 02:04:10,498 | INFO  | PListStore:[/usr/local/apache-activemq-5.9.1/data/localhost/tmp_storage] started | org.apache.activemq.store.kahadb.plist.PListStoreImpl | main<br>2016-10-12 02:04:10,512 | INFO  | Using Persistence Adapter: KahaDBPersistenceAdapter[/usr/local/apache-activemq-5.9.1/data/kahadb] | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:04:10,683 | INFO  | KahaDB is version 5 | org.apache.activemq.store.kahadb.MessageDatabase | main<br>2016-10-12 02:04:10,746 | INFO  | Recovering from the journal … | org.apache.activemq.store.kahadb.MessageDatabase | main<br>2016-10-12 02:04:10,757 | INFO  | Recovery replayed 332 operations from the journal in 0.071 seconds. | org.apache.activemq.store.kahadb.MessageDatabase | main<br>2016-10-12 02:04:10,955 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-35685-1476209050769-0:1) is starting | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:04:10,969 | ERROR | Failed to start Apache ActiveMQ ([localhost, ID:server2-35685-1476209050769-0:1], java.io.IOException: Transport Connector could not be registered in JMX: Failed to bind to server socket: tcp://0.0.0.0:61616?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600 due to: java.net.BindException: Address already in use) | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:04:10,970 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-35685-1476209050769-0:1) is shutting down | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:04:10,970 | INFO  | Connector openwire stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:04:10,970 | INFO  | Connector amqp stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:04:10,970 | INFO  | Connector stomp stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:04:10,970 | INFO  | Connector mqtt stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:04:10,970 | INFO  | Connector ws stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:04:10,973 | INFO  | PListStore:[/usr/local/apache-activemq-5.9.1/data/localhost/tmp_storage] stopped | org.apache.activemq.store.kahadb.plist.PListStoreImpl | main<br>2016-10-12 02:04:10,973 | INFO  | Stopping async queue tasks | org.apache.activemq.store.kahadb.KahaDBStore | main<br>2016-10-12 02:04:10,973 | INFO  | Stopping async topic tasks | org.apache.activemq.store.kahadb.KahaDBStore | main<br>2016-10-12 02:04:10,974 | INFO  | Stopped KahaDB | org.apache.activemq.store.kahadb.KahaDBStore | main<br>2016-10-12 02:04:11,193 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-35685-1476209050769-0:1) uptime 0.691 seconds | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:04:11,193 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-35685-1476209050769-0:1) is shutdown | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:04:11,193 | INFO  | Closing org.apache.activemq.xbean.XBeanBrokerFactory\$1@13c78c0b: startup date [Wed Oct 12 02:04:09 CST 2016]; root of context hierarchy | org.apache.activemq.xbean.XBeanBrokerFactory\$1 | main<br>2016-10-12 02:04:11,194 | WARN  | Exception thrown from LifecycleProcessor on context close | org.apache.activemq.xbean.XBeanBrokerFactory\$1 | main<br>java.lang.IllegalStateException: LifecycleProcessor not initialized - call ‘refresh’ before invoking lifecycle methods via the context: org.apache.activemq.xbean.XBeanBrokerFactory\$1@13c78c0b: startup date [Wed Oct 12 02:04:09 CST 2016]; root of context hierarchy<br>    at org.springframework.context.support.AbstractApplicationContext.getLifecycleProcessor(AbstractApplicationContext.java:360)<br>    at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1057)<br>    at org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:1010)<br>    at org.apache.activemq.hooks.SpringContextHook.run(SpringContextHook.java:30)<br>    at org.apache.activemq.broker.BrokerService.stop(BrokerService.java:809)<br>    at org.apache.activemq.xbean.XBeanBrokerService.stop(XBeanBrokerService.java:122)<br>    at org.apache.activemq.broker.BrokerService.start(BrokerService.java:601)<br>    at org.apache.activemq.xbean.XBeanBrokerService.afterPropertiesSet(XBeanBrokerService.java:73)<br>    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br>    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)<br>    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)<br>    at java.lang.reflect.Method.invoke(Method.java:498)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeCustomInitMethod(AbstractAutowireCapableBeanFactory.java:1638)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1579)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1509)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:521)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:458)<br>    at org.springframework.beans.factory.support.AbstractBeanFactory\$1.getObject(AbstractBeanFactory.java:296)<br>    at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:223)<br>    at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:293)<br>    at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:194)<br>    at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:628)<br>    at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:932)<br>    at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:479)<br>    at org.apache.xbean.spring.context.ResourceXmlApplicationContext.<init>(ResourceXmlApplicationContext.java:64)<br>    at org.apache.xbean.spring.context.ResourceXmlApplicationContext.<init>(ResourceXmlApplicationContext.java:52)<br>    at org.apache.activemq.xbean.XBeanBrokerFactory\$1.<init>(XBeanBrokerFactory.java:104)<br>    at org.apache.activemq.xbean.XBeanBrokerFactory.createApplicationContext(XBeanBrokerFactory.java:104)<br>    at org.apache.activemq.xbean.XBeanBrokerFactory.createBroker(XBeanBrokerFactory.java:67)<br>    at org.apache.activemq.broker.BrokerFactory.createBroker(BrokerFactory.java:71)<br>    at org.apache.activemq.broker.BrokerFactory.createBroker(BrokerFactory.java:54)<br>    at org.apache.activemq.console.command.StartCommand.runTask(StartCommand.java:87)<br>    at org.apache.activemq.console.command.AbstractCommand.execute(AbstractCommand.java:57)<br>    at org.apache.activemq.console.command.ShellCommand.runTask(ShellCommand.java:150)<br>    at org.apache.activemq.console.command.AbstractCommand.execute(AbstractCommand.java:57)<br>    at org.apache.activemq.console.command.ShellCommand.main(ShellCommand.java:104)<br>    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br>    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)<br>    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)<br>    at java.lang.reflect.Method.invoke(Method.java:498)<br>    at org.apache.activemq.console.Main.runTaskClass(Main.java:262)<br>    at org.apache.activemq.console.Main.main(Main.java:115)<br>2016-10-12 02:04:30,534 | INFO  | Refreshing org.apache.activemq.xbean.XBeanBrokerFactory\$1@13c78c0b: startup date [Wed Oct 12 02:04:30 CST 2016]; root of context hierarchy | org.apache.activemq.xbean.XBeanBrokerFactory\$1 | main<br>2016-10-12 02:04:31,297 | INFO  | PListStore:[/usr/local/apache-activemq-5.9.1/data/localhost/tmp_storage] started | org.apache.activemq.store.kahadb.plist.PListStoreImpl | main<br>2016-10-12 02:04:31,311 | INFO  | Using Persistence Adapter: KahaDBPersistenceAdapter[/usr/local/apache-activemq-5.9.1/data/kahadb] | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:04:31,472 | INFO  | KahaDB is version 5 | org.apache.activemq.store.kahadb.MessageDatabase | main<br>2016-10-12 02:04:31,530 | INFO  | Recovering from the journal … | org.apache.activemq.store.kahadb.MessageDatabase | main<br>2016-10-12 02:04:31,543 | INFO  | Recovery replayed 334 operations from the journal in 0.068 seconds. | org.apache.activemq.store.kahadb.MessageDatabase | main<br>2016-10-12 02:04:31,680 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-52293-1476209071560-0:1) is starting | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:04:31,695 | ERROR | Failed to start Apache ActiveMQ ([localhost, ID:server2-52293-1476209071560-0:1], java.io.IOException: Transport Connector could not be registered in JMX: Failed to bind to server socket: tcp://0.0.0.0:61616?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600 due to: java.net.BindException: Address already in use) | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:04:31,695 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-52293-1476209071560-0:1) is shutting down | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:04:31,696 | INFO  | Connector openwire stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:04:31,696 | INFO  | Connector amqp stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:04:31,696 | INFO  | Connector stomp stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:04:31,696 | INFO  | Connector mqtt stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:04:31,696 | INFO  | Connector ws stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:04:31,699 | INFO  | PListStore:[/usr/local/apache-activemq-5.9.1/data/localhost/tmp_storage] stopped | org.apache.activemq.store.kahadb.plist.PListStoreImpl | main<br>2016-10-12 02:04:31,699 | INFO  | Stopping async queue tasks | org.apache.activemq.store.kahadb.KahaDBStore | main<br>2016-10-12 02:04:31,699 | INFO  | Stopping async topic tasks | org.apache.activemq.store.kahadb.KahaDBStore | main<br>2016-10-12 02:04:31,700 | INFO  | Stopped KahaDB | org.apache.activemq.store.kahadb.KahaDBStore | main<br>2016-10-12 02:04:31,984 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-52293-1476209071560-0:1) uptime 0.682 seconds | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:04:31,984 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-52293-1476209071560-0:1) is shutdown | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:04:31,984 | INFO  | Closing org.apache.activemq.xbean.XBeanBrokerFactory\$1@13c78c0b: startup date [Wed Oct 12 02:04:30 CST 2016]; root of context hierarchy | org.apache.activemq.xbean.XBeanBrokerFactory\$1 | main<br>2016-10-12 02:04:31,985 | WARN  | Exception thrown from LifecycleProcessor on context close | org.apache.activemq.xbean.XBeanBrokerFactory\$1 | main<br>java.lang.IllegalStateException: LifecycleProcessor not initialized - call ‘refresh’ before invoking lifecycle methods via the context: org.apache.activemq.xbean.XBeanBrokerFactory\$1@13c78c0b: startup date [Wed Oct 12 02:04:30 CST 2016]; root of context hierarchy<br>    at org.springframework.context.support.AbstractApplicationContext.getLifecycleProcessor(AbstractApplicationContext.java:360)<br>    at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1057)<br>    at org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:1010)<br>    at org.apache.activemq.hooks.SpringContextHook.run(SpringContextHook.java:30)<br>    at org.apache.activemq.broker.BrokerService.stop(BrokerService.java:809)<br>    at org.apache.activemq.xbean.XBeanBrokerService.stop(XBeanBrokerService.java:122)<br>    at org.apache.activemq.broker.BrokerService.start(BrokerService.java:601)<br>    at org.apache.activemq.xbean.XBeanBrokerService.afterPropertiesSet(XBeanBrokerService.java:73)<br>    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br>    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)<br>    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)<br>    at java.lang.reflect.Method.invoke(Method.java:498)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeCustomInitMethod(AbstractAutowireCapableBeanFactory.java:1638)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1579)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1509)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:521)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:458)<br>    at org.springframework.beans.factory.support.AbstractBeanFactory\$1.getObject(AbstractBeanFactory.java:296)<br>    at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:223)<br>    at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:293)<br>    at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:194)<br>    at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:628)<br>    at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:932)<br>    at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:479)<br>    at org.apache.xbean.spring.context.ResourceXmlApplicationContext.<init>(ResourceXmlApplicationContext.java:64)<br>    at org.apache.xbean.spring.context.ResourceXmlApplicationContext.<init>(ResourceXmlApplicationContext.java:52)<br>    at org.apache.activemq.xbean.XBeanBrokerFactory\$1.<init>(XBeanBrokerFactory.java:104)<br>    at org.apache.activemq.xbean.XBeanBrokerFactory.createApplicationContext(XBeanBrokerFactory.java:104)<br>    at org.apache.activemq.xbean.XBeanBrokerFactory.createBroker(XBeanBrokerFactory.java:67)<br>    at org.apache.activemq.broker.BrokerFactory.createBroker(BrokerFactory.java:71)<br>    at org.apache.activemq.broker.BrokerFactory.createBroker(BrokerFactory.java:54)<br>    at org.apache.activemq.console.command.StartCommand.runTask(StartCommand.java:87)<br>    at org.apache.activemq.console.command.AbstractCommand.execute(AbstractCommand.java:57)<br>    at org.apache.activemq.console.command.ShellCommand.runTask(ShellCommand.java:150)<br>    at org.apache.activemq.console.command.AbstractCommand.execute(AbstractCommand.java:57)<br>    at org.apache.activemq.console.command.ShellCommand.main(ShellCommand.java:104)<br>    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br>    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)<br>    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)<br>    at java.lang.reflect.Method.invoke(Method.java:498)<br>    at org.apache.activemq.console.Main.runTaskClass(Main.java:262)<br>    at org.apache.activemq.console.Main.main(Main.java:115)<br>2016-10-12 02:07:32,656 | INFO  | Refreshing org.apache.activemq.xbean.XBeanBrokerFactory\$1@13c78c0b: startup date [Wed Oct 12 02:07:32 CST 2016]; root of context hierarchy | org.apache.activemq.xbean.XBeanBrokerFactory\$1 | main<br>2016-10-12 02:07:33,326 | INFO  | PListStore:[/usr/local/apache-activemq-5.9.1/data/localhost/tmp_storage] started | org.apache.activemq.store.kahadb.plist.PListStoreImpl | main<br>2016-10-12 02:07:33,343 | INFO  | Using Persistence Adapter: KahaDBPersistenceAdapter[/usr/local/apache-activemq-5.9.1/data/kahadb] | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:07:33,528 | INFO  | KahaDB is version 5 | org.apache.activemq.store.kahadb.MessageDatabase | main<br>2016-10-12 02:07:33,587 | INFO  | Recovering from the journal … | org.apache.activemq.store.kahadb.MessageDatabase | main<br>2016-10-12 02:07:33,602 | INFO  | Recovery replayed 336 operations from the journal in 0.071 seconds. | org.apache.activemq.store.kahadb.MessageDatabase | main<br>2016-10-12 02:07:33,740 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-53098-1476209253622-0:1) is starting | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:07:33,749 | ERROR | Failed to start Apache ActiveMQ ([localhost, ID:server2-53098-1476209253622-0:1], java.io.IOException: Transport Connector could not be registered in JMX: Failed to bind to server socket: tcp://0.0.0.0:61616?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600 due to: java.net.BindException: Address already in use) | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:07:33,750 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-53098-1476209253622-0:1) is shutting down | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:07:33,750 | INFO  | Connector openwire stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:07:33,750 | INFO  | Connector amqp stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:07:33,750 | INFO  | Connector stomp stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:07:33,750 | INFO  | Connector mqtt stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:07:33,750 | INFO  | Connector ws stopped | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 02:07:33,752 | INFO  | PListStore:[/usr/local/apache-activemq-5.9.1/data/localhost/tmp_storage] stopped | org.apache.activemq.store.kahadb.plist.PListStoreImpl | main<br>2016-10-12 02:07:33,753 | INFO  | Stopping async queue tasks | org.apache.activemq.store.kahadb.KahaDBStore | main<br>2016-10-12 02:07:33,753 | INFO  | Stopping async topic tasks | org.apache.activemq.store.kahadb.KahaDBStore | main<br>2016-10-12 02:07:33,753 | INFO  | Stopped KahaDB | org.apache.activemq.store.kahadb.KahaDBStore | main<br>2016-10-12 02:07:34,039 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-53098-1476209253622-0:1) uptime 0.710 seconds | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:07:34,039 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-53098-1476209253622-0:1) is shutdown | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 02:07:34,040 | INFO  | Closing org.apache.activemq.xbean.XBeanBrokerFactory\$1@13c78c0b: startup date [Wed Oct 12 02:07:32 CST 2016]; root of context hierarchy | org.apache.activemq.xbean.XBeanBrokerFactory\$1 | main<br>2016-10-12 02:07:34,041 | WARN  | Exception thrown from LifecycleProcessor on context close | org.apache.activemq.xbean.XBeanBrokerFactory\$1 | main<br>java.lang.IllegalStateException: LifecycleProcessor not initialized - call ‘refresh’ before invoking lifecycle methods via the context: org.apache.activemq.xbean.XBeanBrokerFactory\$1@13c78c0b: startup date [Wed Oct 12 02:07:32 CST 2016]; root of context hierarchy<br>    at org.springframework.context.support.AbstractApplicationContext.getLifecycleProcessor(AbstractApplicationContext.java:360)<br>    at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:1057)<br>    at org.springframework.context.support.AbstractApplicationContext.close(AbstractApplicationContext.java:1010)<br>    at org.apache.activemq.hooks.SpringContextHook.run(SpringContextHook.java:30)<br>    at org.apache.activemq.broker.BrokerService.stop(BrokerService.java:809)<br>    at org.apache.activemq.xbean.XBeanBrokerService.stop(XBeanBrokerService.java:122)<br>    at org.apache.activemq.broker.BrokerService.start(BrokerService.java:601)<br>    at org.apache.activemq.xbean.XBeanBrokerService.afterPropertiesSet(XBeanBrokerService.java:73)<br>    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br>    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)<br>    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)<br>    at java.lang.reflect.Method.invoke(Method.java:498)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeCustomInitMethod(AbstractAutowireCapableBeanFactory.java:1638)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1579)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1509)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:521)<br>    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:458)<br>    at org.springframework.beans.factory.support.AbstractBeanFactory\$1.getObject(AbstractBeanFactory.java:296)<br>    at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:223)<br>    at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:293)<br>    at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:194)<br>    at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:628)<br>    at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:932)<br>    at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:479)<br>    at org.apache.xbean.spring.context.ResourceXmlApplicationContext.<init>(ResourceXmlApplicationContext.java:64)<br>    at org.apache.xbean.spring.context.ResourceXmlApplicationContext.<init>(ResourceXmlApplicationContext.java:52)<br>    at org.apache.activemq.xbean.XBeanBrokerFactory\$1.<init>(XBeanBrokerFactory.java:104)<br>    at org.apache.activemq.xbean.XBeanBrokerFactory.createApplicationContext(XBeanBrokerFactory.java:104)<br>    at org.apache.activemq.xbean.XBeanBrokerFactory.createBroker(XBeanBrokerFactory.java:67)<br>    at org.apache.activemq.broker.BrokerFactory.createBroker(BrokerFactory.java:71)<br>    at org.apache.activemq.broker.BrokerFactory.createBroker(BrokerFactory.java:54)<br>    at org.apache.activemq.console.command.StartCommand.runTask(StartCommand.java:87)<br>    at org.apache.activemq.console.command.AbstractCommand.execute(AbstractCommand.java:57)<br>    at org.apache.activemq.console.command.ShellCommand.runTask(ShellCommand.java:150)<br>    at org.apache.activemq.console.command.AbstractCommand.execute(AbstractCommand.java:57)<br>    at org.apache.activemq.console.command.ShellCommand.main(ShellCommand.java:104)<br>    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br>    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)<br>    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)<br>    at java.lang.reflect.Method.invoke(Method.java:498)<br>    at org.apache.activemq.console.Main.runTaskClass(Main.java:262)<br>    at org.apache.activemq.console.Main.main(Main.java:115)</init></init></init></init></init></init></init></init></init></p>
+</blockquote>
+<p>刚开始把精力留在了最后一个 <code>WARN</code> 处，即：</p>
+<blockquote>
+<p>2016-10-12 01:08:54,001 | WARN  | Exception thrown from LifecycleProcessor on context close | org.apache.activemq.xbean.XBeanBrokerFactory\$1 | main<br>java.lang.IllegalStateException: LifecycleProcessor not initialized - call ‘refresh’ before invoking lifecycle methods via the context: org.apache.activemq.xbean.XBeanBrokerFactory\$1@13c78c0b: startup date [Wed Oct 12 01:08:52 CST 2016]; root of context hierarchy</p>
+</blockquote>
+<p>Google 了很久，问题并没有解决，其实问题在上面第一个 <code>ERROR</code> 处，即：</p>
+<blockquote>
+<p>2016-10-12 01:08:53,602 | ERROR | Failed to start Apache ActiveMQ ([localhost, ID:server2-43498-1476205733474-0:1], java.io.IOException: Transport Connector could not be registered in JMX: Failed to bind to server socket: tcp://0.0.0.0:61616?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600 due to: java.net.BindException: Address already in use) | org.apache.activemq.broker.BrokerService | main</p>
+</blockquote>
+<p>从提示信息中的 <code>due to: java.net.BindException: Address already in use</code> 可以看到是端口 <code>61616</code> 被占用了。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>既然问题找到了，也就知道怎么解决。<br>使用 <code>netstat -anp | grep 61616</code> 查看是哪个程序占用了 <code>61616</code> 端口：</p>
+<blockquote>
+<p>[xueliang@server2 ~]\$ netstat -anp | grep 61616<br>(Not all processes could be identified, non-owned process info<br> will not be shown, you would have to be root to see it all.)<br>tcp6       0      0 :::61616                :::*                    LISTEN      10738/java<br>[xueliang@server2 ~]\$</p>
+</blockquote>
+<p>可以看出 <code>PID</code> 是 <code>10738</code>，可以确定的是该进程可以直接执行以下命令终止掉：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill 10738</span><br></pre></td></tr></table></figure></p>
+<p>再次执行 <code>netstat -anp | grep 61616</code> 可以看到刚才占用端口程序已经终止运行了。<br>再次启动 ActiveMQ，并查看日志信息：</p>
+<blockquote>
+<p>[xueliang@server2 ~]\$ cat /usr/local/apache-activemq-5.9.1/data/activemq.log<br>2016-10-12 01:35:56,610 | INFO  | Refreshing org.apache.activemq.xbean.XBeanBrokerFactory\$1@13c78c0b: startup date [Wed Oct 12 01:35:56 CST 2016]; root of context hierarchy | org.apache.activemq.xbean.XBeanBrokerFactory\$1 | main<br>2016-10-12 01:35:57,423 | INFO  | PListStore:[/usr/local/apache-activemq-5.9.1/data/localhost/tmp_storage] started | org.apache.activemq.store.kahadb.plist.PListStoreImpl | main<br>2016-10-12 01:35:57,436 | INFO  | Using Persistence Adapter: KahaDBPersistenceAdapter[/usr/local/apache-activemq-5.9.1/data/kahadb] | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 01:35:57,593 | INFO  | KahaDB is version 5 | org.apache.activemq.store.kahadb.MessageDatabase | main<br>2016-10-12 01:35:57,716 | INFO  | Recovering from the journal … | org.apache.activemq.store.kahadb.MessageDatabase | main<br>2016-10-12 01:35:57,717 | INFO  | Recovery replayed 1 operations from the journal in 0.121 seconds. | org.apache.activemq.store.kahadb.MessageDatabase | main<br>2016-10-12 01:35:57,844 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-47815-1476207357729-0:1) is starting | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 01:35:57,855 | INFO  | Listening for connections at: tcp://server2:61616?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.TransportServerThreadSupport | main<br>2016-10-12 01:35:57,855 | INFO  | Connector openwire started | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 01:35:57,857 | INFO  | Listening for connections at: amqp://server2:5672?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.TransportServerThreadSupport | main<br>2016-10-12 01:35:57,857 | INFO  | Connector amqp started | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 01:35:57,859 | INFO  | Listening for connections at: stomp://server2:61613?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.TransportServerThreadSupport | main<br>2016-10-12 01:35:57,862 | INFO  | Connector stomp started | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 01:35:57,864 | INFO  | Listening for connections at: mqtt://server2:1883?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.TransportServerThreadSupport | main<br>2016-10-12 01:35:57,864 | INFO  | Connector mqtt started | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 01:35:58,018 | INFO  | Listening for connections at ws://server2:61614?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.ws.WSTransportServer | main<br>2016-10-12 01:35:58,019 | INFO  | Connector ws started | org.apache.activemq.broker.TransportConnector | main<br>2016-10-12 01:35:58,048 | INFO  | Apache ActiveMQ 5.9.1 (localhost, ID:server2-47815-1476207357729-0:1) started | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 01:35:58,048 | INFO  | For help or more information please see: <a href="http://activemq.apache.org" target="_blank" rel="noopener">http://activemq.apache.org</a> | org.apache.activemq.broker.BrokerService | main<br>2016-10-12 01:35:58,536 | INFO  | ActiveMQ WebConsole available at <a href="http://localhost:8161/" target="_blank" rel="noopener">http://localhost:8161/</a> | org.apache.activemq.web.WebConsoleStarter | main<br>2016-10-12 01:35:58,741 | INFO  | Initializing Spring FrameworkServlet ‘dispatcher’ | /admin | main<br>2016-10-12 01:36:01,077 | INFO  | jolokia-agent: No access restrictor found at classpath:/jolokia-access.xml, access to all MBeans is allowed | /api | main<br>[xueliang@server2 ~]\$</p>
+</blockquote>
+<p>可以看到已经没有了错误信息，ActiveMQ 正常启动。</p>
+<h1 id="其他可能导致启动失败的原因"><a href="#其他可能导致启动失败的原因" class="headerlink" title="其他可能导致启动失败的原因"></a>其他可能导致启动失败的原因</h1><p>在查找问题原因的过程中，发现一些其他可能导致 ActiveMQ 启动失败的原因：</p>
+<ol>
+<li>主机名包含下划线，相关链接：<a href="http://stackoverflow.com/a/21255931/5122380" target="_blank" rel="noopener">http://stackoverflow.com/a/21255931/5122380</a></li>
+<li>将 <code>conf/activemq.xml</code> 文件中 <code>transportConnectors/transportConnector</code> <code>uri</code> 属性中的 <code>0.0.0.0</code> 替换成你主机的域名，或者 <code>127.0.0.1</code> ，形如：<blockquote>
+<p>&lt;transportConnectors&gt;</p>
+<pre><code>    &amp;lt;!-- DOS protection, limit concurrent connections to 1000 and frame size to 100MB --&amp;gt;
+    &amp;lt;transportConnector name=&quot;openwire&quot; uri=&quot;tcp://127.0.0.1:61616?maximumConnections=1000&amp;amp;wireFormat.maxFrameSize=104857600&quot;/&amp;gt;
+&amp;lt;/transportConnectors&amp;gt;
+</code></pre></blockquote>
+</li>
+</ol>
+<p>相关链接：<a href="http://stackoverflow.com/a/25039610/5122380" target="_blank" rel="noopener">http://stackoverflow.com/a/25039610/5122380</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/25/WinSCP-中普通用户以-root-身份登录-Linux/" rel="next" title="WinSCP 中普通用户以 root 身份登录 Linux">
+                <i class="fa fa-chevron-left"></i> WinSCP 中普通用户以 root 身份登录 Linux
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/02/Spring-RESTful-Redis全注解实现恶意登录保护机制/" rel="prev" title="Spring RESTful + Redis全注解实现恶意登录保护机制">
+                Spring RESTful + Redis全注解实现恶意登录保护机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">薛亮</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题重现"><span class="nav-number">1.</span> <span class="nav-text">问题重现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题原因"><span class="nav-number">2.</span> <span class="nav-text">问题原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决方案"><span class="nav-number">3.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他可能导致启动失败的原因"><span class="nav-number">4.</span> <span class="nav-text">其他可能导致启动失败的原因</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">薛亮</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

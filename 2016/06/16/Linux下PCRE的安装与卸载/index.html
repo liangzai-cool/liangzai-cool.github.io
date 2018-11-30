@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="系统基于ubuntu server 14.04.4 amd64，即Ubuntu系统的服务器版本，基本适用于桌面版  安装第一步 到PCRE官网下载PCRE的压缩包，并解压PCRE官网首页找到下载页面链接： 这里我们选择PCRE1的最新版(8.39)，右键复制链接地址： 在Linux中使用wget命令下载，执行如下命令开始下载：1wget ftp://ftp.csx.cam.ac.uk/pub/s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux下PCRE的安装与卸载">
+<meta property="og:url" content="http://blog.xueliang.org/2016/06/16/Linux下PCRE的安装与卸载/index.html">
+<meta property="og:site_name" content="薛亮的主页">
+<meta property="og:description" content="系统基于ubuntu server 14.04.4 amd64，即Ubuntu系统的服务器版本，基本适用于桌面版  安装第一步 到PCRE官网下载PCRE的压缩包，并解压PCRE官网首页找到下载页面链接： 这里我们选择PCRE1的最新版(8.39)，右键复制链接地址： 在Linux中使用wget命令下载，执行如下命令开始下载：1wget ftp://ftp.csx.cam.ac.uk/pub/s">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://image.xueliang.org/Fhv5I0f2oQ8T76vFuIGGXq0EUT7x">
+<meta property="og:image" content="http://image.xueliang.org/FoOmvLTP6j-E-lFYrAjtTEhDd1WU">
+<meta property="og:updated_time" content="2018-11-30T02:43:32.701Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux下PCRE的安装与卸载">
+<meta name="twitter:description" content="系统基于ubuntu server 14.04.4 amd64，即Ubuntu系统的服务器版本，基本适用于桌面版  安装第一步 到PCRE官网下载PCRE的压缩包，并解压PCRE官网首页找到下载页面链接： 这里我们选择PCRE1的最新版(8.39)，右键复制链接地址： 在Linux中使用wget命令下载，执行如下命令开始下载：1wget ftp://ftp.csx.cam.ac.uk/pub/s">
+<meta name="twitter:image" content="http://image.xueliang.org/Fhv5I0f2oQ8T76vFuIGGXq0EUT7x">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.xueliang.org/2016/06/16/Linux下PCRE的安装与卸载/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Linux下PCRE的安装与卸载 | 薛亮的主页</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">薛亮的主页</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2016/06/16/Linux下PCRE的安装与卸载/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="薛亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="薛亮的主页">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux下PCRE的安装与卸载
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-06-16 15:45:42" itemprop="dateCreated datePublished" datetime="2016-06-16T15:45:42+08:00">2016-06-16</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-30 10:43:32" itemprop="dateModified" datetime="2018-11-30T10:43:32+08:00">2018-11-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>系统基于<code>ubuntu server 14.04.4 amd64</code>，即Ubuntu系统的服务器版本，基本适用于桌面版</p>
+</blockquote>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="第一步-到PCRE官网下载PCRE的压缩包，并解压"><a href="#第一步-到PCRE官网下载PCRE的压缩包，并解压" class="headerlink" title="第一步 到PCRE官网下载PCRE的压缩包，并解压"></a>第一步 到PCRE官网下载PCRE的压缩包，并解压</h2><p>PCRE<a href="http://pcre.org/" target="_blank" rel="noopener">官网</a>首页找到下载页面链接：<br><img src="http://image.xueliang.org/Fhv5I0f2oQ8T76vFuIGGXq0EUT7x" alt="图片加载中..."></p>
+<p>这里我们选择PCRE1的最新版(8.39)，右键复制链接地址：<br><img src="http://image.xueliang.org/FoOmvLTP6j-E-lFYrAjtTEhDd1WU" alt="图片加载中..."></p>
+<p>在Linux中使用<code>wget</code>命令下载，执行如下命令开始下载：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.39.tar.gz</span><br></pre></td></tr></table></figure></p>
+<p>解压：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf pcre-8.39.tar.gz</span><br></pre></td></tr></table></figure></p>
+<h2 id="第二步-进行安装"><a href="#第二步-进行安装" class="headerlink" title="第二步 进行安装"></a>第二步 进行安装</h2><p>进入PCRE的解压目录，开始安装，安装过程比较简单，依次执行下面几条命令即可：</p>
+<p>配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure</span><br></pre></td></tr></table></figure></p>
+<p><strong>注意</strong>：<br>(1) 如果之前没有安装C compiler（C 编译器），这一步将报如下错误信息：</p>
+<blockquote>
+<p>configure: error: in `/home/xueliang/download/pcre-8.39’:<br>configure: error: no acceptable C compiler found in \$PATH<br>See `config.log’ for more details<br>xueliang@dev:~/download/pcre-8.39$</p>
+</blockquote>
+<p>可以参考<a href="20160616165344843">这篇文章</a>安装C compiler，然后继续下面的操作</p>
+<p>(2) 如果之前没有安装C++ compiler（C++ 编译器），这一步将报如下错误信息：</p>
+<blockquote>
+<p>configure: error: You need a C++ compiler for C++ support.<br>xueliang@dev:~/download/pcre-8.39\$</p>
+</blockquote>
+<p>可以参考<a href="20160617002054126">这篇文章</a>安装C++ compiler，然后继续下面的操作</p>
+<p>编译：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure></p>
+<p>如果之前没有安装<code>make</code>命令，这一步将报如下错误信息：</p>
+<blockquote>
+<p>xueliang@dev:~/download\$ make<br>The program ‘make’ is currently not installed. You can install it by typing:<br>sudo apt-get install make<br>xueliang@dev:~/download\$</p>
+</blockquote>
+<p>可以参考<a href="20160616235014273">这篇文章</a>安装<code>make</code>命令，然后继续下面的操作</p>
+<p>对编译结果进行测试：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make test</span><br></pre></td></tr></table></figure></p>
+<p>如果编译无误，会得到如下信息：</p>
+<blockquote>
+<h1 id="Testsuite-summary-for-PCRE-8-39"><a href="#Testsuite-summary-for-PCRE-8-39" class="headerlink" title="Testsuite summary for PCRE 8.39"></a>Testsuite summary for PCRE 8.39</h1></blockquote>
+<h1 id="TOTAL-5"><a href="#TOTAL-5" class="headerlink" title="TOTAL: 5"></a>TOTAL: 5</h1><h1 id="PASS-5"><a href="#PASS-5" class="headerlink" title="PASS:  5"></a>PASS:  5</h1><h1 id="SKIP-0"><a href="#SKIP-0" class="headerlink" title="SKIP:  0"></a>SKIP:  0</h1><h1 id="XFAIL-0"><a href="#XFAIL-0" class="headerlink" title="XFAIL: 0"></a>XFAIL: 0</h1><h1 id="FAIL-0"><a href="#FAIL-0" class="headerlink" title="FAIL:  0"></a>FAIL:  0</h1><h1 id="XPASS-0"><a href="#XPASS-0" class="headerlink" title="XPASS: 0"></a>XPASS: 0</h1><h1 id="ERROR-0"><a href="#ERROR-0" class="headerlink" title="ERROR: 0"></a>ERROR: 0</h1><p>如果通过测试，就可以开始安装了，执行如下命令完成PCRE的安装：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make install</span><br></pre></td></tr></table></figure></p>
+<h1 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h1><p>在PCRE的解压目录下，一条命令搞定：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make uninstall</span><br></pre></td></tr></table></figure></p>
+<p>完成卸载：</p>
+<blockquote>
+<p>xueliang@dev:~/download/pcre-8.39\$ sudo make uninstall<br>[sudo] password for xueliang:<br> ( cd ‘/usr/local/bin’ &amp;&amp; rm -f pcretest pcregrep )<br> ( cd ‘/usr/local/bin’ &amp;&amp; rm -f pcre-config )<br> ( cd ‘/usr/local/share/doc/pcre’ &amp;&amp; rm -f pcre.txt pcre-config.txt pcregrep.txt pcretest.txt AUTHORS COPYING ChangeLog LICENCE NEWS README )<br> ( cd ‘/usr/local/share/doc/pcre/html’ &amp;&amp; rm -f NON-AUTOTOOLS-BUILD.txt README.txt index.html pcre-config.html pcre.html pcre16.html pcre32.html pcre_assign_jit_stack.html pcre_compile.html pcre_compile2.html pcre_config.html pcre_copy_named_substring.html pcre_copy_substring.html pcre_dfa_exec.html pcre_exec.html pcre_free_study.html pcre_free_substring.html pcre_free_substring_list.html pcre_fullinfo.html pcre_get_named_substring.html pcre_get_stringnumber.html pcre_get_stringtable_entries.html pcre_get_substring.html pcre_get_substring_list.html pcre_jit_exec.html pcre_jit_stack_alloc.html pcre_jit_stack_free.html pcre_maketables.html pcre_pattern_to_host_byte_order.html pcre_refcount.html pcre_study.html pcre_utf16_to_host_byte_order.html pcre_utf32_to_host_byte_order.html pcre_version.html pcreapi.html pcrebuild.html pcrecallout.html pcrecompat.html pcredemo.html pcregrep.html pcrejit.html pcrelimits.html pcrematching.html pcrepartial.html pcrepattern.html pcreperform.html pcreposix.html pcreprecompile.html pcresample.html pcrestack.html pcresyntax.html pcretest.html pcreunicode.html )<br> ( cd ‘/usr/local/share/doc/pcre/html’ &amp;&amp; rm -f pcrecpp.html )<br> ( cd ‘/usr/local/include’ &amp;&amp; rm -f pcreposix.h pcrecpp.h pcre_scanner.h )<br> /bin/bash ./libtool   –mode=uninstall rm -f ‘/usr/local/lib/libpcre.la’<br>libtool: uninstall: rm -f /usr/local/lib/libpcre.la /usr/local/lib/libpcre.so.1.2.7 /usr/local/lib/libpcre.so.1 /usr/local/lib/libpcre.so /usr/local/lib/libpcre.a<br> /bin/bash ./libtool   –mode=uninstall rm -f ‘/usr/local/lib/libpcreposix.la’<br>libtool: uninstall: rm -f /usr/local/lib/libpcreposix.la /usr/local/lib/libpcreposix.so.0.0.4 /usr/local/lib/libpcreposix.so.0 /usr/local/lib/libpcreposix.so /usr/local/lib/libpcreposix.a<br> /bin/bash ./libtool   –mode=uninstall rm -f ‘/usr/local/lib/libpcrecpp.la’<br>libtool: uninstall: rm -f /usr/local/lib/libpcrecpp.la /usr/local/lib/libpcrecpp.so.0.0.1 /usr/local/lib/libpcrecpp.so.0 /usr/local/lib/libpcrecpp.so /usr/local/lib/libpcrecpp.a<br> ( cd ‘/usr/local/share/man/man1’ &amp;&amp; rm -f pcre-config.1 pcregrep.1 pcretest.1 )<br> ( cd ‘/usr/local/share/man/man3’ &amp;&amp; rm -f pcre.3 pcre16.3 pcre32.3 pcre_assign_jit_stack.3 pcre_compile.3 pcre_compile2.3 pcre_config.3 pcre_copy_named_substring.3 pcre_copy_substring.3 pcre_dfa_exec.3 pcre_exec.3 pcre_free_study.3 pcre_free_substring.3 pcre_free_substring_list.3 pcre_fullinfo.3 pcre_get_named_substring.3 pcre_get_stringnumber.3 pcre_get_stringtable_entries.3 pcre_get_substring.3 pcre_get_substring_list.3 pcre_jit_exec.3 pcre_jit_stack_alloc.3 pcre_jit_stack_free.3 pcre_maketables.3 pcre_pattern_to_host_byte_order.3 pcre_refcount.3 pcre_study.3 pcre_utf16_to_host_byte_order.3 pcre_utf32_to_host_byte_order.3 pcre_version.3 pcreapi.3 pcrebuild.3 pcrecallout.3 pcrecompat.3 pcredemo.3 pcrejit.3 pcrelimits.3 pcrematching.3 pcrepartial.3 pcrepattern.3 pcreperform.3 pcreposix.3 pcreprecompile.3 pcresample.3 pcrestack.3 pcresyntax.3 pcreunicode.3 pcrecpp.3 )<br> ( cd ‘/usr/local/include’ &amp;&amp; rm -f pcre.h pcrecpparg.h pcre_stringpiece.h )<br> ( cd ‘/usr/local/lib/pkgconfig’ &amp;&amp; rm -f libpcre.pc libpcreposix.pc libpcrecpp.pc )<br>xueliang@dev:~/download/pcre-8.39\$</p>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/16/Linux下安装C-compiler-cc/" rel="next" title="Linux下安装C compiler (cc)">
+                <i class="fa fa-chevron-left"></i> Linux下安装C compiler (cc)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/16/Linux下安装make命令/" rel="prev" title="Linux下安装make命令">
+                Linux下安装make命令 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">薛亮</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步-到PCRE官网下载PCRE的压缩包，并解压"><span class="nav-number">1.1.</span> <span class="nav-text">第一步 到PCRE官网下载PCRE的压缩包，并解压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二步-进行安装"><span class="nav-number">1.2.</span> <span class="nav-text">第二步 进行安装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Testsuite-summary-for-PCRE-8-39"><span class="nav-number">2.</span> <span class="nav-text">Testsuite summary for PCRE 8.39</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TOTAL-5"><span class="nav-number">3.</span> <span class="nav-text">TOTAL: 5</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PASS-5"><span class="nav-number">4.</span> <span class="nav-text">PASS:  5</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SKIP-0"><span class="nav-number">5.</span> <span class="nav-text">SKIP:  0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XFAIL-0"><span class="nav-number">6.</span> <span class="nav-text">XFAIL: 0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#FAIL-0"><span class="nav-number">7.</span> <span class="nav-text">FAIL:  0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XPASS-0"><span class="nav-number">8.</span> <span class="nav-text">XPASS: 0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ERROR-0"><span class="nav-number">9.</span> <span class="nav-text">ERROR: 0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#卸载"><span class="nav-number">10.</span> <span class="nav-text">卸载</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">薛亮</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

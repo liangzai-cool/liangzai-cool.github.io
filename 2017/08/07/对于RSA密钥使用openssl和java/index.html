@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="使用openssl生成一个新的密钥对您首先使用 genrsa OpenSSL中的工具生成私钥：1openssl genrsa -out privatekey.pem 2048 这将创建一个具有2048位长度的新的RSA私钥。密钥存储在文件中 privatekey.pem，它是“PEM”格式。PEM格式本质上是DER编码结构的base64编码变体。您可以查看文件，它应该以“BEGIN RSA PRI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对于RSA密钥使用openssl和java">
+<meta property="og:url" content="http://blog.xueliang.org/2017/08/07/对于RSA密钥使用openssl和java/index.html">
+<meta property="og:site_name" content="薛亮的主页">
+<meta property="og:description" content="使用openssl生成一个新的密钥对您首先使用 genrsa OpenSSL中的工具生成私钥：1openssl genrsa -out privatekey.pem 2048 这将创建一个具有2048位长度的新的RSA私钥。密钥存储在文件中 privatekey.pem，它是“PEM”格式。PEM格式本质上是DER编码结构的base64编码变体。您可以查看文件，它应该以“BEGIN RSA PRI">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-30T02:43:32.732Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="对于RSA密钥使用openssl和java">
+<meta name="twitter:description" content="使用openssl生成一个新的密钥对您首先使用 genrsa OpenSSL中的工具生成私钥：1openssl genrsa -out privatekey.pem 2048 这将创建一个具有2048位长度的新的RSA私钥。密钥存储在文件中 privatekey.pem，它是“PEM”格式。PEM格式本质上是DER编码结构的base64编码变体。您可以查看文件，它应该以“BEGIN RSA PRI">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.xueliang.org/2017/08/07/对于RSA密钥使用openssl和java/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>对于RSA密钥使用openssl和java | 薛亮的主页</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">薛亮的主页</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2017/08/07/对于RSA密钥使用openssl和java/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="薛亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="薛亮的主页">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">对于RSA密钥使用openssl和java
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-08-07 14:28:58" itemprop="dateCreated datePublished" datetime="2017-08-07T14:28:58+08:00">2017-08-07</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-30 10:43:32" itemprop="dateModified" datetime="2018-11-30T10:43:32+08:00">2018-11-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="使用openssl生成一个新的密钥对"><a href="#使用openssl生成一个新的密钥对" class="headerlink" title="使用openssl生成一个新的密钥对"></a>使用openssl生成一个新的密钥对</h1><p>您首先使用 <code>genrsa</code> OpenSSL中的工具生成私钥：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out privatekey.pem 2048</span><br></pre></td></tr></table></figure></p>
+<p>这将创建一个具有2048位长度的新的RSA私钥。密钥存储在文件中 <code>privatekey.pem</code>，它是“PEM”格式。PEM格式本质上是DER编码结构的base64编码变体。您可以查看文件，它应该以“BEGIN RSA PRIVATE KEY”标题开头，并以“END RSA PRIVATE KEY”页尾结尾：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">head -2 privatekey.pem; tail -1 privatekey.pem </span><br><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">MIIEpAIBAAKCAQEAth6P/MXUGL1y69Ao9THV16taSeUWnM4FQpmHP0yMDS3hB4V0</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure></p>
+<p>现在我们需要开始这个文件。虽然这似乎只是私钥，公钥似乎丢失了，但并不是：这个私钥格式包含了重建公钥数据的所有信息。</p>
+<h1 id="提取公钥"><a href="#提取公钥" class="headerlink" title="提取公钥"></a>提取公钥</h1><p>我们将使用的OpenSSL的第二个工具是<code>rsa</code>。这允许对密钥文件进行一些转换。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rsa -in privatekey.pem -out publickey.pem -pubout</span><br></pre></td></tr></table></figure></p>
+<p>如果我们看生成文件 <code>publickey.pem</code>，我们看到，也是PEM格式。页眉和页脚行分别是“BEGIN PUBLIC KEY”和“END PUBLIC KEY”：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">head -2 publickey.pem; tail -1 publickey.pem </span><br><span class="line">-----BEGIN PUBLIC KEY-----</span><br><span class="line">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAth6P/MXUGL1y69Ao9THV</span><br><span class="line">-----END PUBLIC KEY-----</span><br></pre></td></tr></table></figure></p>
+<p>现在我们有明文密钥文件可用。您可以分发公钥文件，以允许对方加密一些数据，同时保留私钥。请注意，私钥文件未加密，必须以某种方式保护（如文件权限等）。</p>
+<h1 id="了解关键文件结构"><a href="#了解关键文件结构" class="headerlink" title="了解关键文件结构"></a>了解关键文件结构</h1><p>Java本身不能直接加载在上述步骤中生成的PEM文件。然而，PEM文件实际上只是用附加的页眉和页脚编码的“DER”格式基础64。但是什么是“DER”格式？该手册页解释了一点：</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-inform DER|NET|PEM</span><br><span class="line">  This specifies the input format. The DER option uses an ASN1 DER encoded form</span><br><span class="line">  compatible with the PKCS#1 RSAPrivateKey or SubjectPublicKeyInfo format.</span><br><span class="line">  The PEM form is the default format: it consists of the DER format base64</span><br><span class="line">  encoded with additional header and footer lines. On input PKCS#8 format</span><br><span class="line">  private keys are also accepted. The NET form is a format is described</span><br><span class="line">  in the NOTES section.</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>所以有标准的PKCS＃1定义了结构RSAPrivateKey和SubjectPublicKeyInfo。该标准也作为RFC 3447出版。附录A.1.2中描述了交换私钥的建议：</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> RSAPrivateKey ::= SEQUENCE &#123;</span><br><span class="line">     version           Version,</span><br><span class="line">     modulus           INTEGER,  -- n</span><br><span class="line">     publicExponent    INTEGER,  -- e</span><br><span class="line">     privateExponent   INTEGER,  -- d</span><br><span class="line">     prime1            INTEGER,  -- p</span><br><span class="line">     prime2            INTEGER,  -- q</span><br><span class="line">     exponent1         INTEGER,  -- d mod (p-1)</span><br><span class="line">     exponent2         INTEGER,  -- d mod (q-1)</span><br><span class="line">     coefficient       INTEGER,  -- (inverse of q) mod p</span><br><span class="line">     otherPrimeInfos   OtherPrimeInfos OPTIONAL</span><br><span class="line"> &#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>你可以看到两件事情：结构基本上是数字列表。私钥结构包含模数，这就是您可以从此私钥文件中提取公钥的原因。</p>
+<p>公钥结构 <code>SubjectPublicKeyInfo</code> 如<a href="https://tools.ietf.org/html/rfc3447#appendix-A.1.1" target="_blank" rel="noopener">附录A.1.1所述</a>：</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> RSAPublicKey ::= SEQUENCE &#123;</span><br><span class="line">     modulus           INTEGER,  -- n</span><br><span class="line">     publicExponent    INTEGER   -- e</span><br><span class="line"> &#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>您可以使用OpenSSL以“人类可读”格式显示此信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">openssl rsa -in privatekey.pem -text</span><br><span class="line">Private-Key: (2048 bit)</span><br><span class="line">modulus:</span><br><span class="line">    00:b6:1e:8f:fc:c5:d4:18:bd:72:eb:d0:28:f5:31:</span><br><span class="line">...</span><br><span class="line">publicExponent: 65537 (0x10001)</span><br><span class="line">privateExponent:</span><br><span class="line">    00:a9:f4:cb:9a:b1:63:c5:d2:c6:b4:9a:86:1e:8c:</span><br><span class="line">... It will display all the fields. The same is possible with the public key:</span><br><span class="line"></span><br><span class="line">openssl rsa -in publickey.pem -text -pubin</span><br><span class="line">Public-Key: (2048 bit)</span><br><span class="line">Modulus:</span><br><span class="line">    00:b6:1e:8f:fc:c5:d4:18:bd:72:eb:d0:28:f5:31:</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<h1 id="将密钥文件转换为Java（公共密钥）"><a href="#将密钥文件转换为Java（公共密钥）" class="headerlink" title="将密钥文件转换为Java（公共密钥）"></a>将密钥文件转换为Java（公共密钥）</h1><p>普通Java能够理解公钥格式。但是，它不能直接读取PEM文件，但可以理解DER编码。解决方案是，首先使用Base64对文件进行解码，然后通过Java进行解析。这是一个这样做的代码段：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public static PublicKey loadPublicKey() throws Exception &#123;</span><br><span class="line">    String publicKeyPEM = FileUtils.readFileToString(new File(&quot;publickey.pem&quot;), StandardCharsets.UTF_8);</span><br><span class="line"></span><br><span class="line">    // strip of header, footer, newlines, whitespaces</span><br><span class="line">    publicKeyPEM = publicKeyPEM</span><br><span class="line">            .replace(&quot;-----BEGIN PUBLIC KEY-----&quot;, &quot;&quot;)</span><br><span class="line">            .replace(&quot;-----END PUBLIC KEY-----&quot;, &quot;&quot;)</span><br><span class="line">            .replaceAll(&quot;\\s&quot;, &quot;&quot;);</span><br><span class="line"></span><br><span class="line">    // decode to get the binary DER representation</span><br><span class="line">    byte[] publicKeyDER = Base64.getDecoder().decode(publicKeyPEM);</span><br><span class="line"></span><br><span class="line">    KeyFactory keyFactory = KeyFactory.getInstance(&quot;RSA&quot;);</span><br><span class="line">    PublicKey publicKey = keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyDER));</span><br><span class="line">    return publicKey;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>它用于 <code>X509EncodedKeySpec</code> 加载公钥，这只是推荐的 <code>SubjectPublicKeyInfo</code> 实现。</p>
+<p>注意：我使用 <a href="http://commons.apache.org/proper/commons-io/" target="_blank" rel="noopener">Apache的commons-io</a>库 <code>FileUtils</code>。其他一切都包含在标准的Java8 JDK中。</p>
+<h1 id="转换私钥用于Java"><a href="#转换私钥用于Java" class="headerlink" title="转换私钥用于Java"></a>转换私钥用于Java</h1><p>不幸的是，我们不能使用完全相同的技巧来进行私钥。Java具有私钥的编码密钥规范：<code>PKCS8EncodedKeySpec</code> - 但是，它实现了“PKCS＃8”而不是我们使用的“PKCS＃1”。幸运的是，OpenSSL还包含一个这种格式的转换器：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs8 -in privatekey.pem -topk8 -nocrypt -out privatekey-pkcs8.pem</span><br></pre></td></tr></table></figure></p>
+<p>如果您检查生成的文件，您将再次看到PEM格式，但现在标题为“BEGIN PRIVATE KEY”：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">head -2 privatekey-pkcs8.pem; tail -1 privatekey-pkcs8.pem</span><br><span class="line">-----BEGIN PRIVATE KEY-----</span><br><span class="line">MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC2Ho/8xdQYvXLr</span><br><span class="line">-----END PRIVATE KEY-----</span><br></pre></td></tr></table></figure></p>
+<p>请注意，这个私钥文件也没有加密（<code>nocrypt</code>），并且必须保持安全。<br>该格式在 <a href="https://tools.ietf.org/html/rfc5208" target="_blank" rel="noopener">RFC 5208</a> 和 <a href="https://tools.ietf.org/html/rfc5208#section-5" target="_blank" rel="noopener">第5节中</a> 的结构中 描述：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PrivateKeyInfo ::= SEQUENCE &#123;</span><br><span class="line">  version                   Version,</span><br><span class="line">  privateKeyAlgorithm       PrivateKeyAlgorithmIdentifier,</span><br><span class="line">  privateKey                PrivateKey,</span><br><span class="line">  attributes           [0]  IMPLICIT Attributes OPTIONAL &#125;</span><br></pre></td></tr></table></figure></p>
+<p>它再次被DER编码，它实际上只是 <code>RSAPrivateKey</code> 在 <code>privateKey</code> 字段中从上面包装结构。但是，此格式允许使用密码加密私钥（我们在此示例中不使用）。</p>
+<p>现在我们也可以在Java中加载私钥：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public static PrivateKey loadPrivateKey() throws Exception &#123;</span><br><span class="line">    String privateKeyPEM = FileUtils.readFileToString(new File(&quot;privatekey-pkcs8.pem&quot;), StandardCharsets.UTF_8);</span><br><span class="line"></span><br><span class="line">    // strip of header, footer, newlines, whitespaces</span><br><span class="line">    privateKeyPEM = privateKeyPEM</span><br><span class="line">            .replace(&quot;-----BEGIN PRIVATE KEY-----&quot;, &quot;&quot;)</span><br><span class="line">            .replace(&quot;-----END PRIVATE KEY-----&quot;, &quot;&quot;)</span><br><span class="line">            .replaceAll(&quot;\\s&quot;, &quot;&quot;);</span><br><span class="line"></span><br><span class="line">    // decode to get the binary DER representation</span><br><span class="line">    byte[] privateKeyDER = Base64.getDecoder().decode(privateKeyPEM);</span><br><span class="line"></span><br><span class="line">    KeyFactory keyFactory = KeyFactory.getInstance(&quot;RSA&quot;);</span><br><span class="line">    PrivateKey privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privateKeyDER));</span><br><span class="line">    return privateKey;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="使用RSA在Java中加密和解密"><a href="#使用RSA在Java中加密和解密" class="headerlink" title="使用RSA在Java中加密和解密"></a>使用RSA在Java中加密和解密</h1><p>现在我们可以使用Java加密和解密，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) throws Exception &#123;</span><br><span class="line">    Cipher cipher = Cipher.getInstance(&quot;RSA/ECB/PKCS1Padding&quot;);</span><br><span class="line">    String clearText = &quot;Sample plain text&quot;;</span><br><span class="line"></span><br><span class="line">    PublicKey publicKey = loadPublicKey();</span><br><span class="line">    cipher.init(Cipher.ENCRYPT_MODE, publicKey);</span><br><span class="line">    byte[] encrypted = cipher.doFinal(clearText.getBytes(StandardCharsets.UTF_8));</span><br><span class="line"></span><br><span class="line">    PrivateKey privateKey = loadPrivateKey();</span><br><span class="line">    cipher.init(Cipher.DECRYPT_MODE, privateKey);</span><br><span class="line">    byte[] decrypted = cipher.doFinal(encrypted);</span><br><span class="line"></span><br><span class="line">    System.out.println(&quot;ClearText: &quot; + clearText);</span><br><span class="line">    System.out.println(&quot;Decrypted: &quot; + new String(decrypted, StandardCharsets.UTF_8));</span><br><span class="line">    System.out.println(&quot;ClearText length: &quot; + clearText.getBytes(StandardCharsets.UTF_8).length);</span><br><span class="line">    System.out.println(&quot;Encrypted length: &quot; + encrypted.length);</span><br><span class="line">    System.out.println(&quot;Encrypted: &quot; + Base64.getEncoder().encodeToString(encrypted));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>输出如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ClearText: Sample plain text</span><br><span class="line">Decrypted: Sample plain text</span><br><span class="line">ClearText length: 17</span><br><span class="line">Encrypted length: 256</span><br><span class="line">Encrypted: riHHycTvKaDtX3SkeoZbFCW3KW3vxEIsF3wVQqOKuwAbTtWFyP6yN5essem+jTx16Ggdp6/rzS9r9Wy5O6P8JuOQAKi...</span><br></pre></td></tr></table></figure></p>
+<p>您可以看到明文已经膨胀多达256个字节。这是因为我生成了一个2048位长度的RSA密钥，这是256字节。RSA密码以块为单位加密，并在块中使用填充。我使用“PKCS1Padding”，它使用11个字节进行填充，这意味着，最多可以在一个块中加密256-11 = 245字节的普通数据。如果您有更大的数据要加密，则需要链接这些块。链接块有不同的方法：电子码本（ECB），密码块链接（CBC）。请参阅 <a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation" target="_blank" rel="noopener">分组密码操作模式</a>。您还可以考虑使用混合方法，这意味着您将首先通过RSA交换AES的对称密钥，然后将此AES密钥用于要交换的较大数据。<br>另请参见：<br><a href="https://tls.mbed.org/kb/cryptography/asn1-key-structures-in-der-and-pem" target="_blank" rel="noopener">mbedtls - ASN.1 DER和PEM中的关键结构</a><br>英文原文：<a href="https://adangel.org/2016/08/29/openssl-rsa-java/" target="_blank" rel="noopener">Using openssl and java for RSA keys</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/26/Gradle-修改文件内容后导致中文乱码/" rel="next" title="Gradle 修改文件内容后导致中文乱码">
+                <i class="fa fa-chevron-left"></i> Gradle 修改文件内容后导致中文乱码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/10/HTTP状态码/" rel="prev" title="HTTP状态码">
+                HTTP状态码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">薛亮</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用openssl生成一个新的密钥对"><span class="nav-number">1.</span> <span class="nav-text">使用openssl生成一个新的密钥对</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#提取公钥"><span class="nav-number">2.</span> <span class="nav-text">提取公钥</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#了解关键文件结构"><span class="nav-number">3.</span> <span class="nav-text">了解关键文件结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#将密钥文件转换为Java（公共密钥）"><span class="nav-number">4.</span> <span class="nav-text">将密钥文件转换为Java（公共密钥）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#转换私钥用于Java"><span class="nav-number">5.</span> <span class="nav-text">转换私钥用于Java</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用RSA在Java中加密和解密"><span class="nav-number">6.</span> <span class="nav-text">使用RSA在Java中加密和解密</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">薛亮</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

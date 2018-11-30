@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="spring Version = 4.3.6.RELEASEspringSecurityVersion = 4.2.1.RELEASEGradle 3.0 + Eclipse Neno(4.6)  这篇文章同样是使用的Java配置，而非XML配置，如果你对于Java配置的Spring MVC开发还不太熟悉，可以先看我这篇文章。 Authority创建一个 Authority ，实现自 org.s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring MVC + Security 4 初体验（Java配置版）">
+<meta property="og:url" content="http://blog.xueliang.org/2017/03/06/Spring-MVC-Security-4-初体验（Java配置版）/index.html">
+<meta property="og:site_name" content="薛亮的主页">
+<meta property="og:description" content="spring Version = 4.3.6.RELEASEspringSecurityVersion = 4.2.1.RELEASEGradle 3.0 + Eclipse Neno(4.6)  这篇文章同样是使用的Java配置，而非XML配置，如果你对于Java配置的Spring MVC开发还不太熟悉，可以先看我这篇文章。 Authority创建一个 Authority ，实现自 org.s">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-30T02:43:32.718Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring MVC + Security 4 初体验（Java配置版）">
+<meta name="twitter:description" content="spring Version = 4.3.6.RELEASEspringSecurityVersion = 4.2.1.RELEASEGradle 3.0 + Eclipse Neno(4.6)  这篇文章同样是使用的Java配置，而非XML配置，如果你对于Java配置的Spring MVC开发还不太熟悉，可以先看我这篇文章。 Authority创建一个 Authority ，实现自 org.s">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.xueliang.org/2017/03/06/Spring-MVC-Security-4-初体验（Java配置版）/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Spring MVC + Security 4 初体验（Java配置版） | 薛亮的主页</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">薛亮的主页</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2017/03/06/Spring-MVC-Security-4-初体验（Java配置版）/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="薛亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="薛亮的主页">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring MVC + Security 4 初体验（Java配置版）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-03-06 00:40:40" itemprop="dateCreated datePublished" datetime="2017-03-06T00:40:40+08:00">2017-03-06</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-30 10:43:32" itemprop="dateModified" datetime="2018-11-30T10:43:32+08:00">2018-11-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>spring Version = 4.3.6.RELEASE<br>springSecurityVersion = 4.2.1.RELEASE<br>Gradle 3.0 + Eclipse Neno(4.6)</p>
+</blockquote>
+<p>这篇文章同样是使用的Java配置，而非XML配置，如果你对于Java配置的Spring MVC开发还不太熟悉，可以先看我<a href="http://xueliang.org/article/detail/20161102173458963" target="_blank" rel="noopener">这篇文章</a>。</p>
+<h1 id="Authority"><a href="#Authority" class="headerlink" title="Authority"></a>Authority</h1><p>创建一个 <code>Authority</code> ，实现自 <code>org.springframework.security.core.GrantedAuthority</code> 类，<code>getAuthority</code> 方法只返回一个表示权限名称的字符串，如 <code>AUTH_USER</code> 、 <code>AUTH_ADMIN</code> 、 <code>AUTH_DBA</code> 等。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public class Authority implements GrantedAuthority &#123;</span><br><span class="line">    </span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    private String authority;</span><br><span class="line"></span><br><span class="line">    public Authority() &#123;  &#125;</span><br><span class="line">    public Authority(String authority) &#123;</span><br><span class="line">        this.setAuthority(authority);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public String getAuthority() &#123;</span><br><span class="line">        return this.authority;</span><br><span class="line">    &#125;</span><br><span class="line">    public void setAuthority(String authority) &#123;</span><br><span class="line">        this.authority = authority;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="User"><a href="#User" class="headerlink" title="User"></a>User</h1><p><code>User</code> 类实现自 <code>org.springframework.security.core.userdetails.UserDetails</code> 接口，包含一组权限的集合 <code>authorities</code>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">public class User implements UserDetails &#123;</span><br><span class="line">    </span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line">    </span><br><span class="line">    private String username;</span><br><span class="line">    private String password;</span><br><span class="line">    private List&lt;Authority&gt; authorities;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public String getUsername() &#123;</span><br><span class="line">        return username;</span><br><span class="line">    &#125;</span><br><span class="line">    public void setUsername(String username) &#123;</span><br><span class="line">        this.username = username;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public String getPassword() &#123;</span><br><span class="line">        return password;</span><br><span class="line">    &#125;</span><br><span class="line">    public void setPassword(String password) &#123;</span><br><span class="line">        this.password = password;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() &#123;</span><br><span class="line">        return this.authorities;</span><br><span class="line">    &#125;</span><br><span class="line">    public void setAuthorities(List&lt;Authority&gt; authorities) &#123;</span><br><span class="line">        this.authorities = authorities;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public boolean isAccountNonExpired() &#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public boolean isAccountNonLocked() &#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public boolean isCredentialsNonExpired() &#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public boolean isEnabled() &#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="UserDetailsService"><a href="#UserDetailsService" class="headerlink" title="UserDetailsService"></a>UserDetailsService</h1><p><code>MyUserDetailsService</code> 实现了 <code>org.springframework.security.core.userdetails.UserDetailsService</code> 的 <code>loadUserByUsername</code> 方法，该方法根据用户名查询符合条件的用户，若没有找到符合条件的用户，必须抛出 <code>UsernameNotFoundException</code> 异常，而不能返回空。这里可以调用 DAO 层，从数据库查询用户，我为了简单，直接将用户临时放到一个常量内，模拟从数据库查询用户。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">public class MyUserDetailsService implements UserDetailsService &#123;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException &#123;</span><br><span class="line">        List&lt;User&gt; userList = Constants.userList;</span><br><span class="line">        for (int i = 0, len = userList.size(); i &lt; len; i++) &#123;</span><br><span class="line">            User user = userList.get(i);</span><br><span class="line">            if (user.getUsername().equals(username)) &#123;</span><br><span class="line">                return user;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        throw new UsernameNotFoundException(&quot;用户不存在！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="SecurityConfig"><a href="#SecurityConfig" class="headerlink" title="SecurityConfig"></a>SecurityConfig</h1><p><code>SecurityConfig</code> 类继承 <code>org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter</code>，<code>WebSecurityConfigurerAdapter</code> 提供了一些默认的配置，方便创建一个实例。</p>
+<p>进入 <code>configure</code> 方法中，首先允许任何情况下的对<code>csrfTokenApi</code> 的请求，该 API 返回一个 <code>csrfToken</code> ，默认情况下除 <code>GET</code>、<code>HEAD</code>、<code>TRACE</code> 和 <code>OPTIONS</code>外，所有请求都必须经过 <a href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0" target="_blank" rel="noopener">CSRF</a> 认证。接下来对不同的API请求设置不同的权限，并且确保所有对 <code>/api/</code> 下的请求都经过了认证。<br>这里向 <code>access</code> 方法传递的表达式中的权限名称，对应上面提到的 <code>Authority</code> 类中 <code>getAuthority</code> 返回的字符串的值，详细的表达式介绍，请移步至<a href="http://docs.spring.io/spring-security/site/docs/4.2.2.RELEASE/reference/htmlsingle/#el-access" target="_blank" rel="noopener">这里</a>。</p>
+<p>接着，对登录表单进行配置。通过 <code>loginProcessingUrl</code> 配置表单提交地址，这个地址对应的API不需要自己写，Spring Security 会自动拦截提交到此地址请求，将其视为登录请求。如果希望登录成功后通过服务器转发到其他页面，可以调用 <code>successForwardUrl(String forwardUrl)</code> 方法指定跳转的地址，对应地，指定失败后跳转地址的方法是 <code>failureForwardUrl(String forwardUrl)</code>。</p>
+<p>这里我使用了RESTful，故不需要配置服务端的转发，而是配置了另外两处：<code>successHandler</code> 和 <code>failureHandler</code> ，<code>successHandler</code> 方法接收一个 <code>AuthenticationSuccessHandler</code> 对象，认证通过之后，Spring Security 将调用该对象的 <code>onAuthenticationSuccess</code> 方法，类似地，<code>failureHandler</code> 方法接收一个 <code>AuthenticationFailureHandler</code> 对象，认证失败之后，将调用该对象的 <code>onAuthenticationFailure</code> 方法。</p>
+<p>配置完登录相关信息之后，接着配置和登出有关的信息。和配置登录表单提交地址类似，这里需要配置登出请求提交地址，这里调用 <code>logoutUrl</code> 方法，指定登出的链接地址，该地址和前面提到的 <code>loginProcessingUrl</code> 都不需要自己写，这两个都是全权交由 Spring Security 来处理。当用户请求 <code>logoutUrl</code> 方法指定的地址时，Spring Security 将对用户执行登出操作。和前面提到的 <code>successForwardUrl</code> 类似，这里提供了 <code>logoutSuccessUrl</code> 方法指定登出成功之后转发的地址。不过我用了RESTful，就不再调用此方法，而是调用 <code>logoutSuccessHandler</code> 传入 <code>LogoutSuccessHandler</code> 对象，登出成功后将调用该对象的 <code>onLogoutSuccess</code> 方法。</p>
+<p>最后，配置对异常的处理 <code>exceptionHandling</code> ，和上面介绍的 <code>successHandler</code> 、 <code>failureHandler</code> 以及 <code>logoutSuccessHandler</code> 差不多，<code>authenticationEntryPoint</code> 接收一个 <code>AuthenticationEntryPoint</code> 对象，当用户请求的操作需要登录时，将抛出 <code>AuthenticationException</code> 异常，并且将该异常传入到 <code>AuthenticationEntryPoint</code> 对象的 <code>commence</code> 方法。<br><code>accessDeniedHandler</code> 方法接收一个 <code>AccessDeniedHandler</code> 对象，该对象的 <code>handle</code> 方法将在权限不足时调用。</p>
+<p>配置完这些，看 <code>configureGlobalSecurity</code> 方法，给 <code>AuthenticationManagerBuilder</code> 配置一个 <code>UserDetailsService</code> 对象，当用户执行登录时，Spring Security 将调用该对象的 <code>loadUserByUsername</code> 方法，将 <code>username</code> 传入此方法，根据 <code>username</code> 获取一个 <code>UserDetails</code> 对象。</p>
+<p>另外，由于不能在数据库中保存明文密码，这里对密码进行 <code>bcrypt</code> 加密后保存，验证密码是否正确时，需要对用户输入的明文密码进行 <code>bcrypt</code> 加密后比较密文是否一致，故这里需要提供一个 <code>BCryptPasswordEncoder</code> 对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@EnableWebSecurity</span><br><span class="line">public class SecurityConfig extends WebSecurityConfigurerAdapter &#123;</span><br><span class="line"></span><br><span class="line">    @Value(&quot;$&#123;api.csrftoken&#125;&quot;)</span><br><span class="line">    private String csrfTokenApi;</span><br><span class="line">    </span><br><span class="line">    @Value(&quot;$&#123;api.login&#125;&quot;)</span><br><span class="line">    private String loginApi;</span><br><span class="line">    </span><br><span class="line">    @Value(&quot;$&#123;api.logout&#125;&quot;)</span><br><span class="line">    private String logoutApi;</span><br><span class="line">    </span><br><span class="line">    @Autowired</span><br><span class="line">    private MyUserDetailsService userDetailsService;</span><br><span class="line">    </span><br><span class="line">    @Autowired</span><br><span class="line">    private PasswordEncoder passwordEncoder;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    protected void configure(HttpSecurity http) throws Exception &#123;</span><br><span class="line">        http.authorizeRequests().antMatchers(csrfTokenApi).permitAll()</span><br><span class="line">        .antMatchers(&quot;/api/user/**&quot;).access(&quot;hasAuthority(&apos;USER&apos;)&quot;)</span><br><span class="line">        .antMatchers(&quot;/api/admin/**&quot;).access(&quot;hasAuthority(&apos;ADMIN&apos;)&quot;)</span><br><span class="line">        .antMatchers(&quot;/api/dba/**&quot;).access(&quot;hasAuthority(&apos;DBA&apos;)&quot;)</span><br><span class="line">        .antMatchers(&quot;/api/**&quot;).fullyAuthenticated()</span><br><span class="line">        .and().formLogin().loginProcessingUrl(loginApi)</span><br><span class="line">        .successHandler(new RestAuthenticationSuccessHandler())</span><br><span class="line">        .failureHandler(new RestAuthenticationFailureHandler())</span><br><span class="line">        .and().logout().logoutUrl(logoutApi)</span><br><span class="line">        .logoutSuccessHandler(new RestLogoutSuccessHandler())</span><br><span class="line">        .and().exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())</span><br><span class="line">        .accessDeniedHandler(new RestAccessDeniedHandler());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Autowired</span><br><span class="line">    public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception &#123;</span><br><span class="line">        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Bean</span><br><span class="line">    public PasswordEncoder passwordEncoder() &#123;</span><br><span class="line">        return new BCryptPasswordEncoder(11);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="WebAppConfig"><a href="#WebAppConfig" class="headerlink" title="WebAppConfig"></a>WebAppConfig</h1><p>因为采用RESTful风格，这里配置响应视图为json格式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@EnableWebMvc</span><br><span class="line">@ComponentScan(basePackages = &quot;org.xueliang.springsecuritystudy&quot;)</span><br><span class="line">@PropertySource(&#123;&quot;classpath:config.properties&quot;&#125;)</span><br><span class="line">public class WebAppConfig extends WebMvcConfigurerAdapter &#123;</span><br><span class="line">    </span><br><span class="line">    @Bean</span><br><span class="line">    public RequestMappingHandlerAdapter requestMappingHandlerAdapter(@Autowired MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter, @Autowired ContentNegotiationManager mvcContentNegotiationManager) &#123;</span><br><span class="line">        RequestMappingHandlerAdapter requestMappingHandlerAdapter = new RequestMappingHandlerAdapter();</span><br><span class="line">        requestMappingHandlerAdapter.setMessageConverters(Collections.singletonList(mappingJackson2HttpMessageConverter));</span><br><span class="line">        requestMappingHandlerAdapter.setContentNegotiationManager(mvcContentNegotiationManager);</span><br><span class="line">        return requestMappingHandlerAdapter;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Bean</span><br><span class="line">    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() &#123;</span><br><span class="line">        return new MappingJackson2HttpMessageConverter();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    /**</span><br><span class="line">     * 设置欢迎页</span><br><span class="line">     * 相当于web.xml中的 welcome-file-list &gt; welcome-file</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void addViewControllers(ViewControllerRegistry registry) &#123;</span><br><span class="line">        registry.addRedirectViewController(&quot;/&quot;, &quot;/index.html&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="WebAppInitializer"><a href="#WebAppInitializer" class="headerlink" title="WebAppInitializer"></a>WebAppInitializer</h1><p>Spring Security 架构是完全基于标准的 Servlet 过滤器的，这里我们需要在 <code>WebInitializer</code> 中引入 <code>DelegatingFilterProxy</code> 过滤器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onStartup(ServletContext servletContext) throws ServletException &#123;</span><br><span class="line">        servletContext.addFilter(&quot;springSecurityFilterChain&quot;, new DelegatingFilterProxy(&quot;springSecurityFilterChain&quot;)).addMappingForUrlPatterns(null, false, &quot;/api/*&quot;);</span><br><span class="line">        // 静态资源映射</span><br><span class="line">        servletContext.getServletRegistration(&quot;default&quot;).addMapping(&quot;*.html&quot;, &quot;*.ico&quot;);</span><br><span class="line">        super.onStartup(servletContext);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected Class&lt;?&gt;[] getRootConfigClasses() &#123;</span><br><span class="line">        return new Class[] &#123; WebAppConfig.class &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected Class&lt;?&gt;[] getServletConfigClasses() &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected String[] getServletMappings() &#123;</span><br><span class="line">        return new String[] &#123; &quot;/&quot; &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected Filter[] getServletFilters() &#123;</span><br><span class="line">        return new Filter[] &#123; new CharacterEncodingFilter(&quot;UTF-8&quot;, true) &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h1><p>本文使用到的项目源码已经放到 <a href="https://github.com/liangzai-cool/springsecuritystudy" target="_blank" rel="noopener">Github</a> 上，你可以下载后运行。</p>
+<h1 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h1><ul>
+<li><a href="20161102173458963">Spring RESTful + Redis全注解实现恶意登录保护机制</a></li>
+<li><a href="20170116145848852">Java程序通过代理访问网络</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/16/Java程序通过代理访问网络/" rel="next" title="Java程序通过代理访问网络">
+                <i class="fa fa-chevron-left"></i> Java程序通过代理访问网络
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/26/MySQL-多列索引优化小记/" rel="prev" title="MySQL 多列索引优化小记">
+                MySQL 多列索引优化小记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">薛亮</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Authority"><span class="nav-number">1.</span> <span class="nav-text">Authority</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#User"><span class="nav-number">2.</span> <span class="nav-text">User</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UserDetailsService"><span class="nav-number">3.</span> <span class="nav-text">UserDetailsService</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SecurityConfig"><span class="nav-number">4.</span> <span class="nav-text">SecurityConfig</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebAppConfig"><span class="nav-number">5.</span> <span class="nav-text">WebAppConfig</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebAppInitializer"><span class="nav-number">6.</span> <span class="nav-text">WebAppInitializer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Source"><span class="nav-number">7.</span> <span class="nav-text">Source</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关文章"><span class="nav-number">8.</span> <span class="nav-text">相关文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">薛亮</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

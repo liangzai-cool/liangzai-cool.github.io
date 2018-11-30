@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="第一步 准备工作分区给CentOS 系统单独创建一个分区，具体看空闲硬盘的大小决定。  右键桌面上 [我的电脑] 或者 [此电脑] 图标，选择 [管理] → [计算机管理] → [存储] - [磁盘管理] 选择一个空闲空间较大的分区，右键选择 [压缩卷(H)…] 在弹出的对话框中输入需要分配给 CentOS 系统的空间大小，以 MB 为单位 输入完毕后，点击对话框右下角的 [压缩] 按钮执行压缩即">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安装 Windows 10 + Centos 7 双系统共存">
+<meta property="og:url" content="http://blog.xueliang.org/2016/09/19/安装-Windows-10-Centos-7-双系统共存/index.html">
+<meta property="og:site_name" content="薛亮的主页">
+<meta property="og:description" content="第一步 准备工作分区给CentOS 系统单独创建一个分区，具体看空闲硬盘的大小决定。  右键桌面上 [我的电脑] 或者 [此电脑] 图标，选择 [管理] → [计算机管理] → [存储] - [磁盘管理] 选择一个空闲空间较大的分区，右键选择 [压缩卷(H)…] 在弹出的对话框中输入需要分配给 CentOS 系统的空间大小，以 MB 为单位 输入完毕后，点击对话框右下角的 [压缩] 按钮执行压缩即">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://image.xueliang.org/Fvhx_yTCms9gODhh1qBr8K6XE4M_">
+<meta property="og:image" content="http://image.xueliang.org/Fj2I3qpa7B2s-Fc8SmuUPzj_B54X">
+<meta property="og:image" content="http://image.xueliang.org/FkI_Hy3_BErBapIW3v5Rl1pwqAoQ">
+<meta property="og:image" content="http://image.xueliang.org/FjaKVh1f66e4pZwC7kQ_cGAyiPYX">
+<meta property="og:image" content="http://image.xueliang.org/FlOZkXk_pgvUJZGLSpJoyFSMNa8e">
+<meta property="og:image" content="http://image.xueliang.org/FuOHyUxyrOBufk0As_G0v_DKgNvN">
+<meta property="og:image" content="http://image.xueliang.org/FjtnDD7mvzdlVPbd2OrZXkUEve1N">
+<meta property="og:image" content="http://image.xueliang.org/FmUOhYxVjGrkv-pj120u4UTuVTP_">
+<meta property="og:image" content="http://image.xueliang.org/FuGJxfnAT1ergaMukBYHgp16D7MO">
+<meta property="og:image" content="http://image.xueliang.org/FgpZdR4Hjoz9dInVLOtVq4LSS2iV">
+<meta property="og:image" content="http://image.xueliang.org/FiQgkNTChrbqhsaMp37ZR8rXrv9x">
+<meta property="og:image" content="http://image.xueliang.org/FpcsJGlUTM30zbfJSrRoV9fHR-0w">
+<meta property="og:image" content="http://image.xueliang.org/FnYq9rmFDS5EDr7ecwOW56RUkgYj">
+<meta property="og:image" content="http://image.xueliang.org/FrSrIYtD30rKs7lzikOiGcwSaRXT">
+<meta property="og:image" content="http://image.xueliang.org/FhzfDo0BumSnSInSTNUe7cZg67BU">
+<meta property="og:image" content="http://image.xueliang.org/FkNNAEgrzPYngcE2cmjEGpvWFp-Z">
+<meta property="og:image" content="http://image.xueliang.org/FhWdSUS0OdUA8fQxNQbA16-M_ajX">
+<meta property="og:image" content="http://image.xueliang.org/Fkc3wvolSxIOG3XoBqEe-1tCzKFS">
+<meta property="og:image" content="http://image.xueliang.org/Fky6g2Wg-LuXkq01L0ivILSxHiEK">
+<meta property="og:image" content="http://image.xueliang.org/FluJbwfh7XN7TQROZeCL5_mAF32O">
+<meta property="og:updated_time" content="2018-11-30T02:43:32.730Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="安装 Windows 10 + Centos 7 双系统共存">
+<meta name="twitter:description" content="第一步 准备工作分区给CentOS 系统单独创建一个分区，具体看空闲硬盘的大小决定。  右键桌面上 [我的电脑] 或者 [此电脑] 图标，选择 [管理] → [计算机管理] → [存储] - [磁盘管理] 选择一个空闲空间较大的分区，右键选择 [压缩卷(H)…] 在弹出的对话框中输入需要分配给 CentOS 系统的空间大小，以 MB 为单位 输入完毕后，点击对话框右下角的 [压缩] 按钮执行压缩即">
+<meta name="twitter:image" content="http://image.xueliang.org/Fvhx_yTCms9gODhh1qBr8K6XE4M_">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.xueliang.org/2016/09/19/安装-Windows-10-Centos-7-双系统共存/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>安装 Windows 10 + Centos 7 双系统共存 | 薛亮的主页</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">薛亮的主页</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2016/09/19/安装-Windows-10-Centos-7-双系统共存/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="薛亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="薛亮的主页">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">安装 Windows 10 + Centos 7 双系统共存
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-09-19 06:49:44" itemprop="dateCreated datePublished" datetime="2016-09-19T06:49:44+08:00">2016-09-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-30 10:43:32" itemprop="dateModified" datetime="2018-11-30T10:43:32+08:00">2018-11-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="第一步-准备工作"><a href="#第一步-准备工作" class="headerlink" title="第一步 准备工作"></a>第一步 准备工作</h1><h2 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h2><p>给CentOS 系统单独创建一个分区，具体看空闲硬盘的大小决定。</p>
+<ul>
+<li>右键桌面上 [我的电脑] 或者 [此电脑] 图标，选择 [管理] → [计算机管理] → [存储] - [磁盘管理]</li>
+<li>选择一个空闲空间较大的分区，右键选择 [压缩卷(H)…]</li>
+<li>在弹出的对话框中输入需要分配给 CentOS 系统的空间大小，以 MB 为单位</li>
+<li>输入完毕后，点击对话框右下角的 [压缩] 按钮执行压缩即可</li>
+</ul>
+<blockquote>
+<p>注意：压缩出的新分区，不要执行 [新建简单卷]，否则稍后 CentOS 不识别，到此步即可</p>
+</blockquote>
+<h2 id="下载-CentOS-7-系统文件"><a href="#下载-CentOS-7-系统文件" class="headerlink" title="下载 CentOS 7 系统文件"></a>下载 CentOS 7 系统文件</h2><p>到 <a href="https://www.centos.org/download" target="_blank" rel="noopener">CentOS官网</a> 下载 ISO 文件，DVD 版即可。</p>
+<h2 id="制作优盘启动盘"><a href="#制作优盘启动盘" class="headerlink" title="制作优盘启动盘"></a>制作优盘启动盘</h2><p>同样很简单：</p>
+<ul>
+<li>准备一个优盘，备份里面所有你认为不能删的文件，稍后将会格式化此优盘</li>
+<li>到 <a href="http://cn.ultraiso.net/xiazai.html" target="_blank" rel="noopener">UltraISO官网</a> 下载软件</li>
+<li>安装，我基本是用完就卸载，所以，除了安装路径改下，其他全部默认</li>
+<li>运行 UltraISO，选择试用，选择主界面菜单栏里的[文件] → [打开]，选择你刚下载好的 CentOS 7 镜像</li>
+<li>选择菜单栏里的 [启动] → [写入硬盘映像]</li>
+<li>在弹出框中确认选中的优盘无误，其他选项保持默认，无需修改，直接点击下方的 [写入] 按钮，执行制作优盘启动盘，稍后确认制作成功的提示信息即可</li>
+</ul>
+<p>准备工作到此结束</p>
+<h1 id="第二步-从优盘启动安装"><a href="#第二步-从优盘启动安装" class="headerlink" title="第二步 从优盘启动安装"></a>第二步 从优盘启动安装</h1><h2 id="调整-BIOS-引导顺序"><a href="#调整-BIOS-引导顺序" class="headerlink" title="调整 BIOS 引导顺序"></a>调整 BIOS 引导顺序</h2><ul>
+<li>插入刚刚制作的优盘启动盘，重启电脑，开机阶段按 <code>F2</code> 、 <code>F8</code> 或 <code>F12</code> 进入 <code>BIOS</code></li>
+<li>切换到 <code>Boot</code> 界面，找到优盘启动项，使用 <code>F5</code> 或 <code>F6</code> 调整其顺序至第一位，即从优盘启动</li>
+<li>按 <code>F10</code> 保存并退出 <code>BIOS</code> ，即可从优盘引导启动。</li>
+<li><p>稍后进入一个标题为 <code>CentOS 7</code> 的黑白界面：<br><img src="http://image.xueliang.org/Fvhx_yTCms9gODhh1qBr8K6XE4M_" alt="图片加载中..."></p>
+<p>同时提示 <code>Press Tab for full configuration options on menu items.</code> 和 <code>Automatic boot in 60 seconds...</code>。</p>
+</li>
+<li><p>默认选中的是 第一项即 <code>Install CentOS 7</code>，按 <code>Tab</code> 键，下方的提示信息将显示为 <code>vmlinuz initrd=initrd.img inst.stage2=hd:LABEL=CentOS\x207x20x86_64 rd.live.check quiet</code><br><img src="http://image.xueliang.org/Fj2I3qpa7B2s-Fc8SmuUPzj_B54X" alt="图片加载中..."></p>
+</li>
+<li><p>移动光标，删除 <code>LABEL=CentOS\x207x20x86_64 rd.live.check</code> 这部分，并用 <code>linux dd</code> 替换，最终的内容为 <code>vmlinuz initrd=initrd.img linux dd quiet</code><br><img src="http://image.xueliang.org/FkI_Hy3_BErBapIW3v5Rl1pwqAoQ" alt="图片加载中..."></p>
+</li>
+<li><p>确认无误后回车，可以看到如下界面<br><img src="http://image.xueliang.org/FjaKVh1f66e4pZwC7kQ_cGAyiPYX" alt="图片加载中..."><br>这里可以看到，界面下方有4列，分别是 <code>DEVICE</code> 、 <code>TYPE</code> 、 <code>LABEL</code> 和 <code>UUID</code>，<code>LABEL</code> 这一列就是驱动器名称，据此找到你的优盘，并记下对应 <code>DEVICE</code> 列的值，一般是 <code>sdb4</code> 。</p>
+</li>
+<li><p>强制关闭计算机后再开机，回到刚才倒计时那个界面，依旧按 <code>Tab</code> 键，修改启动参数，这次修改为 <code>vmlinuz initrd=initrd.img inst.stage2=hd:/dev/sdb4 rd.live.check quiet</code>，这里的 <code>sdb4</code> 替换成你刚才记下的自己优盘对应的 <code>DEVICE</code> 列的值。<br><img src="http://image.xueliang.org/FlOZkXk_pgvUJZGLSpJoyFSMNa8e" alt="图片加载中..."></p>
+</li>
+<li><p>确认无误后回车，稍等片刻就可以看到暖暖的界面啦！<br><img src="http://image.xueliang.org/FuOHyUxyrOBufk0As_G0v_DKgNvN" alt="图片加载中..."></p>
+</li>
+</ul>
+<h2 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h2><ul>
+<li>上面的系统语言根据需要自行选择（为了防止系统自动生成家目录下有 <code>桌面</code> 、 <code>下载</code> 这类中文名路径，切换路径的时候还要修改输入法，比较麻烦，所以这里我保持默认，即 <code>English</code>），这里主要说下第二步的 <code>INSTALLATION SUMMARY</code>。<br><img src="http://image.xueliang.org/FjtnDD7mvzdlVPbd2OrZXkUEve1N" alt="图片加载中..."></li>
+</ul>
+<h3 id="选择需要安装的基础软件"><a href="#选择需要安装的基础软件" class="headerlink" title="选择需要安装的基础软件"></a>选择需要安装的基础软件</h3><ul>
+<li>点击 <code>SOFTWARE</code> 下的 <code>SOFTWARE SELECTION</code> 选择一些需要安装的基础软件，这里只选择安装一个桌面软件 <code>GNOME Desktop</code> 就够了，选择完成之后点击左上角的 <code>Done</code> 回到 <code>INSTALLATION SUMMARY</code> 主界面。<br><img src="http://image.xueliang.org/FmUOhYxVjGrkv-pj120u4UTuVTP_" alt="图片加载中..."></li>
+</ul>
+<h3 id="磁盘分区"><a href="#磁盘分区" class="headerlink" title="磁盘分区"></a>磁盘分区</h3><ul>
+<li><p>点击 <code>SYSTEM</code> 下的 <code>INSTALLATION DESTINATION</code> 选择安装位置，这里可以看到我们之前压缩出来的那个新分区，以及优盘分区。<br>选中那个新分区，并选中 <code>Other Storage Options</code> → <code>Partitioning</code> 下的 <code>I will configure partitioning</code> 选项，<strong>切记，一定要选中此项，否则整个硬盘的数据都将被删除！！！</strong><br>确认无误后，点击左上角的 <code>Done</code> 。<br><img src="http://image.xueliang.org/FuGJxfnAT1ergaMukBYHgp16D7MO" alt="图片加载中..."></p>
+</li>
+<li><p>这一步对硬盘进行分区，可以点击 <code>Click here to create them automatically</code> 即可让安装程序自动创建分区，非常方便，也可以点击左下角写有 <code>AVAILABLE SPACE</code> 字样的红色区域上方的 <code>+</code> 按钮手动创建分区。<br><img src="http://image.xueliang.org/FgpZdR4Hjoz9dInVLOtVq4LSS2iV" alt="图片加载中..."><br>选择手动分区的话，要注意单位，这里我选择自动分区。分区完成并且确认无误后，点击左上角的 <code>Done</code> 结束对硬盘的分区操作。下面我讲下手动分区操作步骤。</p>
+<p>点击 <code>+</code> 按钮，在弹出的对话框中选择新分区挂载的路径，并输入新分区的大小，这里我们设置新分区的大小为 6 GB，并挂载在 根目录 <code>/</code> 下。点击 <code>Add mount point</code> 保存分区信息。<br><img src="http://image.xueliang.org/FiQgkNTChrbqhsaMp37ZR8rXrv9x" alt="图片加载中..."></p>
+<p>此时，可以看到新分区已经出现在左侧栏里了，但分区的单位并不对，默认刚才输入的单位是 <code>MiB</code> 并显示为 <code>KiB</code> ，这里我们修改为 <code>MiB</code> 即可，点击右下角 <code>Update Settings</code> 保存修改后的信息。<br><img src="http://image.xueliang.org/FpcsJGlUTM30zbfJSrRoV9fHR-0w" alt="图片加载中..."><br>以同样的方式添加 <code>swap</code> 等分区，添加完成后，点击左上角的 <code>Done</code> 按钮，完成对磁盘的分区。如果没有给 <code>/boot</code> 进行分区，会在第一次点击 <code>Done</code> 后收到警告信息。可以点击 <code>Click for details</code> 查看警告原因，然后点击 <code>Close</code> 后再次点击一次 <code>Done</code> ；也可以忽略警告信息，再点一次 <code>Done</code> 。<br><img src="http://image.xueliang.org/FnYq9rmFDS5EDr7ecwOW56RUkgYj" alt="图片加载中..."><br>忽略警告信息，点击两次 <code>Done</code> 之后，可以在弹出的对话框中看到，即将对磁盘进行修改的摘要信息，直接点击 <code>Accept Changes</code> ，开始对硬盘执行分区操作。<br><img src="http://image.xueliang.org/FrSrIYtD30rKs7lzikOiGcwSaRXT" alt="图片加载中..."></p>
+</li>
+<li><p>回到 <code>INSTALLATION SUMMARY</code> 界面，待分区执行完成后， <code>SYSTEM</code> 下的 <code>INSTALLATION DESTINATION</code> 下的黄色感叹号就没有。点击右下角的 <code>Begin Installation</code> 按钮开始安装 <code>CentOS</code> 系统。<br><img src="http://image.xueliang.org/FhzfDo0BumSnSInSTNUe7cZg67BU" alt="图片加载中..."></p>
+</li>
+</ul>
+<h3 id="初始化账户"><a href="#初始化账户" class="headerlink" title="初始化账户"></a>初始化账户</h3><ul>
+<li><p>安装进度界面可以看到 <code>USER SETTINGS</code> 下，<code>ROOT PASSWORD</code> 提示需要给 <code>root</code> 账户设置密码（<code>root</code> 账户默认是没有密码的），<code>USER CREATION</code> 提示创建一个普通用户。下面我们按照提示完成对账户的初始化。<br><img src="http://image.xueliang.org/FkNNAEgrzPYngcE2cmjEGpvWFp-Z" alt="图片加载中..."></p>
+</li>
+<li><p>点击 <code>USER SETTINGS</code> 下的 <code>ROOT PASSWORD</code> ，给 <code>root</code> 账户设置密码。如果设置的密码强度不够，需要点两次 <code>Done</code> 按钮忽略警告信息，完成对 <code>root</code> 账户的初始化。<br><img src="http://image.xueliang.org/FhWdSUS0OdUA8fQxNQbA16-M_ajX" alt="图片加载中..."></p>
+</li>
+<li><p>完成对 <code>root</code> 账户初始化后，可以看到 <code>USER SETTINGS</code> 下 <code>USER CREATION</code> 的黄色感叹号已经消失了，说明初始化 <code>root</code> 账户的密码后，创建普通账户已经变成一个可选项。<br><img src="http://image.xueliang.org/Fkc3wvolSxIOG3XoBqEe-1tCzKFS" alt="图片加载中..."></p>
+<p>  但推荐仍创建一个普通账户，以便平时使用，而非平时直接使用 <code>root</code> 账户，这样可以减少使用过程中的误操作，以及 <code>root</code> 账户密码泄露的风险。点击 <code>USER CREATION</code> ，创建一个新的账户，同样 <code>ROOT PASSWORD</code> 一样，如果密码强度不够，请点击两次 <code>Done</code> 按钮。<br><img src="http://image.xueliang.org/Fky6g2Wg-LuXkq01L0ivILSxHiEK" alt="图片加载中..."></p>
+</li>
+</ul>
+<h2 id="完成安装"><a href="#完成安装" class="headerlink" title="完成安装"></a>完成安装</h2><ul>
+<li><p>约15 ~ 30 分钟后，CentOS 7 的安装就大功告成啦。<strong>为了避免重启后再次从优盘启动，可以先拔掉优盘，再点击 <code>Reboot</code> 按钮重启计算机；也可以在重启时进入 <code>BIOS</code> 调整引导顺序，恢复硬盘作为第一引导盘。</strong></p>
+<p><img src="http://image.xueliang.org/FluJbwfh7XN7TQROZeCL5_mAF32O" alt="图片加载中..."></p>
+</li>
+<li><p>开机后会看到一个黑白屏的启动菜单，并且有一个默认选项，屏幕下方有一个 5 秒的倒计时，若 5 秒内没有任何操作，将使用默认选中的内核启动系统，也可以使用上下键进行切换并按回车键，即可使用选中的内核启动系统。这里默认即可。</p>
+</li>
+</ul>
+<h1 id="第三步-找回-Windows-10-启动项"><a href="#第三步-找回-Windows-10-启动项" class="headerlink" title="第三步 找回 Windows 10 启动项"></a>第三步 找回 Windows 10 启动项</h1><p>可能大家都注意到了，上面重启之后，已经无法进入之前的 Windows 10 系统。是的，CentOS 7 不能在安装过程中设置之后的启动项，不像 Ubuntu 那样，在安装 Ubuntu 的过程中，就可以选择启动项，因此这时候就无法进入 Windows 10 了。<br>不过，不用担心，因为 Windows 10 系统的引导信息以及数据都是还在的，我们只需要在 CentOS 7 中找回 Windows 10 的引导信息并添加到启动菜单中就可以了。</p>
+<ul>
+<li>启动 CentOS 7 并使用事先设定的账户，登录系统。这里我使用的是非 <code>root</code> 账户登录的。</li>
+</ul>
+<h2 id="安装-ntfs-3g"><a href="#安装-ntfs-3g" class="headerlink" title="安装 ntfs-3g"></a>安装 ntfs-3g</h2><ul>
+<li>右键桌面，打开一个终端。执行以下命令安装 <code>ntfs-3g</code>：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y ntfs-3g</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>之所以需要安装 <code>ntfs-3g</code> ，是因为 Windows 家族专用的文件系统，CentOS 7 默认不能识别，而要想在 CentOS 7 系统中找回 Windows 10 的引导信息，势必要让 CentOS 7 系统识别 Windows 10 的文件系统，故安装此库。</p>
+<h2 id="更新-Grub2-启动菜单，找回-Windows-10"><a href="#更新-Grub2-启动菜单，找回-Windows-10" class="headerlink" title="更新 Grub2 启动菜单，找回 Windows 10"></a>更新 Grub2 启动菜单，找回 Windows 10</h2><ul>
+<li>执行以下命令即可找回 Windows 10 引导信息：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo grub2-mkconfig -o /boot/grub2/grub.cfg</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这一条命令，是让 <code>grub2</code> 自动扫描磁盘中已经安装的所有系统的引导信息，并将其加入到启动菜单中。重启一下计算机，在上面提过的启动菜单界面，是不是可以看到一个有 <code>Windows</code> 字眼的启动项啦？这就是你的 Windows 10！切换到此项，回车，我 Windows 10 又回来啦！</p>
+<h1 id="第四步-修复启动菜单界面-Windows-版本显示错误的问题"><a href="#第四步-修复启动菜单界面-Windows-版本显示错误的问题" class="headerlink" title="第四步 修复启动菜单界面 Windows 版本显示错误的问题"></a>第四步 修复启动菜单界面 Windows 版本显示错误的问题</h1><p>虽然 Windows 10 已经找回，然而，不尽如人意的是，引导 Windows 10 的菜单项上的 Windows 系统的版本并非“Windows 10”，而是“Windows 7”或 “Windows 8.1”等。<br>初步推测，此启动项上显示的 Windows 版本号，取决于你从何版本的 Windows 升级到 Windows 10的（若你是从 Windows 7 升级到 Windows 10 的，那此启动项的文字就会显示“Windows 7”字眼，对于从 Windows 8.1 升级也是一样的道理。未考虑直接安装 Windows 10 的情况）。<br>需要说明的是，这里只是一个文字显示错误，对正常使用没有丝毫影响。但你有强迫症的话，请继续往下看。</p>
+<h2 id="修复显示错误"><a href="#修复显示错误" class="headerlink" title="修复显示错误"></a>修复显示错误</h2><p>我已经打好了一个 patch，放到了<a href="https://gist.github.com/liangzai-cool/59f0c29a528305a9aa1c3971aeef604b" target="_blank" rel="noopener">这里</a>了，登录已安装好的 CentOS 7 系统，打开一个终端，并这行以下命令即可：</p>
+<ul>
+<li><p>下载patch</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://gist.githubusercontent.com/liangzai-cool/59f0c29a528305a9aa1c3971aeef604b/raw/316a739240b388ff46ee95d38d2c7a97dcd53cbf/20microsoft-win10.patch</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装patch</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">((sudo cp 20microsoft-win10.patch / &amp;&amp; cd / &amp;&amp; sudo patch -p0  ) &lt; 20microsoft-win10.patch)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="错误原因浅析"><a href="#错误原因浅析" class="headerlink" title="错误原因浅析"></a>错误原因浅析</h2><ul>
+<li>启动菜单是执行 <code>Grub2</code> 的命令后，由 <code>Grub2</code> 生成的</li>
+<li><code>Grub2</code> 本身并不能识别磁盘中已安装的操作系统，它是依赖 <code>os-prober</code> 这个库来识别的</li>
+<li><code>os-prober</code> 本是为 <code>debian</code> 系统编写的，其在 <code>debian</code> 系统下不能识别 <code>Windows 10</code> 的问题已经修复</li>
+<li>CentOS 下的 <code>os-prober</code> 目前最新版本依旧是 <code>1.58</code> ，该版本依旧存在此问题，貌似 CentOS 下的 <code>os-prober</code> 无人维护。问题代码位置是 <code>/usr/libexec/os-probes/mounted/20microsoft</code></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/25/Linux下修改系统时区/" rel="next" title="Linux下修改系统时区">
+                <i class="fa fa-chevron-left"></i> Linux下修改系统时区
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/24/MySQL-中-AUTO-INCREMENT-的“坑”/" rel="prev" title="MySQL 中 AUTO_INCREMENT 的“坑”">
+                MySQL 中 AUTO_INCREMENT 的“坑” <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">薛亮</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第一步-准备工作"><span class="nav-number">1.</span> <span class="nav-text">第一步 准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分区"><span class="nav-number">1.1.</span> <span class="nav-text">分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载-CentOS-7-系统文件"><span class="nav-number">1.2.</span> <span class="nav-text">下载 CentOS 7 系统文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#制作优盘启动盘"><span class="nav-number">1.3.</span> <span class="nav-text">制作优盘启动盘</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第二步-从优盘启动安装"><span class="nav-number">2.</span> <span class="nav-text">第二步 从优盘启动安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#调整-BIOS-引导顺序"><span class="nav-number">2.1.</span> <span class="nav-text">调整 BIOS 引导顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始安装"><span class="nav-number">2.2.</span> <span class="nav-text">开始安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#选择需要安装的基础软件"><span class="nav-number">2.2.1.</span> <span class="nav-text">选择需要安装的基础软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#磁盘分区"><span class="nav-number">2.2.2.</span> <span class="nav-text">磁盘分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化账户"><span class="nav-number">2.2.3.</span> <span class="nav-text">初始化账户</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完成安装"><span class="nav-number">2.3.</span> <span class="nav-text">完成安装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第三步-找回-Windows-10-启动项"><span class="nav-number">3.</span> <span class="nav-text">第三步 找回 Windows 10 启动项</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-ntfs-3g"><span class="nav-number">3.1.</span> <span class="nav-text">安装 ntfs-3g</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更新-Grub2-启动菜单，找回-Windows-10"><span class="nav-number">3.2.</span> <span class="nav-text">更新 Grub2 启动菜单，找回 Windows 10</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第四步-修复启动菜单界面-Windows-版本显示错误的问题"><span class="nav-number">4.</span> <span class="nav-text">第四步 修复启动菜单界面 Windows 版本显示错误的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#修复显示错误"><span class="nav-number">4.1.</span> <span class="nav-text">修复显示错误</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#错误原因浅析"><span class="nav-number">4.2.</span> <span class="nav-text">错误原因浅析</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">薛亮</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

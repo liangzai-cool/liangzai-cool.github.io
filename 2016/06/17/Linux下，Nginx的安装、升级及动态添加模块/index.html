@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="系统基于ubuntu server 14.04.4 amd64  安装第一步 下载并解压Nginx压缩包 从Nginx官网下载Nginx，或者在Linux上执行wget http://nginx.org/download/nginx-1.10.1.tar.gz命令直接下载解压nginx-1.10.1.tar.gz文件：1tar zxvf nginx-1.10.1.tar.gz 第二步 配置12c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux下，Nginx的安装、升级及动态添加模块">
+<meta property="og:url" content="http://blog.xueliang.org/2016/06/17/Linux下，Nginx的安装、升级及动态添加模块/index.html">
+<meta property="og:site_name" content="薛亮的主页">
+<meta property="og:description" content="系统基于ubuntu server 14.04.4 amd64  安装第一步 下载并解压Nginx压缩包 从Nginx官网下载Nginx，或者在Linux上执行wget http://nginx.org/download/nginx-1.10.1.tar.gz命令直接下载解压nginx-1.10.1.tar.gz文件：1tar zxvf nginx-1.10.1.tar.gz 第二步 配置12c">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-30T02:43:32.708Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux下，Nginx的安装、升级及动态添加模块">
+<meta name="twitter:description" content="系统基于ubuntu server 14.04.4 amd64  安装第一步 下载并解压Nginx压缩包 从Nginx官网下载Nginx，或者在Linux上执行wget http://nginx.org/download/nginx-1.10.1.tar.gz命令直接下载解压nginx-1.10.1.tar.gz文件：1tar zxvf nginx-1.10.1.tar.gz 第二步 配置12c">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.xueliang.org/2016/06/17/Linux下，Nginx的安装、升级及动态添加模块/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Linux下，Nginx的安装、升级及动态添加模块 | 薛亮的主页</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">薛亮的主页</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2016/06/17/Linux下，Nginx的安装、升级及动态添加模块/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="薛亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="薛亮的主页">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux下，Nginx的安装、升级及动态添加模块
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2016-06-17 16:44:35" itemprop="dateCreated datePublished" datetime="2016-06-17T16:44:35+08:00">2016-06-17</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-30 10:43:32" itemprop="dateModified" datetime="2018-11-30T10:43:32+08:00">2018-11-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>系统基于<code>ubuntu server 14.04.4 amd64</code></p>
+</blockquote>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="第一步-下载并解压Nginx压缩包"><a href="#第一步-下载并解压Nginx压缩包" class="headerlink" title="第一步 下载并解压Nginx压缩包"></a>第一步 下载并解压Nginx压缩包</h2><p> 从<a href="http://nginx.org/en/download.html" target="_blank" rel="noopener">Nginx官网</a>下载Nginx，或者在Linux上执行<code>wget http://nginx.org/download/nginx-1.10.1.tar.gz</code>命令直接下载<br>解压<code>nginx-1.10.1.tar.gz</code>文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf nginx-1.10.1.tar.gz</span><br></pre></td></tr></table></figure></p>
+<h2 id="第二步-配置"><a href="#第二步-配置" class="headerlink" title="第二步 配置"></a>第二步 配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd nginx-1.10.1</span><br><span class="line">./configure --prefix=/usr/local/nginx</span><br></pre></td></tr></table></figure>
+<p>注意：<br><strong>①</strong> 如果之前没有安装C compiler（C 编译器），这一步将报如下错误信息：</p>
+<blockquote>
+<p>xueliang@dev:~/download/nginx-1.10.1\$ ./configure –prefix=/usr/local/nginx<br>checking for OS</p>
+<ul>
+<li>Linux 4.2.0-27-generic x86_64<br>checking for C compiler … not found</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>./configure: error: C compiler cc is not found</p>
+</blockquote>
+<blockquote>
+<p>xueliang@dev:~/download/nginx-1.10.1\$</p>
+</blockquote>
+<p>可以参考<a href="20160616165344843">这篇文章</a>安装C compiler，然后继续下面的操作</p>
+<p><strong>②</strong> 如果之前没有安装PCRE，这一步将报如下错误信息：</p>
+<blockquote>
+<p>checking for PCRE library … not found<br>checking for PCRE library in /usr/local/ … not found<br>checking for PCRE library in /usr/include/pcre/ … not found<br>checking for PCRE library in /usr/pkg/ … not found<br>checking for PCRE library in /opt/local/ … not found</p>
+</blockquote>
+<blockquote>
+<p>./configure: error: the HTTP rewrite module requires the PCRE library.<br>You can either disable the module by using –without-http_rewrite_module<br>option, or install the PCRE library into the system, or build the PCRE library<br>statically from the source with nginx by using –with-pcre=<path> option.</path></p>
+</blockquote>
+<blockquote>
+<p>xueliang@dev:~/download/nginx-1.10.1\$</p>
+</blockquote>
+<p>可以参考<a href="20160616234542404">这篇文章</a>安装PCRE，然后继续下面的操作</p>
+<p><strong>③</strong> 如果之前没有安装zlib，这一步将报如下错误信息：</p>
+<blockquote>
+<p>checking for md5 in system md library … not found<br>checking for md5 in system md5 library … not found<br>checking for md5 in system OpenSSL crypto library … not found<br>checking for sha1 in system md library … not found<br>checking for sha1 in system OpenSSL crypto library … not found<br>checking for zlib library … not found</p>
+</blockquote>
+<blockquote>
+<p>./configure: error: the HTTP gzip module requires the zlib library.<br>You can either disable the module by using –without-http_gzip_module<br>option, or install the zlib library into the system, or build the zlib library<br>statically from the source with nginx by using –with-zlib=<path> option.</path></p>
+</blockquote>
+<blockquote>
+<p>xueliang@dev:~/download/nginx-1.10.1\$</p>
+</blockquote>
+<p>可以参考<a href="20160617235632656">这篇文章</a>安装zlib，然后继续下面的操作</p>
+<p>也可以跳过此步，执行默认安装，<code>--prefix</code>的默认值为<code>/usr/local/nginx</code>，Nginx官网对此有说明：<a href="http://nginx.org/en/docs/configure.html" target="_blank" rel="noopener">Building nginx from Sources</a></p>
+<h2 id="第三步-编译"><a href="#第三步-编译" class="headerlink" title="第三步 编译"></a>第三步 编译</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
+<h2 id="第四步-完成安装"><a href="#第四步-完成安装" class="headerlink" title="第四步 完成安装"></a>第四步 完成安装</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<h1 id="平滑升级"><a href="#平滑升级" class="headerlink" title="平滑升级"></a>平滑升级</h1><p>当需要对正在运行的Nginx进行升级时，可以在不停止Nginx的情况下，使用新版本或者重编译的可执行程序替换旧版本的可执行程序，这里我们从<code>nginx-1.10.1</code>升级到<code>nginx-1.11.1</code>。</p>
+<h2 id="第一步-备份旧版本"><a href="#第一步-备份旧版本" class="headerlink" title="第一步 备份旧版本"></a>第一步 备份旧版本</h2><p>因为Nginx的升级，实质只是用新版本的可执行文件，替换旧版本的可执行程序，所以，对于备份，既可以只备份旧版本可执行文件，也可以打包备份整个旧版本安装目录，参考命令分别如下：<br><strong>只备份旧版本可执行文件</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /usr/local/nginx/sbin/nginx /usr/local/nginx/sbin/nginx.bak</span><br></pre></td></tr></table></figure></p>
+<p><strong>打包备份整个旧版本安装目录</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tar -cvf /usr/local/nginx.bak /usr/local/nginx</span><br></pre></td></tr></table></figure></p>
+<h2 id="第二步-下载新版本并解压Nginx压缩包"><a href="#第二步-下载新版本并解压Nginx压缩包" class="headerlink" title="第二步 下载新版本并解压Nginx压缩包"></a>第二步 下载新版本并解压Nginx压缩包</h2><p>对于新版本Nginx压缩包的下载和解压，可以参考本文关于Nginx的安装部分的第一、二步。</p>
+<h2 id="第三步-使用旧版本配置参数，配置并编译新版本Nginx"><a href="#第三步-使用旧版本配置参数，配置并编译新版本Nginx" class="headerlink" title="第三步 使用旧版本配置参数，配置并编译新版本Nginx"></a>第三步 使用旧版本配置参数，配置并编译新版本Nginx</h2><p>因为只是对Nginx进行升级，并不涉及配置参数的修改，所以，我们一般使用和旧版本相同的配置(当然你也可以使用全新的配置信息)，来编译新版本的Nginx，使用如下命令查看旧版本配置信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx -V</span><br></pre></td></tr></table></figure></p>
+<p>可以得到结果如下：</p>
+<blockquote>
+<p>xueliang@dev:~/download/nginx-1.11.1\$ /usr/local/nginx/sbin/nginx -V<br>nginx version: nginx/1.10.1<br>built by gcc 4.8.4 (Ubuntu 4.8.4-2ubuntu1~14.04.3)<br>configure arguments: –prefix=/usr/local/nginx<br>xueliang@dev:~/download/nginx-1.11.1\$</p>
+</blockquote>
+<p>其中 [configure arguments: –prefix=/usr/local/nginx] 这一行即为旧版本Nginx配置信息，这里可以看出，旧版本只是指定了安装路径，使用[configure arguments:]后面的参数信息，对新版本Nginx作相同配置，然后进行编译：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/local/nginx</span><br></pre></td></tr></table></figure></p>
+<h2 id="第四步-编译新版本Nginx可执行程序"><a href="#第四步-编译新版本Nginx可执行程序" class="headerlink" title="第四步 编译新版本Nginx可执行程序"></a>第四步 编译新版本Nginx可执行程序</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
+<h2 id="第五步-用新版本Nginx可执行程序覆盖旧版本可执行程序"><a href="#第五步-用新版本Nginx可执行程序覆盖旧版本可执行程序" class="headerlink" title="第五步 用新版本Nginx可执行程序覆盖旧版本可执行程序"></a>第五步 用新版本Nginx可执行程序覆盖旧版本可执行程序</h2><p>在上一步的基础上，执行一下命令即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp objs/nginx /usr/local/nginx/sbin/nginx</span><br></pre></td></tr></table></figure></p>
+<p>执行这条命令，可能会报以下异常，提示文件被占用：</p>
+<blockquote>
+<p>xueliang@dev:~/download/nginx-1.11.1\$ sudo cp objs/nginx /usr/local/nginx/sbin/nginx<br>cp: cannot create regular file ‘/usr/local/nginx/sbin/nginx’: Text file busy<br>xueliang@dev:~/download/nginx-1.11.1\$</p>
+</blockquote>
+<p>可以使用以下命令进行强制覆盖：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp -rfp objs/nginx /usr/local/nginx/sbin/nginx</span><br></pre></td></tr></table></figure></p>
+<h2 id="第六步-启动新版本Nginx主进程"><a href="#第六步-启动新版本Nginx主进程" class="headerlink" title="第六步 启动新版本Nginx主进程"></a>第六步 启动新版本Nginx主进程</h2><p>发送 USR2信号给旧版本主进程号：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill -USR2 旧版本的Nginx主进程号</span><br></pre></td></tr></table></figure></p>
+<p>旧版本Nginx主进程接收到<code>-USR2</code>信号，将重命名它的<code>.pid</code>文件为<code>.oldbin</code>，然后执行新版本的Nginx可执行程序，依次启动新版本的主进程和工作进程：</p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">PID</th>
+<th style="text-align:right">PPID</th>
+<th style="text-align:right">USER</th>
+<th style="text-align:right">%CPU</th>
+<th style="text-align:right">VSZ</th>
+<th style="text-align:right">WCHAN</th>
+<th>COMMAND</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">33126</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">root</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1164</td>
+<td style="text-align:right">pause</td>
+<td>nginx: master process /usr/local/nginx/sbin/nginx</td>
+</tr>
+<tr>
+<td style="text-align:right">33134</td>
+<td style="text-align:right">33126</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1368</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+<tr>
+<td style="text-align:right">33135</td>
+<td style="text-align:right">33126</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1380</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+<tr>
+<td style="text-align:right">33136</td>
+<td style="text-align:right">33126</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1368</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+<tr>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">33126</td>
+<td style="text-align:right">root</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1148</td>
+<td style="text-align:right">pause</td>
+<td>nginx: master process /usr/local/nginx/sbin/nginx</td>
+</tr>
+<tr>
+<td style="text-align:right">36265</td>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1364</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+<tr>
+<td style="text-align:right">36266</td>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1364</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+<tr>
+<td style="text-align:right">36267</td>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1164</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<h2 id="第七步-从容关闭旧版本的工作进程"><a href="#第七步-从容关闭旧版本的工作进程" class="headerlink" title="第七步 从容关闭旧版本的工作进程"></a>第七步 从容关闭旧版本的工作进程</h2><p>此时，新、旧版本的Nginx实例会同时运行，共同处理请求，如果此时给旧版本主进程发送<code>WINCH</code> 信号，旧版本主进程将会给它的工作进程发送消息，请求它们从容关闭，此后，旧版本的工作进程开始逐步退出：</p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">PID</th>
+<th style="text-align:right">PPID</th>
+<th style="text-align:right">USER</th>
+<th style="text-align:right">%CPU</th>
+<th style="text-align:right">VSZ</th>
+<th style="text-align:right">WCHAN</th>
+<th>COMMAND</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">33126</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">root</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1164</td>
+<td style="text-align:right">pause</td>
+<td>nginx: master process /usr/local/nginx/sbin/nginx</td>
+</tr>
+<tr>
+<td style="text-align:right">33135</td>
+<td style="text-align:right">33126</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1380</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process is shutting down (nginx)</td>
+</tr>
+<tr>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">33126</td>
+<td style="text-align:right">root</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1148</td>
+<td style="text-align:right">pause</td>
+<td>nginx: master process /usr/local/nginx/sbin/nginx</td>
+</tr>
+<tr>
+<td style="text-align:right">36265</td>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1364</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+<tr>
+<td style="text-align:right">36266</td>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1364</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+<tr>
+<td style="text-align:right">36267</td>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1364</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>从容关闭旧版本的工作进程命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill -WINCH 旧版本的Nginx主进程号</span><br></pre></td></tr></table></figure></p>
+<h2 id="第八步-从容关闭旧版本的主进程，完成Nginx的升级"><a href="#第八步-从容关闭旧版本的主进程，完成Nginx的升级" class="headerlink" title="第八步 从容关闭旧版本的主进程，完成Nginx的升级"></a>第八步 从容关闭旧版本的主进程，完成Nginx的升级</h2><p>经过一段时间后，旧的工作进程（work process）处理完了所有已连接的请求后退出，仅由新版本的工作进程来处理新的请求了：</p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">PID</th>
+<th style="text-align:right">PPID</th>
+<th style="text-align:right">USER</th>
+<th style="text-align:right">%CPU</th>
+<th style="text-align:right">VSZ</th>
+<th style="text-align:right">WCHAN</th>
+<th>COMMAND</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">33126</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">root</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1164</td>
+<td style="text-align:right">pause</td>
+<td>nginx: master process /usr/local/nginx/sbin/nginx</td>
+</tr>
+<tr>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">33126</td>
+<td style="text-align:right">root</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1148</td>
+<td style="text-align:right">pause</td>
+<td>nginx: master process /usr/local/nginx/sbin/nginx</td>
+</tr>
+<tr>
+<td style="text-align:right">36265</td>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1364</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+<tr>
+<td style="text-align:right">36266</td>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1364</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+<tr>
+<td style="text-align:right">36267</td>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1364</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>应该注意的是，此时，旧版本的主进程还尚未关闭它监听的套接字，如果有需要，你仍可以恢复旧版本工作进程。如果由于某些原因，新版本的可执行文件运行情况不理想，下面有几种方案可供参考：</p>
+<ul>
+<li>给旧版本主进程发送 <code>HUP</code> 信号。旧版本主进程将在不重新读取配置信息的情况下，重新开启工作进程。然后，通过给新版本主进程发送 <code>QUIT</code> 信号，所有新版本的进程将会从容关闭。</li>
+<li>给新版本主进程发送 <code>TERM</code> 信号。然后，他将会给它的工作进程发送消息，要求它们立即退出，紧接着，这些工作进程就会立即退出。（如果因为某些原因，新版本进程没有退出，应该给新版本主进程发送 <code>KILL</code> 信号，强制新版本主进程退出。）新版本主进程退出的同时，旧版本主进程将会自动启动它的工作进程。<br>新版本主进程退出后，旧版本主进程将会移除名字以<code>.oldbin</code> 结尾的文件，恢复为它的 <code>.pid</code> 文件。</li>
+</ul>
+<p>如果升级成功，应该给旧版本主进程发送 <code>QUIT</code> 信号：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill -QUIT 旧版本的Nginx主进程号</span><br></pre></td></tr></table></figure></p>
+<p>使其退出，只保留新版本进程：</p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">PID</th>
+<th style="text-align:right">PPID</th>
+<th style="text-align:right">USER</th>
+<th style="text-align:right">%CPU</th>
+<th style="text-align:right">VSZ</th>
+<th style="text-align:right">WCHAN</th>
+<th>COMMAND</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">33126</td>
+<td style="text-align:right">root</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1148</td>
+<td style="text-align:right">pause</td>
+<td>nginx: master process /usr/local/nginx/sbin/nginx</td>
+</tr>
+<tr>
+<td style="text-align:right">36265</td>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1364</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+<tr>
+<td style="text-align:right">36266</td>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1364</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+<tr>
+<td style="text-align:right">36267</td>
+<td style="text-align:right">36264</td>
+<td style="text-align:right">nobody</td>
+<td style="text-align:right">0.0</td>
+<td style="text-align:right">1364</td>
+<td style="text-align:right">kqread</td>
+<td>nginx: worker process (nginx)</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<h1 id="添加模块"><a href="#添加模块" class="headerlink" title="添加模块"></a>添加模块</h1><p>刚接触Nginx时，只知道Nginx的功能是分模块的，并不清楚有些模块默认是不参与到构建中去的，比如<code>ngx_http_ssl_module</code>模块，是用来支持<code>https</code>协议的，默认情况下是没有构建到Nginx中的。<br>随着业务不断扩展，如果需要Nginx支持某些模块，而这些模块默认不在Nginx的构建计划中，构建Nginx时，又没有指定加入这些模块，该怎么办呢？是否能够给已经运行的Nginx动态添加这些模块呢？答案是肯定的！<br>给运行中的Nginx动态添加模块的方案，与上面提到的平滑升级Nginx的方案很类似。下面我们来看一下如何给运行中的Nginx添加 <code>ngx_http_ssl_module</code> 模块。</p>
+<h2 id="第一步-查看运行中的Nginx版本，并下载、解压对应版本的压缩包"><a href="#第一步-查看运行中的Nginx版本，并下载、解压对应版本的压缩包" class="headerlink" title="第一步 查看运行中的Nginx版本，并下载、解压对应版本的压缩包"></a>第一步 查看运行中的Nginx版本，并下载、解压对应版本的压缩包</h2><p>查看Nginx版本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx -v</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>xueliang@dev:~\$ /usr/local/nginx/sbin/nginx -v<br>nginx version: nginx/1.11.1<br>xueliang@dev:~\$</p>
+</blockquote>
+<p>或者：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx -V</span><br></pre></td></tr></table></figure></p>
+<p>结果：</p>
+<blockquote>
+<p>xueliang@dev:~\$ /usr/local/nginx/sbin/nginx -V<br>nginx version: nginx/1.11.1<br>built by gcc 4.8.4 (Ubuntu 4.8.4-2ubuntu1~14.04.3)<br>configure arguments: –prefix=/usr/local/nginx<br>xueliang@dev:~\$</p>
+</blockquote>
+<p>这里可以看出，正在运行的Nginx版本为<code>1.11.1</code>，参照<a href="#安装">安装</a>Nginx部分，下载并解压对应版本的Nginx</p>
+<h2 id="第二步-编译Nginx，同时加入需要模块配置"><a href="#第二步-编译Nginx，同时加入需要模块配置" class="headerlink" title="第二步 编译Nginx，同时加入需要模块配置"></a>第二步 编译Nginx，同时加入需要模块配置</h2><p>参考<a href="#第三步-使用旧版本配置参数配置并编译新版本nginx">平滑升级的第三步</a>，查看运行中的Nginx的配置参数，并在最后追加<code>-with-http_ssl_module</code>。<br>如：原配置信息为 <code>--prefix=/usr/local/nginx</code>，则新配置信息为 <code>--prefix=/usr/local/nginx --with-http_ssl_module</code>，配置Nginx执行的命令如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/local/nginx --with-http_ssl_module</span><br></pre></td></tr></table></figure></p>
+<h2 id="第三步-平滑重启Nginx，完成动态模块添加"><a href="#第三步-平滑重启Nginx，完成动态模块添加" class="headerlink" title="第三步 平滑重启Nginx，完成动态模块添加"></a>第三步 平滑重启Nginx，完成动态模块添加</h2><p>这一步可以参考<a href="#第四步-编译新版本nginx可执行程序">平滑升级的第四至八步</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/17/Linux下安装zlib/" rel="next" title="Linux下安装zlib">
+                <i class="fa fa-chevron-left"></i> Linux下安装zlib
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/31/MySQL中字符串、日期时间等常用函数总结/" rel="prev" title="MySQL中字符串、日期时间等常用函数总结">
+                MySQL中字符串、日期时间等常用函数总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">薛亮</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步-下载并解压Nginx压缩包"><span class="nav-number">1.1.</span> <span class="nav-text">第一步 下载并解压Nginx压缩包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二步-配置"><span class="nav-number">1.2.</span> <span class="nav-text">第二步 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三步-编译"><span class="nav-number">1.3.</span> <span class="nav-text">第三步 编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四步-完成安装"><span class="nav-number">1.4.</span> <span class="nav-text">第四步 完成安装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#平滑升级"><span class="nav-number">2.</span> <span class="nav-text">平滑升级</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步-备份旧版本"><span class="nav-number">2.1.</span> <span class="nav-text">第一步 备份旧版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二步-下载新版本并解压Nginx压缩包"><span class="nav-number">2.2.</span> <span class="nav-text">第二步 下载新版本并解压Nginx压缩包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三步-使用旧版本配置参数，配置并编译新版本Nginx"><span class="nav-number">2.3.</span> <span class="nav-text">第三步 使用旧版本配置参数，配置并编译新版本Nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四步-编译新版本Nginx可执行程序"><span class="nav-number">2.4.</span> <span class="nav-text">第四步 编译新版本Nginx可执行程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五步-用新版本Nginx可执行程序覆盖旧版本可执行程序"><span class="nav-number">2.5.</span> <span class="nav-text">第五步 用新版本Nginx可执行程序覆盖旧版本可执行程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第六步-启动新版本Nginx主进程"><span class="nav-number">2.6.</span> <span class="nav-text">第六步 启动新版本Nginx主进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第七步-从容关闭旧版本的工作进程"><span class="nav-number">2.7.</span> <span class="nav-text">第七步 从容关闭旧版本的工作进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第八步-从容关闭旧版本的主进程，完成Nginx的升级"><span class="nav-number">2.8.</span> <span class="nav-text">第八步 从容关闭旧版本的主进程，完成Nginx的升级</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加模块"><span class="nav-number">3.</span> <span class="nav-text">添加模块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步-查看运行中的Nginx版本，并下载、解压对应版本的压缩包"><span class="nav-number">3.1.</span> <span class="nav-text">第一步 查看运行中的Nginx版本，并下载、解压对应版本的压缩包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二步-编译Nginx，同时加入需要模块配置"><span class="nav-number">3.2.</span> <span class="nav-text">第二步 编译Nginx，同时加入需要模块配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三步-平滑重启Nginx，完成动态模块添加"><span class="nav-number">3.3.</span> <span class="nav-text">第三步 平滑重启Nginx，完成动态模块添加</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">薛亮</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

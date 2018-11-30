@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="说明本笔记基于ckeditor 4.4.7 安装引入ckeditor/ckeditor.js，给目标textarea添加 name 和 class=&amp;quot;ckeditor&amp;quot; ，即可将一个textarea修饰为ckeditor。 扩展允许的内容示例(扩展允许abcd标签，同时允许abcd附加任何属性内容，任何style内容，任何类内容)：1CKEDITOR.config.extraA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ckeditor 笔记（持续更新）">
+<meta property="og:url" content="http://blog.xueliang.org/2015/07/12/ckeditor-笔记（持续更新）/index.html">
+<meta property="og:site_name" content="薛亮的主页">
+<meta property="og:description" content="说明本笔记基于ckeditor 4.4.7 安装引入ckeditor/ckeditor.js，给目标textarea添加 name 和 class=&amp;quot;ckeditor&amp;quot; ，即可将一个textarea修饰为ckeditor。 扩展允许的内容示例(扩展允许abcd标签，同时允许abcd附加任何属性内容，任何style内容，任何类内容)：1CKEDITOR.config.extraA">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://image.xueliang.org/Fs134w52brG9_L1Jiq8goZdaqb8P">
+<meta property="og:updated_time" content="2018-11-30T02:43:32.722Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ckeditor 笔记（持续更新）">
+<meta name="twitter:description" content="说明本笔记基于ckeditor 4.4.7 安装引入ckeditor/ckeditor.js，给目标textarea添加 name 和 class=&amp;quot;ckeditor&amp;quot; ，即可将一个textarea修饰为ckeditor。 扩展允许的内容示例(扩展允许abcd标签，同时允许abcd附加任何属性内容，任何style内容，任何类内容)：1CKEDITOR.config.extraA">
+<meta name="twitter:image" content="http://image.xueliang.org/Fs134w52brG9_L1Jiq8goZdaqb8P">
+
+
+
+
+
+
+  <link rel="canonical" href="http://blog.xueliang.org/2015/07/12/ckeditor-笔记（持续更新）/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>ckeditor 笔记（持续更新） | 薛亮的主页</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">薛亮的主页</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2015/07/12/ckeditor-笔记（持续更新）/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="薛亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="薛亮的主页">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ckeditor 笔记（持续更新）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-07-12 04:34:24" itemprop="dateCreated datePublished" datetime="2015-07-12T04:34:24+08:00">2015-07-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-30 10:43:32" itemprop="dateModified" datetime="2018-11-30T10:43:32+08:00">2018-11-30</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>本笔记基于ckeditor 4.4.7</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>引入ckeditor/ckeditor.js，给目标textarea添加 <code>name</code> 和 <code>class=&quot;ckeditor&quot;</code> ，即可将一个textarea修饰为ckeditor。</p>
+<h1 id="扩展允许的内容"><a href="#扩展允许的内容" class="headerlink" title="扩展允许的内容"></a>扩展允许的内容</h1><p>示例(扩展允许abcd标签，同时允许abcd附加任何属性内容，任何style内容，任何类内容)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CKEDITOR.config.extraAllowedContent = &apos;abcd[*]&#123;*&#125;(*)&apos;;</span><br></pre></td></tr></table></figure></p>
+<p>参考官方API：<a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-extraAllowedContent" target="_blank" rel="noopener">http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-extraAllowedContent</a></p>
+<h1 id="支持HTML5标签"><a href="#支持HTML5标签" class="headerlink" title="支持HTML5标签"></a>支持HTML5标签</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CKEDITOR.config.allowedContent = &#123;</span><br><span class="line">  <span class="string">'$1'</span>: &#123;</span><br><span class="line">    elements: CKEDITOR.dtd,</span><br><span class="line">    attributes: <span class="literal">true</span>,</span><br><span class="line">    styles: <span class="literal">true</span>,</span><br><span class="line">    classes: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>参考官方API：<a href="http://docs.ckeditor.com/#!/guide/dev_disallowed_content-section-how-to-allow-everything-except..." target="_blank" rel="noopener">http://docs.ckeditor.com/#!/guide/dev_disallowed_content-section-how-to-allow-everything-except…</a></p>
+<h1 id="自定义行高插件"><a href="#自定义行高插件" class="headerlink" title="自定义行高插件"></a>自定义行高插件</h1><p>本插件源码来自互联网，由于源代码基于ckeditor3.6.6.1，故对源码进行过简单修改，以求适应ckeditor 4.4.7</p>
+<p>插件目录如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lineheight</span><br><span class="line"> └─┬ plugin.js</span><br><span class="line">   │</span><br><span class="line">   └─ lang</span><br><span class="line">     ├ en.js</span><br><span class="line">     └ zh-cn.js</span><br></pre></td></tr></table></figure></p>
+<h2 id="引入方式1-通过api对ckeditor进行扩展，推荐"><a href="#引入方式1-通过api对ckeditor进行扩展，推荐" class="headerlink" title="引入方式1(通过api对ckeditor进行扩展，推荐)"></a>引入方式1(通过api对ckeditor进行扩展，推荐)</h2><p>将lineheight文件夹放在项目里，如：<code>project/static/lineheight</code></p>
+<p>在业务层js(如<code>project/static/my.src.js</code>)里添加以下两行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CKEDITOR.plugins.addExternal(&apos;lineheight&apos;, &apos;static/lineheight/&apos;); // 添加行高插件</span><br><span class="line">CKEDITOR.config.extraPlugins = (CKEDITOR.config.extraPlugins &amp;&amp; CKEDITOR.config.extraPlugins.length) ? (CKEDITOR.config.extraPlugins + &apos;,lineheight&apos;) : &apos;lineheight&apos;;</span><br></pre></td></tr></table></figure></p>
+<h2 id="引入方式2-直接修改ckeditor源码，不推荐"><a href="#引入方式2-直接修改ckeditor源码，不推荐" class="headerlink" title="引入方式2(直接修改ckeditor源码，不推荐)"></a>引入方式2(直接修改ckeditor源码，不推荐)</h2><p>将<code>lineheight</code>文件夹放在<code>ckeditor/plugins/</code>目录下，<br>然后修改<code>ckeditor/config.js</code>文件：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config.extraPlugins = (config.extraPlugins &amp;&amp; config.extraPlugins.length ? config.extraPlugins + <span class="string">',lineheight'</span> : <span class="string">'lineheight'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>ckeditor引入自定义插件方式，参考资料：<a href="http://stackoverflow.com/questions/4631852/can-i-control-where-ckeditor-finds-plugins-to-load/4632693#4632693" target="_blank" rel="noopener">Can I control where CKEditor finds plugins to load?</a></p>
+<p>下载地址：<a href="http://download.csdn.net/detail/liangzai_cool/8809063" target="_blank" rel="noopener">ckeditor 行高插件</a></p>
+<h1 id="为“图片属性”对话框添加上传图片按钮"><a href="#为“图片属性”对话框添加上传图片按钮" class="headerlink" title="为“图片属性”对话框添加上传图片按钮"></a>为“图片属性”对话框添加上传图片按钮</h1><p>示例代码如下<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"> CKEDITOR.on(<span class="string">'dialogDefinition'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">   <span class="keyword">var</span> dialogName = e.data.name;</span><br><span class="line">   <span class="keyword">var</span> dialog = e.data.definition.dialog;</span><br><span class="line">   <span class="keyword">var</span> dialogDefinition = e.data.definition;</span><br><span class="line">    <span class="comment">// Check if the definition is from the dialog window you are interested in (the "Link" dialog window).</span></span><br><span class="line">   <span class="keyword">if</span> (dialogName == <span class="string">'image'</span>) &#123;<span class="comment">//判断打开的对话框是否为“图片属性对话框”</span></span><br><span class="line">     dialog.on(<span class="string">'show'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">        <span class="comment">// Get a reference to the "Link Info" tab.</span></span><br><span class="line">        <span class="keyword">var</span> $upload = $(e.sender.getElement().$).find(<span class="string">'.cke_dialog_ui_hbox_last:first'</span>);</span><br><span class="line">        $uploadCKEditor = $upload;</span><br><span class="line">        <span class="keyword">if</span> ($upload.find(<span class="string">'iframe'</span>).length == <span class="number">0</span>)&#123;</span><br><span class="line">         $upload.empty().append(<span class="string">'&lt;iframe style="height:39px;width:110px; margin-top:11px;" src="/upload.htm?callback=uploadfinishedFromCKEditor&amp;width=110&amp;height=39&amp;margin=5" frameborder="0" scrolling="no"&gt;&lt;/iframe&gt;'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">       $(e.sender.getElement().$).find(<span class="string">':input.cke_dialog_ui_input_text:eq(2)'</span>).val(<span class="string">'100%'</span>);</span><br><span class="line">     &#125;);</span><br><span class="line">     dialog.on(<span class="string">'hide'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">       <span class="comment">//alert('dialog ' + dialogName + ' closed.');</span></span><br><span class="line">     &#125;);</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义回调函数，可以根据自己的业务修改</span></span><br><span class="line"> <span class="built_in">window</span>.uploadfinishedFromCKEditor = <span class="function"><span class="keyword">function</span>(<span class="params">url</span>)</span>&#123;</span><br><span class="line">     <span class="keyword">var</span> $input =  $uploadCKEditor.siblings(<span class="string">'.cke_dialog_ui_hbox_first:first'</span>).find(<span class="string">':input'</span>);</span><br><span class="line">     $input.val(url);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>效果如下：<br><img src="http://image.xueliang.org/Fs134w52brG9_L1Jiq8goZdaqb8P" alt="图片加载中"></p>
+<h1 id="将光标定位（移到）最后位置"><a href="#将光标定位（移到）最后位置" class="headerlink" title="将光标定位（移到）最后位置"></a>将光标定位（移到）最后位置</h1><p>首先，要有光标…<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> editor = CKEDITOR.instances.editor1;</span><br><span class="line"><span class="keyword">var</span> range = editor.createRange();</span><br><span class="line">range.moveToElementEditablePosition(editor.editable(), <span class="literal">true</span>);</span><br><span class="line">editor.getSelection().selectRanges([range]);</span><br></pre></td></tr></table></figure></p>
+<p>参考官方API：<a href="http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-createRange" target="_blank" rel="noopener">http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-createRange</a><br><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.dom.range-method-moveToElementEditablePosition" target="_blank" rel="noopener">http://docs.ckeditor.com/#!/api/CKEDITOR.dom.range-method-moveToElementEditablePosition</a><br><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-getSelection" target="_blank" rel="noopener">http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-getSelection</a><br><a href="http://docs.ckeditor.com/#!/api/CKEDITOR.dom.selection-method-selectRanges" target="_blank" rel="noopener">http://docs.ckeditor.com/#!/api/CKEDITOR.dom.selection-method-selectRanges</a></p>
+<h1 id="完整toolbar配置"><a href="#完整toolbar配置" class="headerlink" title="完整toolbar配置"></a>完整<code>toolbar</code>配置</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">window</span>.CKEDITOR) &#123;</span><br><span class="line">  config.toolbar = [</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">'document'</span>, <span class="attr">items</span>: [ <span class="string">'Source'</span>, <span class="string">'-'</span>, <span class="string">'Save'</span>, <span class="string">'NewPage'</span>, <span class="string">'Preview'</span>, <span class="string">'Print'</span>, <span class="string">'-'</span>, <span class="string">'Templates'</span> ] &#125;,</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">'clipboard'</span>, <span class="attr">items</span>: [ <span class="string">'Cut'</span>, <span class="string">'Copy'</span>, <span class="string">'Paste'</span>, <span class="string">'PasteText'</span>, <span class="string">'PasteFromWord'</span>, <span class="string">'-'</span>, <span class="string">'Undo'</span>, <span class="string">'Redo'</span> ] &#125;,</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">'editing'</span>, <span class="attr">items</span>: [ <span class="string">'Find'</span>, <span class="string">'Replace'</span>, <span class="string">'-'</span>, <span class="string">'SelectAll'</span>, <span class="string">'-'</span>, <span class="string">'Scayt'</span> ] &#125;,</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">'forms'</span>, <span class="attr">items</span>: [ <span class="string">'Form'</span>, <span class="string">'Checkbox'</span>, <span class="string">'Radio'</span>, <span class="string">'TextField'</span>, <span class="string">'Textarea'</span>, <span class="string">'Select'</span>, <span class="string">'Button'</span>, <span class="string">'ImageButton'</span>, <span class="string">'HiddenField'</span> ] &#125;,</span><br><span class="line">    <span class="string">'/'</span>,</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">'basicstyles'</span>, <span class="attr">items</span>: [ <span class="string">'Bold'</span>, <span class="string">'Italic'</span>, <span class="string">'Underline'</span>, <span class="string">'Strike'</span>, <span class="string">'Subscript'</span>, <span class="string">'Superscript'</span>, <span class="string">'-'</span>, <span class="string">'RemoveFormat'</span> ] &#125;,</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">'paragraph'</span>, <span class="attr">items</span>: [ <span class="string">'NumberedList'</span>, <span class="string">'BulletedList'</span>, <span class="string">'-'</span>, <span class="string">'Outdent'</span>, <span class="string">'Indent'</span>, <span class="string">'-'</span>, <span class="string">'Blockquote'</span>, <span class="string">'CreateDiv'</span>, <span class="string">'-'</span>, <span class="string">'JustifyLeft'</span>, <span class="string">'JustifyCenter'</span>, <span class="string">'JustifyRight'</span>, <span class="string">'JustifyBlock'</span>, <span class="string">'-'</span>, <span class="string">'BidiLtr'</span>, <span class="string">'BidiRtl'</span>, <span class="string">'Language'</span> ] &#125;,</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">'links'</span>, <span class="attr">items</span>: [ <span class="string">'Link'</span>, <span class="string">'Unlink'</span>, <span class="string">'Anchor'</span> ] &#125;,</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">'insert'</span>, <span class="attr">items</span>: [ <span class="string">'Image'</span>, <span class="string">'Flash'</span>, <span class="string">'Table'</span>, <span class="string">'HorizontalRule'</span>, <span class="string">'Smiley'</span>, <span class="string">'SpecialChar'</span>, <span class="string">'PageBreak'</span>, <span class="string">'Iframe'</span> ] &#125;,</span><br><span class="line">    <span class="string">'/'</span>,</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">'styles'</span>, <span class="attr">items</span>: [ <span class="string">'Styles'</span>, <span class="string">'Format'</span>, <span class="string">'Font'</span>, <span class="string">'FontSize'</span> ] &#125;,</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">'colors'</span>, <span class="attr">items</span>: [ <span class="string">'TextColor'</span>, <span class="string">'BGColor'</span> ] &#125;,</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">'tools'</span>, <span class="attr">items</span>: [ <span class="string">'Maximize'</span>, <span class="string">'ShowBlocks'</span> ] &#125;,</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">'about'</span>, <span class="attr">items</span>: [ <span class="string">'About'</span> ] &#125;</span><br><span class="line">  ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="以编程方式选中指定的选项卡"><a href="#以编程方式选中指定的选项卡" class="headerlink" title="以编程方式选中指定的选项卡"></a>以编程方式选中指定的选项卡</h1><p>当相应的事件触发后，比如用户点击了某个按钮，以编程的方式，选中对话框中，指定的选项卡，可以使用 <code>dialog</code> 对象的 <code>selectPage(tabId)</code> 方法。<br>例如当前选中的选项卡 ID 为 <code>tab_3</code>，现在需要切换到 ID 为 <code>tab_0</code> 的选项卡，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var dialog = CKEDITOR.dialog.getCurrent(); // 获取当前打开的对话框对象</span><br><span class="line">dialog.selectPage(&apos;tab_0&apos;);	// 切换到 ID 为`tab_0` 的选项卡</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/06/30/jQuery-学习笔记/" rel="next" title="jQuery 学习笔记">
+                <i class="fa fa-chevron-left"></i> jQuery 学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/01/07/Ant学习-之-致命错误/" rel="prev" title="Ant学习 之 [致命错误]">
+                Ant学习 之 [致命错误] <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">薛亮</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#说明"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#扩展允许的内容"><span class="nav-number">3.</span> <span class="nav-text">扩展允许的内容</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#支持HTML5标签"><span class="nav-number">4.</span> <span class="nav-text">支持HTML5标签</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义行高插件"><span class="nav-number">5.</span> <span class="nav-text">自定义行高插件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#引入方式1-通过api对ckeditor进行扩展，推荐"><span class="nav-number">5.1.</span> <span class="nav-text">引入方式1(通过api对ckeditor进行扩展，推荐)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入方式2-直接修改ckeditor源码，不推荐"><span class="nav-number">5.2.</span> <span class="nav-text">引入方式2(直接修改ckeditor源码，不推荐)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为“图片属性”对话框添加上传图片按钮"><span class="nav-number">6.</span> <span class="nav-text">为“图片属性”对话框添加上传图片按钮</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#将光标定位（移到）最后位置"><span class="nav-number">7.</span> <span class="nav-text">将光标定位（移到）最后位置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#完整toolbar配置"><span class="nav-number">8.</span> <span class="nav-text">完整toolbar配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#以编程方式选中指定的选项卡"><span class="nav-number">9.</span> <span class="nav-text">以编程方式选中指定的选项卡</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">薛亮</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
