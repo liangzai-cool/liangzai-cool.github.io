@@ -883,6 +883,338 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2015/06/30/javascript-工作笔记/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="薛亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="薛亮的主页">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2015/06/30/javascript-工作笔记/" itemprop="url">
+                  javascript 工作笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-06-30 01:59:14" itemprop="dateCreated datePublished" datetime="2015-06-30T01:59:14+08:00">2015-06-30</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-12-01 19:24:05" itemprop="dateModified" datetime="2018-12-01T19:24:05+08:00">2018-12-01</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/06/30/javascript-工作笔记/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/30/javascript-工作笔记/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="prototype"><a href="#prototype" class="headerlink" title="prototype"></a>prototype</h1><h2 id="一个类型如何从另一个类型继承"><a href="#一个类型如何从另一个类型继承" class="headerlink" title="一个类型如何从另一个类型继承"></a>一个类型如何从另一个类型继承</h2><p>实例代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Class1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.field1 = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">this</span>.method1 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Class2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.field2 = <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">this</span>.method2 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;  </span><br><span class="line">    alert(<span class="number">2</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Class2.prototype = <span class="keyword">new</span> Class1(); <span class="comment">//关键代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//测试</span></span><br><span class="line"><span class="keyword">var</span> myObject1 = <span class="keyword">new</span> Class1();</span><br><span class="line">alert(myObject1.field1); <span class="comment">//1</span></span><br><span class="line"><span class="keyword">if</span> (myObject1.method1) &#123; <span class="comment">//true</span></span><br><span class="line">  myObject1.method1();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  alert(<span class="string">"myObject1.mehtod1 is undefined"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">alert(myObject1.field2); <span class="comment">//undefined</span></span><br><span class="line"><span class="keyword">if</span> (myObject1.method2) &#123;</span><br><span class="line">  myObject1.method2();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  alert(<span class="string">"myObject1.mehtod2 is undefined"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myObject2 = <span class="keyword">new</span> Class2();</span><br><span class="line">alert(myObject2.field1); <span class="comment">//2</span></span><br><span class="line"><span class="keyword">if</span> (myObject2.method1) &#123; <span class="comment">//true</span></span><br><span class="line">  myObject2.method1();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  alert(<span class="string">"myObject2.mehtod1 is undefined"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">alert(myObject2.field2); <span class="comment">//2</span></span><br><span class="line"><span class="keyword">if</span> (myObject2.method2) &#123; <span class="comment">//true</span></span><br><span class="line">  myObject2.method2();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  alert(<span class="string">"myObject2.mehtod2 is undefined"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>附：</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> windowHeight = $(<span class="built_in">window</span>).height();    <span class="comment">//浏览器时下窗口可视区域高度;</span></span><br><span class="line"><span class="keyword">var</span> scrollTop = $(<span class="built_in">document</span>).scrollTop();    <span class="comment">//获取滚动条到顶部的垂直高度;</span></span><br><span class="line"><span class="keyword">var</span> documentHeight = $(<span class="built_in">document</span>.body).height();    <span class="comment">//浏览器时下窗口文档body的高度;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> windowHeight = $(<span class="built_in">window</span>).height();    <span class="comment">//浏览器时下窗口可视区域高度;</span></span><br><span class="line"><span class="keyword">var</span> scrollTop = $(<span class="built_in">document</span>).scrollTop();    <span class="comment">//获取滚动条到顶部的垂直高度;</span></span><br><span class="line"><span class="keyword">var</span> documentHeight = $(<span class="built_in">document</span>.body).height();    <span class="comment">//浏览器时下窗口文档body的高度;</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="URL传递中文之JavaScript-encodeURIComponent"><a href="#URL传递中文之JavaScript-encodeURIComponent" class="headerlink" title="URL传递中文之JavaScript encodeURIComponent"></a>URL传递中文之JavaScript encodeURIComponent</h1><p>使用URL传递中文等特殊符号时，可以使用<code>encodeURIComponent</code>进行encode一下，服务器端接收后，进行dencode，可以避免乱码</p>
+<h1 id="通过原生JS获取iframe内容物-示例："><a href="#通过原生JS获取iframe内容物-示例：" class="headerlink" title="通过原生JS获取iframe内容物 示例："></a>通过原生JS获取iframe内容物 示例：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.info(<span class="built_in">document</span>.getElementById(<span class="string">'iframeId'</span>).context.contentWindow.document);</span><br></pre></td></tr></table></figure>
+<h1 id="将滚动条内的指定元素显示在可视区域"><a href="#将滚动条内的指定元素显示在可视区域" class="headerlink" title="将滚动条内的指定元素显示在可视区域"></a>将滚动条内的指定元素显示在可视区域</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> index = <span class="built_in">parseInt</span>(value) - <span class="number">1</span>;  <span class="comment">// 指定元素的索引</span></span><br><span class="line"><span class="keyword">var</span> $container = <span class="built_in">document</span>.querySelector(<span class="string">'ul.list-group'</span>);  <span class="comment">// 容器</span></span><br><span class="line"><span class="keyword">var</span> $item = <span class="built_in">document</span>.querySelectorAll(<span class="string">'ul.list-group li'</span>).item(index);  <span class="comment">// 指定元素</span></span><br><span class="line">$container.scrollTop = $item.offsetTop - $container.offsetTop;</span><br></pre></td></tr></table></figure>
+<iframe width="100%" height="300" src="//jsfiddle.net/liangzai_cool/uhvyymyn/embedded/js,html,css,result/dark/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2015/06/30/jQuery-学习笔记/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="薛亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="薛亮的主页">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2015/06/30/jQuery-学习笔记/" itemprop="url">
+                  jQuery 学习笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-06-30 01:59:14" itemprop="dateCreated datePublished" datetime="2015-06-30T01:59:14+08:00">2015-06-30</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-12-01 19:57:09" itemprop="dateModified" datetime="2018-12-01T19:57:09+08:00">2018-12-01</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/06/30/jQuery-学习笔记/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/30/jQuery-学习笔记/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Ajax"><a href="#Ajax" class="headerlink" title="Ajax"></a>Ajax</h1><h2 id="在不同的callback函数间传递变量"><a href="#在不同的callback函数间传递变量" class="headerlink" title="在不同的callback函数间传递变量"></a>在不同的callback函数间传递变量</h2><p>jQuery中的ajax()函数的返回值可以链式调用done()、fail()等函数，如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(<span class="string">"/exmple.do"</span>)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//①</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//②</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.fail(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//③</span></span><br><span class="line">    alert(<span class="string">"fail"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>如果想在②处获取①处的数据，只需在①处将数据绑定在this关键字上，即可在②处用过this.exmple获取。</p>
+<p>最终实现代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(<span class="string">"/exmple.do"</span>)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">"liangzai_cool"</span>; <span class="comment">//①</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.name); <span class="comment">//② 此处会弹出对话框，内容即为:liangzai_cool</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.fail(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//③</span></span><br><span class="line">    alert(<span class="string">"fail"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2015/06/30/MySQL-工作笔记（持续更新）/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1109,171 +1441,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2015/06/30/jQuery-学习笔记/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="薛亮">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="薛亮的主页">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/06/30/jQuery-学习笔记/" itemprop="url">
-                  jQuery 学习笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2015-06-30 01:59:14" itemprop="dateCreated datePublished" datetime="2015-06-30T01:59:14+08:00">2015-06-30</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-12-01 19:57:09" itemprop="dateModified" datetime="2018-12-01T19:57:09+08:00">2018-12-01</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015/06/30/jQuery-学习笔记/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/30/jQuery-学习笔记/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Ajax"><a href="#Ajax" class="headerlink" title="Ajax"></a>Ajax</h1><h2 id="在不同的callback函数间传递变量"><a href="#在不同的callback函数间传递变量" class="headerlink" title="在不同的callback函数间传递变量"></a>在不同的callback函数间传递变量</h2><p>jQuery中的ajax()函数的返回值可以链式调用done()、fail()等函数，如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(<span class="string">"/exmple.do"</span>)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//①</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//②</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.fail(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//③</span></span><br><span class="line">    alert(<span class="string">"fail"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>如果想在②处获取①处的数据，只需在①处将数据绑定在this关键字上，即可在②处用过this.exmple获取。</p>
-<p>最终实现代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(<span class="string">"/exmple.do"</span>)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">"liangzai_cool"</span>; <span class="comment">//①</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.name); <span class="comment">//② 此处会弹出对话框，内容即为:liangzai_cool</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.fail(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//③</span></span><br><span class="line">    alert(<span class="string">"fail"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2015/06/30/jQuery-fancybox-学习笔记/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1393,173 +1560,6 @@
 <p>解决方案：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">".fancybox"</span>).fancybox(&#123;</span><br><span class="line">  <span class="comment">// HTML templates</span></span><br><span class="line">  tpl: &#123;</span><br><span class="line">    wrap    : <span class="string">'&lt;div class="fancybox-wrap" tabIndex="-1"&gt;&lt;div class="fancybox-skin"&gt;&lt;div class="fancybox-outer"&gt;&lt;div class="fancybox-inner"&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;'</span>,</span><br><span class="line">    image   : <span class="string">'&lt;img class="fancybox-image" src="&#123;href&#125;" alt="" /&gt;'</span>,</span><br><span class="line">    iframe  : <span class="string">'&lt;iframe id="fancybox-frame&#123;rnd&#125;" name="fancybox-frame&#123;rnd&#125;" class="fancybox-iframe" frameborder="0" vspace="0" hspace="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen'</span> + ($.browser.msie ? <span class="string">' allowtransparency="true"'</span> : <span class="string">''</span>) + <span class="string">'&gt;&lt;/iframe&gt;'</span>,</span><br><span class="line">    error   : <span class="string">'&lt;p class="fancybox-error"&gt;请求的内容未找到。&lt;br/&gt;请稍后再试。&lt;/p&gt;'</span>,</span><br><span class="line">    closeBtn: <span class="string">'&lt;a title="关闭" class="fancybox-item fancybox-close" href="javascript:;"&gt;&lt;/a&gt;'</span>,</span><br><span class="line">    next    : <span class="string">'&lt;a title="下一个" class="fancybox-nav fancybox-next" href="javascript:;"&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;'</span>,</span><br><span class="line">    prev    : <span class="string">'&lt;a title="上一个" class="fancybox-nav fancybox-prev" href="javascript:;"&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
 <p>效果如下：<br><img src="http://image.xueliang.org/20150601145250147" alt="这里写图片描述"></p>
 
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.xueliang.org/2015/06/30/javascript-工作笔记/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="薛亮">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="薛亮的主页">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/06/30/javascript-工作笔记/" itemprop="url">
-                  javascript 工作笔记
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2015-06-30 01:59:14" itemprop="dateCreated datePublished" datetime="2015-06-30T01:59:14+08:00">2015-06-30</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-12-01 19:24:05" itemprop="dateModified" datetime="2018-12-01T19:24:05+08:00">2018-12-01</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015/06/30/javascript-工作笔记/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/30/javascript-工作笔记/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="prototype"><a href="#prototype" class="headerlink" title="prototype"></a>prototype</h1><h2 id="一个类型如何从另一个类型继承"><a href="#一个类型如何从另一个类型继承" class="headerlink" title="一个类型如何从另一个类型继承"></a>一个类型如何从另一个类型继承</h2><p>实例代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Class1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.field1 = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">this</span>.method1 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Class2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.field2 = <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">this</span>.method2 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;  </span><br><span class="line">    alert(<span class="number">2</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Class2.prototype = <span class="keyword">new</span> Class1(); <span class="comment">//关键代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//测试</span></span><br><span class="line"><span class="keyword">var</span> myObject1 = <span class="keyword">new</span> Class1();</span><br><span class="line">alert(myObject1.field1); <span class="comment">//1</span></span><br><span class="line"><span class="keyword">if</span> (myObject1.method1) &#123; <span class="comment">//true</span></span><br><span class="line">  myObject1.method1();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  alert(<span class="string">"myObject1.mehtod1 is undefined"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">alert(myObject1.field2); <span class="comment">//undefined</span></span><br><span class="line"><span class="keyword">if</span> (myObject1.method2) &#123;</span><br><span class="line">  myObject1.method2();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  alert(<span class="string">"myObject1.mehtod2 is undefined"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myObject2 = <span class="keyword">new</span> Class2();</span><br><span class="line">alert(myObject2.field1); <span class="comment">//2</span></span><br><span class="line"><span class="keyword">if</span> (myObject2.method1) &#123; <span class="comment">//true</span></span><br><span class="line">  myObject2.method1();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  alert(<span class="string">"myObject2.mehtod1 is undefined"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">alert(myObject2.field2); <span class="comment">//2</span></span><br><span class="line"><span class="keyword">if</span> (myObject2.method2) &#123; <span class="comment">//true</span></span><br><span class="line">  myObject2.method2();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  alert(<span class="string">"myObject2.mehtod2 is undefined"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p><strong>附：</strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> windowHeight = $(<span class="built_in">window</span>).height();    <span class="comment">//浏览器时下窗口可视区域高度;</span></span><br><span class="line"><span class="keyword">var</span> scrollTop = $(<span class="built_in">document</span>).scrollTop();    <span class="comment">//获取滚动条到顶部的垂直高度;</span></span><br><span class="line"><span class="keyword">var</span> documentHeight = $(<span class="built_in">document</span>.body).height();    <span class="comment">//浏览器时下窗口文档body的高度;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> windowHeight = $(<span class="built_in">window</span>).height();    <span class="comment">//浏览器时下窗口可视区域高度;</span></span><br><span class="line"><span class="keyword">var</span> scrollTop = $(<span class="built_in">document</span>).scrollTop();    <span class="comment">//获取滚动条到顶部的垂直高度;</span></span><br><span class="line"><span class="keyword">var</span> documentHeight = $(<span class="built_in">document</span>.body).height();    <span class="comment">//浏览器时下窗口文档body的高度;</span></span><br></pre></td></tr></table></figure></p>
-<h1 id="URL传递中文之JavaScript-encodeURIComponent"><a href="#URL传递中文之JavaScript-encodeURIComponent" class="headerlink" title="URL传递中文之JavaScript encodeURIComponent"></a>URL传递中文之JavaScript encodeURIComponent</h1><p>使用URL传递中文等特殊符号时，可以使用<code>encodeURIComponent</code>进行encode一下，服务器端接收后，进行dencode，可以避免乱码</p>
-<h1 id="通过原生JS获取iframe内容物-示例："><a href="#通过原生JS获取iframe内容物-示例：" class="headerlink" title="通过原生JS获取iframe内容物 示例："></a>通过原生JS获取iframe内容物 示例：</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.info(<span class="built_in">document</span>.getElementById(<span class="string">'iframeId'</span>).context.contentWindow.document);</span><br></pre></td></tr></table></figure>
-<h1 id="将滚动条内的指定元素显示在可视区域"><a href="#将滚动条内的指定元素显示在可视区域" class="headerlink" title="将滚动条内的指定元素显示在可视区域"></a>将滚动条内的指定元素显示在可视区域</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> index = <span class="built_in">parseInt</span>(value) - <span class="number">1</span>;  <span class="comment">// 指定元素的索引</span></span><br><span class="line"><span class="keyword">var</span> $container = <span class="built_in">document</span>.querySelector(<span class="string">'ul.list-group'</span>);  <span class="comment">// 容器</span></span><br><span class="line"><span class="keyword">var</span> $item = <span class="built_in">document</span>.querySelectorAll(<span class="string">'ul.list-group li'</span>).item(index);  <span class="comment">// 指定元素</span></span><br><span class="line">$container.scrollTop = $item.offsetTop - $container.offsetTop;</span><br></pre></td></tr></table></figure>
-<iframe width="100%" height="300" src="//jsfiddle.net/liangzai_cool/uhvyymyn/embedded/js,html,css,result/dark/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
           
         
       
@@ -1747,7 +1747,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                      
+                    
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
