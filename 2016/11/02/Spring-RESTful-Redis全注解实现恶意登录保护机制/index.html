@@ -37,12 +37,16 @@
 
 
 
+  <meta name="google-site-verification" content="V4mjId6JYX7o1j4L14DFN6f6g6BnrPuhGEUruFm4_uQ">
 
 
 
 
 
 
+
+
+  <meta name="baidu-site-verification" content="XMpGgFHb0u">
 
 
 
@@ -113,13 +117,14 @@
 
 
   <meta name="description" content="好久没更博了…最近看了个真正全注解实现的 SpringMVC 博客，感觉很不错，终于可以彻底丢弃 web.xml 了。其实这玩意也是老东西了，丢弃 web.xml，是基于 5、6年前发布的 Servlet 3.0 规范，只不过少有人玩而已…现在4.0都快正式发布了…Spring对注解的支持也从09年底就开始支持了…基础部分我就不仔细讲了，可以先看一下这篇 以及其中提到的另外两篇文章，这三篇文章讲的">
+<meta name="keywords" content="java,spring,redis,恶意登录保护">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring RESTful + Redis全注解实现恶意登录保护机制">
 <meta property="og:url" content="http://blog.xueliang.org/2016/11/02/Spring-RESTful-Redis全注解实现恶意登录保护机制/index.html">
 <meta property="og:site_name" content="薛亮的主页">
 <meta property="og:description" content="好久没更博了…最近看了个真正全注解实现的 SpringMVC 博客，感觉很不错，终于可以彻底丢弃 web.xml 了。其实这玩意也是老东西了，丢弃 web.xml，是基于 5、6年前发布的 Servlet 3.0 规范，只不过少有人玩而已…现在4.0都快正式发布了…Spring对注解的支持也从09年底就开始支持了…基础部分我就不仔细讲了，可以先看一下这篇 以及其中提到的另外两篇文章，这三篇文章讲的">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-30T02:43:32.720Z">
+<meta property="og:updated_time" content="2018-12-01T12:14:09.300Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring RESTful + Redis全注解实现恶意登录保护机制">
 <meta name="twitter:description" content="好久没更博了…最近看了个真正全注解实现的 SpringMVC 博客，感觉很不错，终于可以彻底丢弃 web.xml 了。其实这玩意也是老东西了，丢弃 web.xml，是基于 5、6年前发布的 Servlet 3.0 规范，只不过少有人玩而已…现在4.0都快正式发布了…Spring对注解的支持也从09年底就开始支持了…基础部分我就不仔细讲了，可以先看一下这篇 以及其中提到的另外两篇文章，这三篇文章讲的">
@@ -228,6 +233,14 @@
           <li class="menu-item menu-item-home">
     <a href="/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
   </li>
         
         
@@ -374,7 +387,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-11-30 10:43:32" itemprop="dateModified" datetime="2018-11-30T10:43:32+08:00">2018-11-30</time>
+                <time title="修改时间：2018-12-01 20:14:09" itemprop="dateModified" datetime="2018-12-01T20:14:09+08:00">2018-12-01</time>
               
             
           </span>
@@ -453,6 +466,18 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/spring/" rel="tag"># spring</a>
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
+          
+            <a href="/tags/恶意登录保护/" rel="tag"># 恶意登录保护</a>
+          
+        </div>
       
 
       
@@ -563,6 +588,105 @@
 
               
 
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
               
             </nav>
           
@@ -1117,6 +1241,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
 
