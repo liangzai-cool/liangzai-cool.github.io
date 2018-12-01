@@ -383,6 +383,17 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/06/30/jQuery-学习笔记/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/30/jQuery-学习笔记/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -437,18 +448,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/06/30/jQuery-fancybox-学习笔记/" rel="next" title="jQuery.fancybox 学习笔记">
-                <i class="fa fa-chevron-left"></i> jQuery.fancybox 学习笔记
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/06/30/MySQL-工作笔记（持续更新）/" rel="prev" title="MySQL 工作笔记（持续更新）">
-                MySQL 工作笔记（持续更新） <i class="fa fa-chevron-right"></i>
+              <a href="/2015/06/30/javascript-工作笔记/" rel="prev" title="javascript 工作笔记">
+                javascript 工作笔记 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -470,6 +477,16 @@
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
 
   
 
@@ -716,9 +733,30 @@
 
   
 
-
+  
+    <script id="dsq-count-scr" src="https://xueliang-org.disqus.com/count.js" async></script>
+  
 
   
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://blog.xueliang.org/2015/06/30/jQuery-学习笔记/';
+        this.page.identifier = '2015/06/30/jQuery-学习笔记/';
+        this.page.title = 'jQuery 学习笔记';
+        };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://xueliang-org.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
 
 
 
