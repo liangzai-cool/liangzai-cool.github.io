@@ -438,7 +438,21 @@
                
                  <span class="post-meta-item-text">阅读次数：</span>
                
-                 <span class="leancloud-visitors-count"></span>
+                 <span class="leancloud-visitors-views-count"></span>
+             </span>
+          
+
+          
+          
+             <span id="/2016/09/25/WinSCP-中普通用户以-root-身份登录-Linux/" class="leancloud_visitors" data-flag-title="WinSCP 中普通用户以 root 身份登录 Linux">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读人数：</span>
+               
+                 <span class="leancloud-visitors-visitors-count"></span>
              </span>
           
 
@@ -1283,11 +1297,12 @@
 
 
   
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js"></script>
 
   
   <script>
     
-    function addCount(Counter) {
+    function addCount(Counter, fieldName) {
       var $visitors = $(".leancloud_visitors");
       var url = $visitors.attr('id').trim();
       var title = $visitors.attr('data-flag-title').trim();
@@ -1298,9 +1313,23 @@
             var counter = results[0];
             
               var $element = $(document.getElementById(url));
-              $element.find('.leancloud-visitors-count').text(counter.time + 1);
+              $element.find('.leancloud-visitors-views-count').text(counter.time + 1);
             
-            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            var jsonParams = { views: { "__op":"Increment", "amount":1 } };
+            var isNewVisitor = false;
+
+            if ('visitors' == fieldName) {
+              var viewedPostIds = Cookies.get('viewd_posts');
+              if(!(viewedPostIds && viewedPostIds.length)) {
+                viewedPostIds = '|';
+              }
+              if (viewedPostIds.indexOf('|' + counter.objectId + '|') < 0) {
+                jsonParams.visitors = { "__op":"Increment", "amount":1 };
+                isNewVisitor = true;
+              }
+            }
+
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify(jsonParams))
             
             .fail(function ({ responseJSON }) {
                 console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
@@ -1308,7 +1337,8 @@
           } else {
             
               var $element = $(document.getElementById(url));
-              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              $element.find('.leancloud-visitors-views-count').text('Counter not initialized! See more at console err msg.');
+              $element.find('.leancloud-visitors-visitors-count').text('Counter not initialized! See more at console err msg.');
               console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
             
           }
