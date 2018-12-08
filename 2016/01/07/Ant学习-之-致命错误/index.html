@@ -1294,6 +1294,8 @@
               if (viewedPostIds.indexOf('|' + counter.objectId + '|') < 0) {
                 jsonParams.visitors = { "__op":"Increment", "amount":1 };
                 isNewVisitor = true;
+              } else {
+                return;
               }
             } else if ('views' == fieldName) {
               jsonParams.views = { "__op":"Increment", "amount":1 };
