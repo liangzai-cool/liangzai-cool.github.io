@@ -1405,10 +1405,12 @@
 
       Counter('get', '/classes/Counter', { where: JSON.stringify({ url: { "$in": entries } }) })
         .done(function ({ results }) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+          var VIEWS_COUNT_CONTAINER_REF = '.leancloud-visitors-views-count';
+          var VISITORS_COUNT_CONTAINER_REF = '.leancloud-visitors-views-count';
 
           if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            $visitors.find(VIEWS_COUNT_CONTAINER_REF).text(0);
+            $visitors.find(VISITORS_COUNT_CONTAINER_REF).text(0);
             return;
           }
 
@@ -1419,15 +1421,19 @@
             var visitors = item.visitors;
             var element = document.getElementById(url);
 
-            $(element).find(COUNT_CONTAINER_REF).text(views);
-            $(element).find(COUNT_CONTAINER_REF).text(visitors);
+            $(element).find(VIEWS_COUNT_CONTAINER_REF).text(views);
+            $(element).find(VISITORS_COUNT_CONTAINER_REF).text(visitors);
           }
           for(var i = 0; i < entries.length; i++) {
             var url = entries[i];
             var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
-              countSpan.text(0);
+            var viewsCountSpan = $(element).find(VIEWS_COUNT_CONTAINER_REF);
+            var visitorsCountSpan = $(element).find(VISITORS_COUNT_CONTAINER_REF);
+            if( viewsCountSpan.text() == '') {
+              viewsCountSpan.text(0);
+            }
+            if( visitorsCountSpan.text() == '') {
+              visitorsCountSpan.text(0);
             }
           }
         })
