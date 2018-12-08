@@ -576,14 +576,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2015/06/30/jQuery-学习笔记/" rel="next" title="jQuery 学习笔记">
+                <i class="fa fa-chevron-left"></i> jQuery 学习笔记
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/06/30/javascript-工作笔记/" rel="prev" title="javascript 工作笔记">
-                javascript 工作笔记 <i class="fa fa-chevron-right"></i>
+              <a href="/2015/07/12/ckeditor-笔记（持续更新）/" rel="prev" title="ckeditor 笔记（持续更新）">
+                ckeditor 笔记（持续更新） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -1341,7 +1345,7 @@
               var $element = $(document.getElementById(url));
               $element.find('.leancloud-visitors-views-count').text(counter.time + 1);
             
-            var jsonParams = { views: { "__op":"Increment", "amount":1 } };
+            var jsonParams = {  };
             var isNewVisitor = false;
 
             if ('visitors' == fieldName) {
@@ -1353,6 +1357,8 @@
                 jsonParams.visitors = { "__op":"Increment", "amount":1 };
                 isNewVisitor = true;
               }
+            } else if ('views' == fieldName) {
+              jsonParams.views = { "__op":"Increment", "amount":1 };
             }
 
             Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify(jsonParams))

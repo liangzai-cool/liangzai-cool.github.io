@@ -1281,7 +1281,7 @@
               var $element = $(document.getElementById(url));
               $element.find('.leancloud-visitors-views-count').text(counter.time + 1);
             
-            var jsonParams = { views: { "__op":"Increment", "amount":1 } };
+            var jsonParams = {  };
             var isNewVisitor = false;
 
             if ('visitors' == fieldName) {
@@ -1293,6 +1293,8 @@
                 jsonParams.visitors = { "__op":"Increment", "amount":1 };
                 isNewVisitor = true;
               }
+            } else if ('views' == fieldName) {
+              jsonParams.views = { "__op":"Increment", "amount":1 };
             }
 
             Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify(jsonParams))
