@@ -117,7 +117,7 @@
 
 
   <meta name="description" content="系统基于ubuntu server 14.04.4 amd64，即Ubuntu系统的服务器版本，基本适用于桌面版  安装第一步 下载并解压zlib压缩包打开zlib官网，找到下载链接，右键复制地址： 在Linux中使用wget命令下载，执行如下命令开始下载：1wget http://zlib.net/zlib-1.2.8.tar.gz 解压：1tar zxvf zlib-1.2.8.tar.gz">
-<meta name="keywords" content="linux,centos,ubuntu,zlib">
+<meta name="keywords" content="linux,ubuntu,centos,zlib">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux下安装zlib">
 <meta property="og:url" content="http://blog.xueliang.org/2016/06/17/Linux下安装zlib/index.html">
@@ -523,9 +523,9 @@
           
             <a href="/tags/linux/" rel="tag"># linux</a>
           
-            <a href="/tags/centos/" rel="tag"># centos</a>
-          
             <a href="/tags/ubuntu/" rel="tag"># ubuntu</a>
+          
+            <a href="/tags/centos/" rel="tag"># centos</a>
           
             <a href="/tags/zlib/" rel="tag"># zlib</a>
           
@@ -1305,40 +1305,33 @@
         .done(function ({ results }) {
           if (results.length > 0) {
             var counter = results[0];
-            var jsonParams = {  };
+            var jsonParams = { views: { "__op": "Increment", "amount": 1 } };
             var isNewVisitor = false;
 
-            if ('visitors' == fieldName) {
-              var viewedPostIds = Cookies.get('viewd_posts');
-              if(!(viewedPostIds && viewedPostIds.length)) {
-                viewedPostIds = '|';
-              }
-              if (viewedPostIds.indexOf('|' + counter.objectId + '|') < 0) {
-                jsonParams.visitors = { "__op":"Increment", "amount":1 };
-                isNewVisitor = true;
-              } else {
-                return;
-              }
-            } else if ('views' == fieldName) {
-              jsonParams.views = { "__op":"Increment", "amount":1 };
+            var viewedPostIds = Cookies.get('viewd_posts');
+            if(!(viewedPostIds && viewedPostIds.length)) {
+              viewedPostIds = '|';
+            }
+            if (viewedPostIds.indexOf('|' + counter.objectId + '|') < 0) {
+              jsonParams.visitors = { "__op":"Increment", "amount":1 };
+              isNewVisitor = true;
             }
 
             
               var $element = $(document.getElementById(url));
               $element.find('.leancloud-visitors-views-count').text(counter.views + 1);
-              if ('visitors' == fieldName && isNewVisitor) {
-                counter.visitors += 1;
+              var visitors = counter.visitors;
+              if (isNewVisitor) {
+                visitors += 1;
               }
-              $element.find('.leancloud-visitors-visitors-count').text(counter.visitors);
+              $element.find('.leancloud-visitors-visitors-count').text(visitors);
             
 
             Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify(jsonParams))
             .done(function() {
-              if ('visitors' == fieldName && isNewVisitor) {
+              if (isNewVisitor) {
                 viewedPostIds += counter.objectId + '|';
                 Cookies.set('viewd_posts', viewedPostIds, {expires: 365});
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-visitors-count').text(counter.visitors + 1);
               }
             })
             

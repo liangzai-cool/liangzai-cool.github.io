@@ -1262,40 +1262,33 @@
         .done(function ({ results }) {
           if (results.length > 0) {
             var counter = results[0];
-            var jsonParams = {  };
+            var jsonParams = { views: { "__op": "Increment", "amount": 1 } };
             var isNewVisitor = false;
 
-            if ('visitors' == fieldName) {
-              var viewedPostIds = Cookies.get('viewd_posts');
-              if(!(viewedPostIds && viewedPostIds.length)) {
-                viewedPostIds = '|';
-              }
-              if (viewedPostIds.indexOf('|' + counter.objectId + '|') < 0) {
-                jsonParams.visitors = { "__op":"Increment", "amount":1 };
-                isNewVisitor = true;
-              } else {
-                return;
-              }
-            } else if ('views' == fieldName) {
-              jsonParams.views = { "__op":"Increment", "amount":1 };
+            var viewedPostIds = Cookies.get('viewd_posts');
+            if(!(viewedPostIds && viewedPostIds.length)) {
+              viewedPostIds = '|';
+            }
+            if (viewedPostIds.indexOf('|' + counter.objectId + '|') < 0) {
+              jsonParams.visitors = { "__op":"Increment", "amount":1 };
+              isNewVisitor = true;
             }
 
             
               var $element = $(document.getElementById(url));
               $element.find('.leancloud-visitors-views-count').text(counter.views + 1);
-              if ('visitors' == fieldName && isNewVisitor) {
-                counter.visitors += 1;
+              var visitors = counter.visitors;
+              if (isNewVisitor) {
+                visitors += 1;
               }
-              $element.find('.leancloud-visitors-visitors-count').text(counter.visitors);
+              $element.find('.leancloud-visitors-visitors-count').text(visitors);
             
 
             Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify(jsonParams))
             .done(function() {
-              if ('visitors' == fieldName && isNewVisitor) {
+              if (isNewVisitor) {
                 viewedPostIds += counter.objectId + '|';
                 Cookies.set('viewd_posts', viewedPostIds, {expires: 365});
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-visitors-count').text(counter.visitors + 1);
               }
             })
             

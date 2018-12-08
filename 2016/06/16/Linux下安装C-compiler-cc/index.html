@@ -117,7 +117,7 @@
 
 
   <meta name="description" content="系统基于ubuntu server 14.04.4 amd64，即Ubuntu系统的服务器版本，基本适用于桌面版  第一步 检测系统中是否已经安装了C compiler执行以下命令：1cc -v 结果如下：  xueliang@dev:~\$ cc -v-bash: /usr/bin/cc: No such file or directoryxueliang@dev:~\$  说明没有安装C c">
-<meta name="keywords" content="linux,centos,ubuntu,c-compiler">
+<meta name="keywords" content="linux,ubuntu,centos,c-compiler">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux下安装C compiler (cc)">
 <meta property="og:url" content="http://blog.xueliang.org/2016/06/16/Linux下安装C-compiler-cc/index.html">
@@ -508,9 +508,9 @@
           
             <a href="/tags/linux/" rel="tag"># linux</a>
           
-            <a href="/tags/centos/" rel="tag"># centos</a>
-          
             <a href="/tags/ubuntu/" rel="tag"># ubuntu</a>
+          
+            <a href="/tags/centos/" rel="tag"># centos</a>
           
             <a href="/tags/c-compiler/" rel="tag"># c-compiler</a>
           
@@ -1290,40 +1290,33 @@
         .done(function ({ results }) {
           if (results.length > 0) {
             var counter = results[0];
-            var jsonParams = {  };
+            var jsonParams = { views: { "__op": "Increment", "amount": 1 } };
             var isNewVisitor = false;
 
-            if ('visitors' == fieldName) {
-              var viewedPostIds = Cookies.get('viewd_posts');
-              if(!(viewedPostIds && viewedPostIds.length)) {
-                viewedPostIds = '|';
-              }
-              if (viewedPostIds.indexOf('|' + counter.objectId + '|') < 0) {
-                jsonParams.visitors = { "__op":"Increment", "amount":1 };
-                isNewVisitor = true;
-              } else {
-                return;
-              }
-            } else if ('views' == fieldName) {
-              jsonParams.views = { "__op":"Increment", "amount":1 };
+            var viewedPostIds = Cookies.get('viewd_posts');
+            if(!(viewedPostIds && viewedPostIds.length)) {
+              viewedPostIds = '|';
+            }
+            if (viewedPostIds.indexOf('|' + counter.objectId + '|') < 0) {
+              jsonParams.visitors = { "__op":"Increment", "amount":1 };
+              isNewVisitor = true;
             }
 
             
               var $element = $(document.getElementById(url));
               $element.find('.leancloud-visitors-views-count').text(counter.views + 1);
-              if ('visitors' == fieldName && isNewVisitor) {
-                counter.visitors += 1;
+              var visitors = counter.visitors;
+              if (isNewVisitor) {
+                visitors += 1;
               }
-              $element.find('.leancloud-visitors-visitors-count').text(counter.visitors);
+              $element.find('.leancloud-visitors-visitors-count').text(visitors);
             
 
             Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify(jsonParams))
             .done(function() {
-              if ('visitors' == fieldName && isNewVisitor) {
+              if (isNewVisitor) {
                 viewedPostIds += counter.objectId + '|';
                 Cookies.set('viewd_posts', viewedPostIds, {expires: 365});
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-visitors-count').text(counter.visitors + 1);
               }
             })
             

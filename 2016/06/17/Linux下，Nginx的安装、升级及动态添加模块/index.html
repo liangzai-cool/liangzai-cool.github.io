@@ -117,7 +117,7 @@
 
 
   <meta name="description" content="系统基于ubuntu server 14.04.4 amd64  安装第一步 下载并解压Nginx压缩包 从Nginx官网下载Nginx，或者在Linux上执行wget http://nginx.org/download/nginx-1.10.1.tar.gz命令直接下载解压nginx-1.10.1.tar.gz文件：1tar zxvf nginx-1.10.1.tar.gz 第二步 配置12c">
-<meta name="keywords" content="centos,ubuntu,nginx">
+<meta name="keywords" content="ubuntu,centos,nginx">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux下，Nginx的安装、升级及动态添加模块">
 <meta property="og:url" content="http://blog.xueliang.org/2016/06/17/Linux下，Nginx的安装、升级及动态添加模块/index.html">
@@ -851,9 +851,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/centos/" rel="tag"># centos</a>
-          
             <a href="/tags/ubuntu/" rel="tag"># ubuntu</a>
+          
+            <a href="/tags/centos/" rel="tag"># centos</a>
           
             <a href="/tags/nginx/" rel="tag"># nginx</a>
           
@@ -1633,40 +1633,33 @@
         .done(function ({ results }) {
           if (results.length > 0) {
             var counter = results[0];
-            var jsonParams = {  };
+            var jsonParams = { views: { "__op": "Increment", "amount": 1 } };
             var isNewVisitor = false;
 
-            if ('visitors' == fieldName) {
-              var viewedPostIds = Cookies.get('viewd_posts');
-              if(!(viewedPostIds && viewedPostIds.length)) {
-                viewedPostIds = '|';
-              }
-              if (viewedPostIds.indexOf('|' + counter.objectId + '|') < 0) {
-                jsonParams.visitors = { "__op":"Increment", "amount":1 };
-                isNewVisitor = true;
-              } else {
-                return;
-              }
-            } else if ('views' == fieldName) {
-              jsonParams.views = { "__op":"Increment", "amount":1 };
+            var viewedPostIds = Cookies.get('viewd_posts');
+            if(!(viewedPostIds && viewedPostIds.length)) {
+              viewedPostIds = '|';
+            }
+            if (viewedPostIds.indexOf('|' + counter.objectId + '|') < 0) {
+              jsonParams.visitors = { "__op":"Increment", "amount":1 };
+              isNewVisitor = true;
             }
 
             
               var $element = $(document.getElementById(url));
               $element.find('.leancloud-visitors-views-count').text(counter.views + 1);
-              if ('visitors' == fieldName && isNewVisitor) {
-                counter.visitors += 1;
+              var visitors = counter.visitors;
+              if (isNewVisitor) {
+                visitors += 1;
               }
-              $element.find('.leancloud-visitors-visitors-count').text(counter.visitors);
+              $element.find('.leancloud-visitors-visitors-count').text(visitors);
             
 
             Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify(jsonParams))
             .done(function() {
-              if ('visitors' == fieldName && isNewVisitor) {
+              if (isNewVisitor) {
                 viewedPostIds += counter.objectId + '|';
                 Cookies.set('viewd_posts', viewedPostIds, {expires: 365});
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-visitors-count').text(counter.visitors + 1);
               }
             })
             

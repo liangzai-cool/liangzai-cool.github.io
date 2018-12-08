@@ -437,9 +437,9 @@
       
         <tags>
             
-            <tag> centos </tag>
-            
             <tag> ubuntu </tag>
+            
+            <tag> centos </tag>
             
             <tag> nginx </tag>
             
@@ -460,9 +460,9 @@
             
             <tag> linux </tag>
             
-            <tag> centos </tag>
-            
             <tag> ubuntu </tag>
+            
+            <tag> centos </tag>
             
             <tag> zlib </tag>
             
@@ -483,9 +483,9 @@
             
             <tag> linux </tag>
             
-            <tag> centos </tag>
-            
             <tag> ubuntu </tag>
+            
+            <tag> centos </tag>
             
             <tag> c++-compiler </tag>
             
@@ -506,9 +506,9 @@
             
             <tag> linux </tag>
             
-            <tag> centos </tag>
-            
             <tag> ubuntu </tag>
+            
+            <tag> centos </tag>
             
             <tag> make </tag>
             
@@ -529,9 +529,9 @@
             
             <tag> linux </tag>
             
-            <tag> centos </tag>
-            
             <tag> ubuntu </tag>
+            
+            <tag> centos </tag>
             
             <tag> pcre </tag>
             
@@ -552,9 +552,9 @@
             
             <tag> linux </tag>
             
-            <tag> centos </tag>
-            
             <tag> ubuntu </tag>
+            
+            <tag> centos </tag>
             
             <tag> c-compiler </tag>
             
@@ -652,25 +652,6 @@
     </entry>
     
     <entry>
-      <title>jQuery 学习笔记</title>
-      <link href="/2015/06/30/jQuery-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-      <url>/2015/06/30/jQuery-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
-      
-        <content type="html"><![CDATA[<h1 id="Ajax"><a href="#Ajax" class="headerlink" title="Ajax"></a>Ajax</h1><h2 id="在不同的callback函数间传递变量"><a href="#在不同的callback函数间传递变量" class="headerlink" title="在不同的callback函数间传递变量"></a>在不同的callback函数间传递变量</h2><p>jQuery中的ajax()函数的返回值可以链式调用done()、fail()等函数，如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(<span class="string">"/exmple.do"</span>)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//①</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//②</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.fail(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//③</span></span><br><span class="line">    alert(<span class="string">"fail"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p><p>如果想在②处获取①处的数据，只需在①处将数据绑定在this关键字上，即可在②处用过this.exmple获取。</p><p>最终实现代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(<span class="string">"/exmple.do"</span>)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">"liangzai_cool"</span>; <span class="comment">//①</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.name); <span class="comment">//② 此处会弹出对话框，内容即为:liangzai_cool</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.fail(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//③</span></span><br><span class="line">    alert(<span class="string">"fail"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> jquery </tag>
-            
-            <tag> ajax </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
       <title>jQuery.fancybox 学习笔记</title>
       <link href="/2015/06/30/jQuery-fancybox-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
       <url>/2015/06/30/jQuery-fancybox-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
@@ -716,6 +697,25 @@
         <tags>
             
             <tag> js </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>jQuery 学习笔记</title>
+      <link href="/2015/06/30/jQuery-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+      <url>/2015/06/30/jQuery-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Ajax"><a href="#Ajax" class="headerlink" title="Ajax"></a>Ajax</h1><h2 id="在不同的callback函数间传递变量"><a href="#在不同的callback函数间传递变量" class="headerlink" title="在不同的callback函数间传递变量"></a>在不同的callback函数间传递变量</h2><p>jQuery中的ajax()函数的返回值可以链式调用done()、fail()等函数，如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(<span class="string">"/exmple.do"</span>)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//①</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//②</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.fail(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//③</span></span><br><span class="line">    alert(<span class="string">"fail"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p><p>如果想在②处获取①处的数据，只需在①处将数据绑定在this关键字上，即可在②处用过this.exmple获取。</p><p>最终实现代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(<span class="string">"/exmple.do"</span>)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = <span class="string">"liangzai_cool"</span>; <span class="comment">//①</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.done(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.name); <span class="comment">//② 此处会弹出对话框，内容即为:liangzai_cool</span></span><br><span class="line">    alert(<span class="string">"done"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.fail(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//③</span></span><br><span class="line">    alert(<span class="string">"fail"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> jquery </tag>
+            
+            <tag> ajax </tag>
             
         </tags>
       
