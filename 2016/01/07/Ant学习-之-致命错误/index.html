@@ -1269,7 +1269,7 @@
   
   <script>
     
-    function addCount(Counter, fieldName) {
+    function addCount(Counter) {
       var $visitors = $(".leancloud_visitors");
       var url = $visitors.attr('id').trim();
       var title = $visitors.attr('data-flag-title').trim();
@@ -1342,8 +1342,7 @@
             });
           };
           
-          addCount(Counter, 'views');
-          addCount(Counter, 'visitors');
+          addCount(Counter);
           
         })
     });

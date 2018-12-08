@@ -507,14 +507,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2015/06/30/jQuery-fancybox-学习笔记/" rel="next" title="jQuery.fancybox 学习笔记">
+                <i class="fa fa-chevron-left"></i> jQuery.fancybox 学习笔记
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/06/30/javascript-工作笔记/" rel="prev" title="javascript 工作笔记">
-                javascript 工作笔记 <i class="fa fa-chevron-right"></i>
+              <a href="/2015/06/30/MySQL-工作笔记（持续更新）/" rel="prev" title="MySQL 工作笔记（持续更新）">
+                MySQL 工作笔记（持续更新） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -1259,7 +1263,7 @@
   
   <script>
     
-    function addCount(Counter, fieldName) {
+    function addCount(Counter) {
       var $visitors = $(".leancloud_visitors");
       var url = $visitors.attr('id').trim();
       var title = $visitors.attr('data-flag-title').trim();
@@ -1332,8 +1336,7 @@
             });
           };
           
-          addCount(Counter, 'views');
-          addCount(Counter, 'visitors');
+          addCount(Counter);
           
         })
     });
