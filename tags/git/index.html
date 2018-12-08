@@ -1127,10 +1127,12 @@
           for (var i = 0; i < results.length; i++) {
             var item = results[i];
             var url = item.url;
-            var time = item.time;
+            var views = item.views;
+            var visitors = item.visitors;
             var element = document.getElementById(url);
 
-            $(element).find(COUNT_CONTAINER_REF).text(time);
+            $(element).find(COUNT_CONTAINER_REF).text(views);
+            $(element).find(COUNT_CONTAINER_REF).text(visitors);
           }
           for(var i = 0; i < entries.length; i++) {
             var url = entries[i];
