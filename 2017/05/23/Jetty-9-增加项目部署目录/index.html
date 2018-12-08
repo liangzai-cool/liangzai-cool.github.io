@@ -1282,8 +1282,9 @@
               var $element = $(document.getElementById(url));
               $element.find('.leancloud-visitors-views-count').text(counter.views + 1);
               if ('visitors' == fieldName && isNewVisitor) {
-                $element.find('.leancloud-visitors-visitors-count').text(counter.visitors + 1);
+                counter.visitors += 1;
               }
+              $element.find('.leancloud-visitors-visitors-count').text(counter.visitors);
             
 
             Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify(jsonParams))

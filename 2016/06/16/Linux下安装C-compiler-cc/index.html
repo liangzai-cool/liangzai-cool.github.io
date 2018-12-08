@@ -117,7 +117,7 @@
 
 
   <meta name="description" content="系统基于ubuntu server 14.04.4 amd64，即Ubuntu系统的服务器版本，基本适用于桌面版  第一步 检测系统中是否已经安装了C compiler执行以下命令：1cc -v 结果如下：  xueliang@dev:~\$ cc -v-bash: /usr/bin/cc: No such file or directoryxueliang@dev:~\$  说明没有安装C c">
-<meta name="keywords" content="linux,ubuntu,centos,c-compiler">
+<meta name="keywords" content="linux,centos,ubuntu,c-compiler">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux下安装C compiler (cc)">
 <meta property="og:url" content="http://blog.xueliang.org/2016/06/16/Linux下安装C-compiler-cc/index.html">
@@ -508,9 +508,9 @@
           
             <a href="/tags/linux/" rel="tag"># linux</a>
           
-            <a href="/tags/ubuntu/" rel="tag"># ubuntu</a>
-          
             <a href="/tags/centos/" rel="tag"># centos</a>
+          
+            <a href="/tags/ubuntu/" rel="tag"># ubuntu</a>
           
             <a href="/tags/c-compiler/" rel="tag"># c-compiler</a>
           
@@ -1312,8 +1312,9 @@
               var $element = $(document.getElementById(url));
               $element.find('.leancloud-visitors-views-count').text(counter.views + 1);
               if ('visitors' == fieldName && isNewVisitor) {
-                $element.find('.leancloud-visitors-visitors-count').text(counter.visitors + 1);
+                counter.visitors += 1;
               }
+              $element.find('.leancloud-visitors-visitors-count').text(counter.visitors);
             
 
             Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify(jsonParams))

@@ -437,9 +437,9 @@
       
         <tags>
             
-            <tag> ubuntu </tag>
-            
             <tag> centos </tag>
+            
+            <tag> ubuntu </tag>
             
             <tag> nginx </tag>
             
@@ -460,9 +460,9 @@
             
             <tag> linux </tag>
             
-            <tag> ubuntu </tag>
-            
             <tag> centos </tag>
+            
+            <tag> ubuntu </tag>
             
             <tag> zlib </tag>
             
@@ -483,9 +483,9 @@
             
             <tag> linux </tag>
             
-            <tag> ubuntu </tag>
-            
             <tag> centos </tag>
+            
+            <tag> ubuntu </tag>
             
             <tag> c++-compiler </tag>
             
@@ -506,9 +506,9 @@
             
             <tag> linux </tag>
             
-            <tag> ubuntu </tag>
-            
             <tag> centos </tag>
+            
+            <tag> ubuntu </tag>
             
             <tag> make </tag>
             
@@ -529,9 +529,9 @@
             
             <tag> linux </tag>
             
-            <tag> ubuntu </tag>
-            
             <tag> centos </tag>
+            
+            <tag> ubuntu </tag>
             
             <tag> pcre </tag>
             
@@ -552,9 +552,9 @@
             
             <tag> linux </tag>
             
-            <tag> ubuntu </tag>
-            
             <tag> centos </tag>
+            
+            <tag> ubuntu </tag>
             
             <tag> c-compiler </tag>
             
