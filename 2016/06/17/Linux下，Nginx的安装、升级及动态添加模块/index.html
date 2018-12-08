@@ -1633,11 +1633,6 @@
         .done(function ({ results }) {
           if (results.length > 0) {
             var counter = results[0];
-            
-              var $element = $(document.getElementById(url));
-              $element.find('.leancloud-visitors-views-count').text(counter.views + 1);
-              $element.find('.leancloud-visitors-visitors-count').text(counter.visitors + 1);
-            
             var jsonParams = {  };
             var isNewVisitor = false;
 
@@ -1655,6 +1650,14 @@
             } else if ('views' == fieldName) {
               jsonParams.views = { "__op":"Increment", "amount":1 };
             }
+
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-views-count').text(counter.views + 1);
+              if ('visitors' == fieldName && isNewVisitor) {
+                $element.find('.leancloud-visitors-visitors-count').text(counter.visitors + 1);
+              }
+            
 
             Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify(jsonParams))
             .done(function() {

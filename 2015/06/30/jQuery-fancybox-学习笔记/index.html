@@ -515,8 +515,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/06/30/javascript-工作笔记/" rel="next" title="javascript 工作笔记">
-                <i class="fa fa-chevron-left"></i> javascript 工作笔记
+              <a href="/2015/06/30/MySQL-工作笔记（持续更新）/" rel="next" title="MySQL 工作笔记（持续更新）">
+                <i class="fa fa-chevron-left"></i> MySQL 工作笔记（持续更新）
               </a>
             
           </div>
@@ -1280,11 +1280,6 @@
         .done(function ({ results }) {
           if (results.length > 0) {
             var counter = results[0];
-            
-              var $element = $(document.getElementById(url));
-              $element.find('.leancloud-visitors-views-count').text(counter.views + 1);
-              $element.find('.leancloud-visitors-visitors-count').text(counter.visitors + 1);
-            
             var jsonParams = {  };
             var isNewVisitor = false;
 
@@ -1302,6 +1297,14 @@
             } else if ('views' == fieldName) {
               jsonParams.views = { "__op":"Increment", "amount":1 };
             }
+
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-views-count').text(counter.views + 1);
+              if ('visitors' == fieldName && isNewVisitor) {
+                $element.find('.leancloud-visitors-visitors-count').text(counter.visitors + 1);
+              }
+            
 
             Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify(jsonParams))
             .done(function() {
